@@ -65,8 +65,8 @@ object.check_solid = function(self, ox, oy)
 	if (ox == nil) then ox = 0 end
 	if (oy == nil) then oy = 0 end
 
-	for i = flr((ox + self.x + self.hit_x) / 8),flr((ox + self.x + self.hit_x + self.hit_w) / 8) do
-		for j = flr((oy + self.y + self.hit_y) / 8),flr((oy + self.y + self.hit_y + self.hit_h) / 8) do
+	for i = flr((ox + self.x + self.hit_x) / 8),flr((ox + self.x + self.hit_x + self.hit_w - 1) / 8) do
+		for j = flr((oy + self.y + self.hit_y) / 8),flr((oy + self.y + self.hit_y + self.hit_h - 1) / 8) do
 			if (fget(room_tile_at(i, j), 1)) then
 				return true
 			end

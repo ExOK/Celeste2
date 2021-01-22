@@ -41,7 +41,7 @@ crate.init = function(self)
 	self.spr = self.tile
 end
 crate.update = function(self) 
-	if (not self:check_solid()) then
+	if (not self:check_solid(0, 1)) then
 		self:move_y(1)
 	end
 end
