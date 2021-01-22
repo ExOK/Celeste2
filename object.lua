@@ -76,10 +76,10 @@ object.overlaps = function(self, b, ox, oy)
 	if (ox == nil) then ox = 0 end
 	if (oy == nil) then oy = 0 end
 	return
-		ox + self.x + self.hit_x + self.hit_w >= b.x + b.hit_x and
-		oy + self.y + self.hit_y + self.hit_h >= b.y + b.hit_y and
+		ox + self.x + self.hit_x + self.hit_w > b.x + b.hit_x and
+		oy + self.y + self.hit_y + self.hit_h > b.y + b.hit_y and
 		ox + self.x + self.hit_x < b.x + b.hit_x + b.hit_w and
-		oy + self.y + self.hit.y < b.y + b.hit_y + b.hit_w
+		oy + self.y + self.hit_y < b.y + b.hit_y + b.hit_h
 end
 
 object.check_solid = function(self, ox, oy)
@@ -96,7 +96,7 @@ object.check_solid = function(self, ox, oy)
 
 	for i=1,#objects do
 		local o = objects[i]
-		if (o.geom == g_solid and o != self and self:overlaps(ox, y)) then
+		if (o.geom == g_solid and o != self and self:overlaps(o, ox, oy)) then
 			return true
 		end
 	end
