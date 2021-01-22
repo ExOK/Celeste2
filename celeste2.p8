@@ -86,8 +86,8 @@ function create(type, x, y)
 end
 
 function solid_at(x, y, w, h)
-	for i = flr(x / 8),flr((x + w) / 8) do
-		for j = flr(y / 8),flr((y + h) / 8) do
+	for i = flr(x / 8),flr((x + w - 1) / 8) do
+		for j = flr(y / 8),flr((y + h - 1) / 8) do
 			if (fget(room_tile_at(i, j), 1)) then
 				return true
 			end
