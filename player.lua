@@ -9,4 +9,6 @@ player.update = function(self)
 		self.move_y(self, 0.5)
 	end
 end
+
 setmetatable(player, lookup)
+add(types, player)

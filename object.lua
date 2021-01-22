@@ -1,4 +1,5 @@
 objects = {}
+types = {}
 
 lookup = {}
 lookup.__index = function(self, i) return self.base[i] end
