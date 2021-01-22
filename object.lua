@@ -19,6 +19,7 @@ object.hit_w = 8
 object.hit_h = 8
 object.geom = g_none
 object.actor = true
+
 object.move_x = function(self, x)
 	local mx = 0;
 	self.remainder_x += x;
@@ -29,7 +30,17 @@ object.move_x = function(self, x)
 	end
 
 	self.remainder_x -= mx;
-	self.x += mx
+
+	local mxs = sign(mx)
+	while (mx != 0)
+	do
+		if (self:check_solid(mxs)) then
+			break
+		else
+			self.x += mxs
+			mx -= mxs
+		end
+	end
 end
 
 object.move_y = function(self, y)
@@ -42,7 +53,17 @@ object.move_y = function(self, y)
 	end
 
 	self.remainder_y -= my;
-	self.y += my
+	
+	local mys = sign(my)
+	while (my != 0)
+	do
+		if (self:check_solid(mys)) then
+			break
+		else
+			self.y += mys
+			my -= mys
+		end
+	end
 end
 
 object.draw = function(self)
