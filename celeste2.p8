@@ -21,10 +21,7 @@ function _draw()
 	map((room % 4) * 16, (room / 4) * 16, 0, 0, 16, 16, 1)
 
 	for i=1,#objects do
-		local o = objects[i]
-		if (o.spr != nil) then
-			spr(o.spr, o.x, o.y)
-		end
+		objects[i]:draw()
 	end
 end
 
@@ -35,18 +32,6 @@ end
 #include player.lua
 
 -->8
-
-function solid_at(x, y, w, h)
-	for i = flr(x / 8),flr((x + w - 1) / 8) do
-		for j = flr(y / 8),flr((y + h - 1) / 8) do
-			if (fget(room_tile_at(i, j), 1)) then
-				return true
-			end
-		end
-	end
-
-	return false
-end
 
 -- gets the tile at the given location in the CURRENT room
 function room_tile_at(x, y)
