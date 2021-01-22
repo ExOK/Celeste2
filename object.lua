@@ -34,7 +34,7 @@ object.move_x = function(self, x)
 	local mxs = sign(mx)
 	while (mx != 0)
 	do
-		if (self:check_solid(mxs)) then
+		if (self:check_solid(mxs, 0)) then
 			break
 		else
 			self.x += mxs
@@ -57,7 +57,7 @@ object.move_y = function(self, y)
 	local mys = sign(my)
 	while (my != 0)
 	do
-		if (self:check_solid(mys)) then
+		if (self:check_solid(0, mys)) then
 			break
 		else
 			self.y += mys
