@@ -10,7 +10,72 @@ function _init()
 	room_load(0)
 end
 -->8
+input_x = 0
+input_y = 0
+input_x_turned = false
+input_y_turned = false
+input_jump = false
+input_jump_pressed = false
+input_grapple = false
+input_grapple_pressed = false
+
 function _update()
+
+	-- input_x
+	local prev_x = input_x
+	if (btn(0)) then
+		if (btn(1)) then
+			if (input_x_turned) then
+				input_x = prev_x
+			else
+				input_x = -prev_x
+				input_x_turned = true
+			end
+		else
+			input_x = -1
+			input_x_turned = false
+		end
+	elseif (btn(1)) then
+		input_x = 1
+		input_x_turned = false
+	else
+		input_x = 0
+		input_x_turned = false
+	end
+
+	-- input_y
+	local prev_y = input_y
+	if (btn(2)) then
+		if (btn(3)) then
+			if (input_y_turned) then
+				input_y = prev_y
+			else
+				input_y = -prev_y
+				input_y_turned = true
+			end
+		else
+			input_y = -1
+			input_y_turned = false
+		end
+	elseif (btn(3)) then
+		input_y = 1
+		input_y_turned = false
+	else
+		input_y = 0
+		input_y_turned = false
+	end
+
+	-- input_jump
+	local jump = btn(4)
+	input_jump_pressed = jump and not input_jump
+	input_jump = jump
+
+	-- input_grapple
+	local grapple = btn(5)
+	input_grapple_pressed = grapple and not input_grapple
+	input_grapple = grapple
+
+	--objects
 	for i = 1, #objects do
 		objects[i]:update()
 	end

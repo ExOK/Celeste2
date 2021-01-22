@@ -31,10 +31,12 @@ object.move_x = function(self, x)
 
 	self.remainder_x -= mx;
 
+	local total = mx
 	local mxs = sign(mx)
 	while (mx != 0)
 	do
 		if (self:check_solid(mxs, 0)) then
+			self:on_collide_x(total - mx, total)
 			break
 		else
 			self.x += mxs
@@ -54,16 +56,28 @@ object.move_y = function(self, y)
 
 	self.remainder_y -= my;
 	
+	local total = my
 	local mys = sign(my)
 	while (my != 0)
 	do
 		if (self:check_solid(0, mys)) then
+			self:on_collide_y(total - my, total)
 			break
 		else
 			self.y += mys
 			my -= mys
 		end
 	end
+end
+
+object.on_collide_x = function(self, moved, target)
+	self.remainder_x = 0
+	self.speed_x = 0
+end
+
+object.on_collide_y = function(self, moved, target)
+	self.remainder_y = 0
+	self.speed_y = 0
 end
 
 object.draw = function(self)
