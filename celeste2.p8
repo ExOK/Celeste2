@@ -4,9 +4,10 @@ __lua__
 
 -- globals
 room = 0
+objects = {}
 
 function _init()
-	load(0)
+	room_load(0)
 end
 -->8
 function _update()
@@ -51,7 +52,6 @@ player.update = function(self)
 end
 setmetatable(player, lookup)
 
-objects = {}
 function create(type, x, y)
 	local obj = {}
 	obj.base = type
@@ -64,12 +64,9 @@ function create(type, x, y)
 end
 
 function solid_at(x, y, w, h)
-	local rx = (room % 4) * 16
-	local ry = (room / 4) * 16
-	
 	for i = flr(x / 8),flr((x + w) / 8) do
 		for j = flr(y / 8),flr((y + h) / 8) do
-			if (fget(mget(rx + i, ry + j), 1)) then
+			if (fget(room_tile_at(i, j), 1)) then
 				return true
 			end
 		end
@@ -78,8 +75,15 @@ function solid_at(x, y, w, h)
 	return false
 end
 
-function load(index)
+-- gets the tile at the given location in the CURRENT room
+function room_tile_at(x, y)
+	return mget((room % 4) * 16 + x, (room / 4) * 16 + y)
+end
+
+-- loads the given room
+function room_load(index)
 	room = index
+	objects = {}
 
 	local rx = (room % 4) * 16
 	local ry = (room / 4) * 16
@@ -90,7 +94,6 @@ function load(index)
 			end
 		end
 	end
-
 end
 
 __gfx__
