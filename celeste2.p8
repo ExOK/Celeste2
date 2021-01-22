@@ -31,11 +31,33 @@ lookup = {}
 lookup.__index = function(self, i) return self.base[i] end
 
 object = {}
+object.speed_x = 0;
+object.speed_y = 0;
+object.remainder_x = 0;
+object.remainder_y = 0;
 object.move_x = function(self, x)
-	self.x += x
+	local mx = 0;
+	self.remainder_x += x;
+	if (self.remainder_x < 0) then
+		mx = flr(self.remainder_x - 0.5)
+	else
+		mx = flr(self.remainder_x + 0.5)
+	end
+
+	self.remainder_x -= mx;
+	self.x += mx
 end
 object.move_y = function(self, y)
-	self.y += y
+	local my = 0;	
+	self.remainder_y += y;
+	if (self.remainder_y < 0) then
+		my = flr(self.remainder_y - 0.5)
+	else
+		my = flr(self.remainder_y + 0.5)
+	end
+
+	self.remainder_y -= my;
+	self.y += my
 end
 
 player = {}
@@ -46,7 +68,7 @@ player.init = function(self)
 end
 player.update = function(self) 
 	if (not solid_at(self.x, self.y + 1, 8, 8)) then
-		self.y += 1
+		self.move_y(self, 0.5)
 	end
 end
 setmetatable(player, lookup)
