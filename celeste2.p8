@@ -85,11 +85,9 @@ function room_load(index)
 	room = index
 	objects = {}
 
-	local rx = (room % 4) * 16
-	local ry = (room / 4) * 16
 	for i = 0,15 do
 		for j = 0,15 do
-			if (mget(rx + i, ry + j) == player.tile) then
+			if (room_tile_at(i, j) == player.tile) then
 				create(player, i * 8, j * 8)
 			end
 		end
