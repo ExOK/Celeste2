@@ -68,6 +68,12 @@ player.grapple_check = function(self, x, y)
 	return false
 end
 
+player.grapple_attach = function(self)
+	self.state = 2
+	self.grapple_wave = 1.5
+	freeze_time = 2
+end
+
 player.draw_grapple = function(self)
 
 	if (self.grapple_wave == 0) then
@@ -75,10 +81,10 @@ player.draw_grapple = function(self)
 	else
 		if (self.grapple_dir_x != 0) then
 			--horizontal
-			draw_sine_h(self.x, self.grapple_x, self.y - 3, 7, 3 * self.grapple_wave, 20, 0.08, 6)
+			draw_sine_h(self.x, self.grapple_x, self.y - 3, 7, 3 * self.grapple_wave, 0.666, 0.08, 6)
 		else
 			--vertical
-			draw_sine_v(self.y - 3, self.grapple_y, self.x, 7, 3 * self.grapple_wave, 20, 0.08, 6)
+			draw_sine_v(self.y - 3, self.grapple_y, self.x, 7, 3 * self.grapple_wave, 0.666, 0.08, 6)
 		end
 	end
 
@@ -154,8 +160,7 @@ player.update = function(self)
 			local sign = sgn(self.grapple_dir_x)
 			for i = 1, 12 do
 				if (self:grapple_check(self.grapple_x + sign, self.grapple_y)) then
-					self.state = 2
-					self.grapple_wave = 1.5
+					self:grapple_attach()
 				else
 					self.grapple_x += sign
 				end
@@ -164,8 +169,7 @@ player.update = function(self)
 			local sign = sgn(self.grapple_dir_y)
 			for i = 1, 12 do
 				if (self:grapple_check(self.grapple_x, self.grapple_y + sign)) then
-					self.state = 2
-					self.grapple_wave = 1.5
+					self:grapple_attach()
 				else
 					self.grapple_y += sign
 				end
@@ -184,7 +188,7 @@ player.update = function(self)
 		-- grapple attached state
 
 		-- grapple wave
-		self.grapple_wave = approach(self.grapple_wave, 0, 0.3)
+		self.grapple_wave = approach(self.grapple_wave, 0, 0.6)
 
 		-- release
 		if (not input_grapple) then

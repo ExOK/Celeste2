@@ -20,6 +20,10 @@ function _init()
 	room_load(0)
 end
 -->8
+
+freeze_time = 0
+game_time = 0
+
 input_x = 0
 input_y = 0
 input_x_turned = false
@@ -109,9 +113,16 @@ function _update()
 	end
 	input_grapple = grapple
 
-	--objects
-	for i = 1, #objects do
-		objects[i]:update()
+	--freeze
+	if (freeze_time > 0) then
+		freeze_time -= 1
+	else
+		game_time += 1
+
+		--objects
+		for i = 1, #objects do
+			objects[i]:update()
+		end
 	end
 end
 -->8
@@ -235,7 +246,7 @@ function draw_sine_h(x0, x1, y, col, amplitude, time_freq, x_freq, fade_x_dist)
 	pset(x1, y, col)
 
 	local x_sign = sgn(x1 - x0)
-	local x_max = abs(x1 - x0) - 2
+	local x_max = abs(x1 - x0) - 1
 	local last_y = y
 	local this_y = 0
 	local ax = 0
@@ -253,7 +264,7 @@ function draw_sine_h(x0, x1, y, col, amplitude, time_freq, x_freq, fade_x_dist)
 		end
 
 		ax = x0 + i * x_sign
-		ay = y + sin(time() * time_freq + i * x_freq) * amplitude * fade
+		ay = y + sin(game_time * time_freq + i * x_freq) * amplitude * fade
 		pset(ax, ay, col)
 
 		this_y = ay
@@ -270,7 +281,7 @@ function draw_sine_v(y0, y1, x, col, amplitude, time_freq, y_freq, fade_y_dist)
 	pset(x, y1, col)
 
 	local y_sign = sgn(y1 - y0)
-	local y_max = abs(y1 - y0) - 2
+	local y_max = abs(y1 - y0) - 1
 	local last_x = x
 	local this_x = 0
 	local ax = 0
@@ -288,7 +299,7 @@ function draw_sine_v(y0, y1, x, col, amplitude, time_freq, y_freq, fade_y_dist)
 		end
 
 		ay = y0 + i * y_sign
-		ax = x + sin(time() * time_freq + i * y_freq) * amplitude * fade
+		ax = x + sin(game_time * time_freq + i * y_freq) * amplitude * fade
 		pset(ax, ay, col)
 
 		this_x = ax
