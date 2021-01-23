@@ -31,7 +31,9 @@ player.update = function(self)
 		-- normal state
 
 		-- running
-		if (on_ground) then
+		if (abs(self.speed_x) > 2 and input_x == sign(self.speed_x)) then
+			self.speed_x = approach(self.speed_x, input_x * 2, 0.1)
+		elseif (on_ground) then
 			self.speed_x = approach(self.speed_x, input_x * 2, 0.6)
 		elseif (input_x != 0) then
 			self.speed_x = approach(self.speed_x, input_x * 2, 0.3)
@@ -42,9 +44,9 @@ player.update = function(self)
 		-- gravity
 		if (not on_ground) then
 			if (abs(self.speed_y) < 0.2) then
-				self.speed_y = min(self.speed_y + 0.4, 6)
+				self.speed_y = min(self.speed_y + 0.4, 5)
 			else
-				self.speed_y = min(self.speed_y + 0.8, 6)
+				self.speed_y = min(self.speed_y + 0.8, 5)
 			end
 		end
 
@@ -61,6 +63,7 @@ player.update = function(self)
 		-- jumping
 		if (self.jump_grace > 0 and consume_jump_press()) then
 			self.speed_y = -4
+			self.speed_x += input_x * 0.2
 			self.jump_grace = 0
 			self:move_y(self.jump_grace_y - self.y)
 			self.t_var_jump = 4
