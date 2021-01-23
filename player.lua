@@ -2,7 +2,7 @@ player = {}
 player.tile = 2
 player.base = object
 
-player.jump_grace = 0
+player.t_jump_grace = 0
 player.jump_grace_y = 0
 player.t_var_jump = 0
 player.var_jump_speed = 0
@@ -11,6 +11,8 @@ player.grapple_y = 0
 player.grapple_dir = 0
 player.grapple_hit = nil
 player.grapple_wave = 0
+player.grapple_boost = false
+player.t_grapple_cooldown = 0
 
 player.state = 0
 player.frame = 0
@@ -27,17 +29,16 @@ player.start_grapple = function(self)
 	self.grapple_x = self.x
 	self.grapple_y = self.y - 3	
 	self.grapple_wave = 0
+	self.t_grapple_cooldown = 6
 	self.t_var_jump = 0
 
 	if (input_x != 0) then
 		self.grapple_dir = input_x
 	else
-		if (self.right) then
-			self.grapple_dir = 1
-		else
-			self.grapple_dir = -1
-		end
+		self.grapple_dir = self.facing
 	end
+	self.facing = self.grapple_dir
+
 end
 
 player.grapple_check = function(self, x, y)
@@ -57,28 +58,15 @@ player.grapple_check = function(self, x, y)
 	return false
 end
 
-player.grapple_attach = function(self)
-	self.state = 2
-	self.grapple_wave = 1.5
-	freeze_time = 2
+-- Jumps
 
-	self.speed_x = self.grapple_dir * 8
-end
-
-player.draw_grapple = function(self)
-
-	if (self.grapple_wave == 0) then
-		line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
-	else
-		if (self.grapple_dir != 0) then
-			--horizontal
-			draw_sine_h(self.x, self.grapple_x, self.y - 3, 7, 3 * self.grapple_wave, 0.2, 0.08, 6)
-		else
-			--vertical
-			draw_sine_v(self.y - 3, self.grapple_y, self.x, 7, 3 * self.grapple_wave, 0.2, 0.08, 6)
-		end
-	end
-
+player.wall_jump = function(self, dir)
+	consume_jump_press()
+	self.speed_y = -3
+	self.speed_x = 3 * dir
+	self.var_jump_speed = self.speed_y
+	self.t_var_jump = 4
+	self.facing = dir
 end
 
 -- Events
@@ -99,14 +87,23 @@ end
 player.update = function(self)
 	local on_ground = self:check_solid(0, 1)
 	if (on_ground) then
-		self.jump_grace = 4
+		self.t_jump_grace = 4
 		self.jump_grace_y = self.y
 	else
-		self.jump_grace = max(0, self.jump_grace - 1)
+		self.t_jump_grace = max(0, self.t_jump_grace - 1)
+	end
+
+	if (self.t_grapple_cooldown > 0 and self.state < 1) then
+		self.t_grapple_cooldown -= 1
 	end
 
 	if (self.state == 0) then
 		-- normal state
+
+		-- facing
+		if (input_x ~= 0) then
+			self.facing = input_x
+		end
 
 		-- running
 		if (abs(self.speed_x) > 2 and input_x == sgn(self.speed_x)) then
@@ -121,12 +118,10 @@ player.update = function(self)
 
 		-- gravity
 		if (not on_ground) then
-			local max = 4.5
-
 			if (abs(self.speed_y) < 0.2) then
-				self.speed_y = min(self.speed_y + 0.4, max)
+				self.speed_y = min(self.speed_y + 0.4, 4.5)
 			else
-				self.speed_y = min(self.speed_y + 0.8, max)
+				self.speed_y = min(self.speed_y + 0.8, 4.5)
 			end
 		end
 
@@ -142,29 +137,23 @@ player.update = function(self)
 
 		-- jumping
 		if (input_jump_pressed > 0) then
-			if (self.jump_grace > 0) then
+			if (self.t_jump_grace > 0) then
 				consume_jump_press()
 				self.speed_y = -4
 				self.speed_x += input_x * 0.2
 				self.var_jump_speed = self.speed_y
 				self.t_var_jump = 4
-				self.jump_grace = 0
+				self.t_jump_grace = 0
 				self:move_y(self.jump_grace_y - self.y)
 			elseif (self:check_solid(2, 0)) then
-				self.speed_y = -4
-				self.speed_x = -2.5
-				self.var_jump_speed = self.speed_y
-				self.t_var_jump = 3
+				self:wall_jump(-1)
 			elseif (self:check_solid(-2, 0)) then
-				self.speed_y = -4
-				self.speed_x = 2.5
-				self.var_jump_speed = self.speed_y
-				self.t_var_jump = 3
+				self:wall_jump(1)
 			end
 		end
 
 		-- throw grapple
-		if (consume_grapple_press()) then
+		if (self.t_grapple_cooldown <= 0 and consume_grapple_press()) then
 			self:start_grapple()
 		end
 
@@ -176,7 +165,10 @@ player.update = function(self)
 		-- grapple movement
 		for i = 1, 12 do
 			if (self:grapple_check(self.grapple_x + self.grapple_dir, self.grapple_y)) then
-				self:grapple_attach()
+				self.state = 2
+				self.grapple_wave = 2
+				self.grapple_boost = false
+				freeze_time = 2
 			else
 				self.grapple_x += self.grapple_dir
 			end
@@ -192,7 +184,12 @@ player.update = function(self)
 		end
 
 	elseif (self.state == 2) then
-		-- grapple attached state	
+		-- grapple attached state
+		
+		if (not self.grapple_boost) then
+			self.grapple_boost = true
+			self.speed_x = self.grapple_dir * 8
+		end
 
 		-- acceleration
 		self.speed_x = approach(self.speed_x, self.grapple_dir * 5, 0.25)
@@ -200,6 +197,10 @@ player.update = function(self)
 
 		if (self:check_solid(self.grapple_dir, 0)) then
 			self.frame = 2
+			if (consume_jump_press()) then
+				self.state = 0
+				self:wall_jump(-self.grapple_dir)
+			end
 		end
 
 		-- grapple wave
@@ -208,6 +209,10 @@ player.update = function(self)
 		-- release
 		if (not input_grapple) then
 			self.state = 0
+			self.facing *= -1
+			if (abs(self.speed_x) > 5) then
+				self.speed_x = sgn(self.speed_x) * 5
+			end
 		end
 
 	end
@@ -216,10 +221,9 @@ player.update = function(self)
 	self:move_x(self.speed_x)
 	self:move_y(self.speed_y)
 
-	-- hacky sprite stuff
+	-- sprite
 	if (self.state != 2 and self.state != 1) then
 		if (input_x != 0) then
-			self.right = input_x > 0
 			self.frame += 0.25
 			self.frame = self.frame % 2
 		else
@@ -251,13 +255,12 @@ end
 player.draw = function(self)
 
 	-- scarf
-	local facing = (self.right and 1 or -1)
-	local last = { x = self.x - facing,y = self.y - 3 }
+	local last = { x = self.x - self.facing,y = self.y - 3 }
 	for i=1,#self.scarf do
 		local s = self.scarf[i]
 
 		-- approach last pos with an offset
-		s.x += (last.x - s.x - facing) / 1.5
+		s.x += (last.x - s.x - self.facing) / 1.5
 		s.y += ((last.y - s.y) + sin(i * 0.25 + time()) * i * 0.25) / 2
 
 		-- don't let it get too far
@@ -279,11 +282,15 @@ player.draw = function(self)
 
 	-- grapple
 	if (self.state != 0) then
-		self:draw_grapple()
+		if (self.grapple_wave == 0) then
+			line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
+		else
+			draw_sine_h(self.x, self.grapple_x, self.y - 3, 7, 2 * self.grapple_wave, 6, 0.08, 6)
+		end
 	end
 
 	-- sprite
-	spr(self.spr, self.x - 4, self.y - 8, 1, 1, not self.right)
+	spr(self.spr, self.x - 4, self.y - 8, 1, 1, self.facing ~= 1)
 end
 
 setmetatable(player, lookup)
