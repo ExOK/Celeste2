@@ -107,6 +107,47 @@ object.check_solid = function(self, ox, oy)
 	return false
 end
 
+object.corner_correct = function(self, dir_x, dir_y, side_dist, look_ahead, only_sign)
+	if (look_ahead == nil) then look_ahead = 1 end
+	if (only_sign == nil) then only_sign = 0 end
+
+	if (dir_x ~= 0) then
+		for i = 1, side_dist do
+			for s = 1, -2, -2 do
+				if (s == -only_sign) then
+					goto continue_x
+				end
+
+				if (not self:check_solid(dir_x, i * s)) then
+					self.x += dir_x
+					self.y += i * s
+					return true
+				end
+
+				::continue_x::
+			end
+		end
+	elseif (dir_y ~= 0) then
+		for i = 1, side_dist do
+			for s = 1, -1, -2 do
+				if (s == -only_sign) then
+					goto continue_y
+				end
+
+				if (not self:check_solid(i * s, dir_y)) then
+					self.x += i * s
+					self.y += dir_y
+					return true
+				end
+
+				::continue_y::
+			end
+		end
+	end
+
+	return false
+end
+
 function create(type, x, y)
 	local obj = {}
 	obj.base = type

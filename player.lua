@@ -62,6 +62,14 @@ player.update = function(self)
 
 end
 
+player.on_collide_y = function(self, moved, target)
+
+	if (target < 0 and self:corner_correct(0, -1, 2)) then
+		return
+	end
+
+end
+
 player.draw = function(self)
 	
 	local facing = 1
