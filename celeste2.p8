@@ -167,7 +167,7 @@ function _draw()
 	clip(0,0,128,128)
 
 	-- draw tileset
-	map((room % 4) * 16, (room / 4) * 16, 0, 0, 32, 16, 1)
+	map((room % 4) * 16, (room / 4) * 16, 0, 0, 96, 16, 1)
 
 	-- draw objects
 	local p = nil

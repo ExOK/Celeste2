@@ -331,7 +331,7 @@ player.update = function(self)
 		shake = 5
 	end
 
-	camera(max(0, min(128, self.x - 64)), 0)
+	camera(max(0, min(8 * 96, self.x - 36)), 0)
 end
 
 player.on_collide_x = function(self, moved, target)
