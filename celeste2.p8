@@ -5,8 +5,14 @@ __lua__
 -- globals
 room = 0
 objects = {}
+snow = {}
 
 function _init()
+
+	for i=0,25 do
+		snow[i] = { x = rnd(132), y = rnd(132) }
+	end
+
 	room_load(0)
 end
 -->8
@@ -111,6 +117,12 @@ function _draw()
 
 	for i=1,#objects do
 		objects[i]:draw()
+	end
+
+	for i=1,#snow do
+		circfill(snow[i].x % 132 - 2, snow[i].y % 132, i % 2, 7)
+		snow[i].x += (4 - i % 4)
+		snow[i].y += sin(time() * 0.25 + i * 0.1)
 	end
 
 	print("cpu: " .. flr(stat(1) * 100) .. "/100", 9, 9, 4)
