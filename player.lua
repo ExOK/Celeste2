@@ -27,6 +27,7 @@ player.start_grapple = function(self)
 	self.grapple_x = self.x
 	self.grapple_y = self.y - 3	
 	self.grapple_wave = 0
+	self.t_var_jump = 0
 
 	if (input_x != 0) then
 		self.grapple_dir = input_x
@@ -171,6 +172,7 @@ player.update = function(self)
 
 		-- grapple wave
 		self.grapple_wave = approach(self.grapple_wave, 1, 0.2)
+		self.frame = 1
 
 		-- release
 		if (not input_grapple) then
@@ -183,6 +185,10 @@ player.update = function(self)
 		-- acceleration
 		self.speed_x = approach(self.speed_x, self.grapple_dir * 5, 0.25)
 		self.speed_y = approach(self.speed_y, 0, 0.4)
+
+		if (self:check_solid(self.grapple_dir, 0)) then
+			self.frame = 2
+		end
 
 		-- grapple wave
 		self.grapple_wave = approach(self.grapple_wave, 0, 0.6)
@@ -199,9 +205,7 @@ player.update = function(self)
 	self:move_y(self.speed_y)
 
 	-- hacky sprite stuff
-	if (self.state == 2) then
-		self.frame = 2
-	else
+	if (self.state != 2 and self.state != 1) then
 		if (input_x != 0) then
 			self.right = input_x > 0
 			self.frame += 0.25
@@ -241,7 +245,7 @@ player.draw = function(self)
 
 		-- approach last pos with an offset
 		s.x += (last.x - s.x - facing) / 1.5
-		s.y += ((last.y - s.y) + sin(i * 0.25 + time()) * i * 0.3) / 2
+		s.y += ((last.y - s.y) + sin(i * 0.25 + time()) * i * 0.25) / 2
 
 		-- don't let it get too far
 		local dx = s.x - last.x
