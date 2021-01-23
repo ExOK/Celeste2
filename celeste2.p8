@@ -15,9 +15,21 @@ input_y = 0
 input_x_turned = false
 input_y_turned = false
 input_jump = false
-input_jump_pressed = false
+input_jump_pressed = 0
 input_grapple = false
-input_grapple_pressed = false
+input_grapple_pressed = 0
+
+function consume_jump_press()
+	local val = input_jump_pressed > 0
+	input_jump_pressed = 0
+	return val
+end
+
+function consume_grapple_press()
+	local val = input_grapple_pressed > 0
+	input_grapple_pressed = 0
+	return val
+end
 
 function _update()
 
@@ -67,12 +79,24 @@ function _update()
 
 	-- input_jump
 	local jump = btn(4)
-	input_jump_pressed = jump and not input_jump
+	if (jump and not input_jump) then		
+		input_jump_pressed = 4
+	elseif (jump) then
+		input_jump_pressed = max(0, input_jump_pressed - 1)
+	else
+		input_jump_pressed = 0
+	end
 	input_jump = jump
 
 	-- input_grapple
 	local grapple = btn(5)
-	input_grapple_pressed = grapple and not input_grapple
+	if (grapple and not input_grapple) then
+		input_grapple_pressed = 4
+	elseif (grapple) then
+		input_grapple_pressed = max(0, input_grapple_pressed - 1)
+	else
+		input_grapple_pressed = 0
+	end
 	input_grapple = grapple
 
 	--objects

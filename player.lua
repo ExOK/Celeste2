@@ -21,8 +21,8 @@ player.update = function(self)
 	if (on_ground) then
 		self.jump_grace = 4
 		self.jump_grace_y = self.y
-	elseif (self.jump_grace > 0) then
-		self.jump_grace -= 1
+	else
+		self.jump_grace = max(0, self.jump_grace - 1)
 	end
 
 	if (self.state == 0) then
@@ -43,7 +43,7 @@ player.update = function(self)
 		end
 
 		-- jumping
-		if (self.jump_grace > 0 and input_jump_pressed) then
+		if (self.jump_grace > 0 and consume_jump_press()) then
 			self.speed_y = -8
 			self.jump_grace = 0
 			self:move_y(self.jump_grace_y - self.y)
