@@ -247,7 +247,7 @@ player.update = function(self)
 		-- dead state
 
 		self.dead_timer += 1
-		if (self.dead_timer >= 30) then
+		if (self.dead_timer >= 20) then
 			room_load(room)
 		end
 		return
