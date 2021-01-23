@@ -6,11 +6,15 @@ __lua__
 room = 0
 objects = {}
 snow = {}
+clouds = {}
 
 function _init()
 
 	for i=0,25 do
 		snow[i] = { x = rnd(132), y = rnd(132) }
+	end
+	for i=0,25 do
+		clouds[i] = { x = rnd(132), y = rnd(132), s = 16 + rnd(32) }
 	end
 
 	room_load(0)
@@ -112,19 +116,44 @@ function _update()
 end
 -->8
 function _draw()
-	cls()
+
+	-- clear screen
+	cls(0)
+
+	-- draw clouds
+	local cc = 13
+	for i=0,#clouds do
+		local c = clouds[i]
+		local x = (c.x - c.s / 2) % (128 + c.s)
+		local y = c.y
+		clip(x - c.s / 2, y - c.s / 2, c.s, c.s / 2)
+		circfill(x, y, c.s / 3, cc)
+		if (i % 2 == 0) then
+			circfill(x - c.s / 3, y, c.s / 5, cc)
+		end
+		if (i % 2 == 0) then
+			circfill(x + c.s / 3, y, c.s / 6, cc)
+		end
+		c.x += (4 - i % 4) * 0.25
+	end
+	clip(0,0,128,128)
+
+	-- draw tileset
 	map((room % 4) * 16, (room / 4) * 16, 0, 0, 16, 16, 1)
 
+	-- draw objects
 	for i=1,#objects do
 		objects[i]:draw()
 	end
 
+	-- draw snow
 	for i=1,#snow do
 		circfill(snow[i].x % 132 - 2, snow[i].y % 132, i % 2, 7)
 		snow[i].x += (4 - i % 4)
 		snow[i].y += sin(time() * 0.25 + i * 0.1)
 	end
 
+	-- debug
 	print("cpu: " .. flr(stat(1) * 100) .. "/100", 9, 9, 4)
 	print("mem: " .. flr(stat(0)) .. "/2048", 9, 15, 4)
 end
