@@ -27,7 +27,7 @@ object.move_x = function(self, x)
 	self.remainder_x -= mx
 
 	local total = mx
-	local mxs = sign(mx)
+	local mxs = sgn(mx)
 	while (mx != 0)
 	do
 		if (self:check_solid(mxs, 0)) then
@@ -46,7 +46,7 @@ object.move_y = function(self, y)
 	self.remainder_y -= my
 	
 	local total = my
-	local mys = sign(my)
+	local mys = sgn(my)
 	while (my != 0)
 	do
 		if (self:check_solid(0, mys)) then
