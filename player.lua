@@ -16,19 +16,7 @@ player.grapple_wave = 0
 player.state = 0
 player.frame = 0
 
-player.init = function(self)
-	self.spr = self.tile
-	self.hit_x = -3
-	self.hit_y = -6
-	self.hit_w = 6
-	self.hit_h = 6
-
-	self.scarf = {}
-	for i = 0,4 do
-		add(self.scarf, { x = self.x, y = self.y })
-	end
-
-end
+-- Grapple Functions
 
 player.start_grapple = function(self)
 	self.state = 1
@@ -78,6 +66,9 @@ player.grapple_attach = function(self)
 	self.state = 2
 	self.grapple_wave = 1.5
 	freeze_time = 2
+
+	self.speed_x = self.grapple_dir_x * 8
+	self.speed_y = self.grapple_dir_y * 8
 end
 
 player.draw_grapple = function(self)
@@ -87,13 +78,28 @@ player.draw_grapple = function(self)
 	else
 		if (self.grapple_dir_x != 0) then
 			--horizontal
-			draw_sine_h(self.x, self.grapple_x, self.y - 3, 7, 3 * self.grapple_wave, 0.666, 0.08, 6)
+			draw_sine_h(self.x, self.grapple_x, self.y - 3, 7, 3 * self.grapple_wave, 0.2, 0.08, 6)
 		else
 			--vertical
-			draw_sine_v(self.y - 3, self.grapple_y, self.x, 7, 3 * self.grapple_wave, 0.666, 0.08, 6)
+			draw_sine_v(self.y - 3, self.grapple_y, self.x, 7, 3 * self.grapple_wave, 0.2, 0.08, 6)
 		end
 	end
 
+end
+
+-- Events
+
+player.init = function(self)
+	self.spr = self.tile
+	self.hit_x = -3
+	self.hit_y = -6
+	self.hit_w = 6
+	self.hit_h = 6
+
+	self.scarf = {}
+	for i = 0,4 do
+		add(self.scarf, { x = self.x, y = self.y })
+	end
 end
 
 player.update = function(self) 
@@ -192,6 +198,14 @@ player.update = function(self)
 
 	elseif (self.state == 2) then
 		-- grapple attached state
+
+		if (self.grapple_dir_x != 0) then			
+			self.speed_x = approach(self.speed_x, self.grapple_dir_x * 5, 0.25)
+			self.speed_y = approach(self.speed_y, 0, 0.4)
+		else
+			self.speed_x = approach(self.speed_x, 0, 0.4)
+			self.speed_y = approach(self.speed_y, self.grapple_dir_y * 5, 0.25)
+		end
 
 		-- grapple wave
 		self.grapple_wave = approach(self.grapple_wave, 0, 0.6)
