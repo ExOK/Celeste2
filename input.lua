@@ -1,56 +1,57 @@
 input_x = 0
 input_y = 0
-input_x_turned = false
-input_y_turned = false
 input_jump = false
 input_jump_pressed = 0
 input_grapple = false
 input_grapple_pressed = 0
 
-function update_input()
-    -- input_x
-	local prev_x = input_x
-	if (btn(0)) then
-		if (btn(1)) then
-			if (input_x_turned) then
-				input_x = prev_x
+axis = {}
+axis.update = function(self)
+    local prev_x = self.value
+	if (btn(self.negative)) then
+		if (btn(self.positive)) then
+            if (self.turned) then
+                self.value = prev_x
+				return prev_x
 			else
-				input_x = -prev_x
-				input_x_turned = true
+                self.turned = true
+                self.value = -prev_x
+                return -prev_x
 			end
 		else
-			input_x = -1
-			input_x_turned = false
+            self.turned = false
+            self.value = -1
+            return -1
 		end
-	elseif (btn(1)) then
-		input_x = 1
-		input_x_turned = false
+	elseif (btn(self.positive)) then
+        self.turned = false
+        self.value = 1
+        return 1
 	else
-		input_x = 0
-		input_x_turned = false
-	end
+        self.turned = false
+        self.value = 0
+        return 0
+    end
+end
 
-	-- input_y
-	local prev_y = input_y
-	if (btn(2)) then
-		if (btn(3)) then
-			if (input_y_turned) then
-				input_y = prev_y
-			else
-				input_y = -prev_y
-				input_y_turned = true
-			end
-		else
-			input_y = -1
-			input_y_turned = false
-		end
-	elseif (btn(3)) then
-		input_y = 1
-		input_y_turned = false
-	else
-		input_y = 0
-		input_y_turned = false
-	end
+axis_x = {}
+setmetatable(axis_x, axis)
+axis_x.value = 0
+axis_x.turned = false
+axis_x.positive = 1
+axis_x.negative = 0
+
+axis_y = {}
+setmetatable(axis_y, axis)
+axis_y.value = 0
+axis_y.turned = false
+axis_y.positive = 2
+axis_y.negative = 3
+
+function update_input()
+    -- axes
+    input_x = axis.update(axis_x)
+    input_y = axis.update(axis_y)
 
 	-- input_jump
 	local jump = btn(4)
