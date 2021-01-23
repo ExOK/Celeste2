@@ -17,6 +17,7 @@ player.update = function(self)
 		self.jump_grace = 4
 	elseif (self.jump_grace > 0) then
 		self.jump_grace -= 1
+	end
 
 	if (self.state == 0) then
 		-- normal state
