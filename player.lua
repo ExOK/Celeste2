@@ -13,6 +13,7 @@ player.grapple_hit = nil
 player.grapple_wave = 0
 player.grapple_boost = false
 player.t_grapple_cooldown = 0
+player.grapple_ice_timer = 0
 
 player.state = 0
 player.frame = 0
@@ -41,21 +42,23 @@ player.start_grapple = function(self)
 
 end
 
+-- 0 = nothing, 1 = solid, 2 = ice
 player.grapple_check = function(self, x, y)
-	if (fget(room_tile_at(flr(x / 8), flr(y / 8)), 1)) then
+	local tile = room_tile_at(flr(x / 8), flr(y / 8))
+	if (fget(tile, 1)) then
 		self.grapple_hit = nil
-		return true
+		return fget(tile, 2) and 2 or 1
 	end
 
 	for i=1,#objects do
 		local o = objects[i]
 		if (o.geom == g_solid and o:contains(x, y)) then
 			self.grapple_hit = on_collide_x
-			return true
+			return 1
 		end
 	end
 
-	return false
+	return 0
 end
 
 -- Jumps
@@ -164,13 +167,17 @@ player.update = function(self)
 
 		-- grapple movement
 		for i = 1, 12 do
-			if (self:grapple_check(self.grapple_x + self.grapple_dir, self.grapple_y)) then
+			local hit = self:grapple_check(self.grapple_x + self.grapple_dir, self.grapple_y)
+			if (hit == 0) then
+				self.grapple_x += self.grapple_dir
+			elseif (hit == 1) then
 				self.state = 2
 				self.grapple_wave = 2
 				self.grapple_boost = false
 				freeze_time = 2
 			else
-				self.grapple_x += self.grapple_dir
+				self.grapple_ice_timer = 0
+				self.state = 3
 			end
 		end
 
@@ -214,7 +221,14 @@ player.update = function(self)
 				self.speed_x = sgn(self.speed_x) * 5
 			end
 		end
-
+	
+	-- grapple hit ice 
+	elseif (self.state == 3) then
+		self.grapple_ice_timer += 1
+		self.grapple_wave = 3
+		if (self.grapple_ice_timer > 5) then
+			self.state = 0
+		end
 	end
 
 	-- apply
