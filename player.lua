@@ -141,13 +141,26 @@ player.update = function(self)
 		end		
 
 		-- jumping
-		if (self.jump_grace > 0 and consume_jump_press()) then
-			self.speed_y = -4
-			self.speed_x += input_x * 0.2
-			self.var_jump_speed = self.speed_y
-			self.t_var_jump = 4
-			self.jump_grace = 0
-			self:move_y(self.jump_grace_y - self.y)
+		if (input_jump_pressed > 0) then
+			if (self.jump_grace > 0) then
+				consume_jump_press()
+				self.speed_y = -4
+				self.speed_x += input_x * 0.2
+				self.var_jump_speed = self.speed_y
+				self.t_var_jump = 4
+				self.jump_grace = 0
+				self:move_y(self.jump_grace_y - self.y)
+			elseif (self:check_solid(2, 0)) then
+				self.speed_y = -4
+				self.speed_x = -2.5
+				self.var_jump_speed = self.speed_y
+				self.t_var_jump = 3
+			elseif (self:check_solid(-2, 0)) then
+				self.speed_y = -4
+				self.speed_x = 2.5
+				self.var_jump_speed = self.speed_y
+				self.t_var_jump = 3
+			end
 		end
 
 		-- throw grapple
