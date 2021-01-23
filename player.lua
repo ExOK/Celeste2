@@ -13,7 +13,7 @@ player.grapple_hit = nil
 player.grapple_wave = 0
 player.grapple_boost = false
 player.t_grapple_cooldown = 0
-player.grapple_ice_timer = 0
+player.grapple_retract = false
 player.dead_timer = 0
 
 player.state = 0
@@ -31,6 +31,7 @@ player.start_grapple = function(self)
 	self.grapple_x = self.x
 	self.grapple_y = self.y - 3	
 	self.grapple_wave = 0
+	self.grapple_failed = false
 	self.t_grapple_cooldown = 6
 	self.t_var_jump = 0
 
@@ -100,6 +101,24 @@ player.update = function(self)
 		self.t_grapple_cooldown -= 1
 	end
 
+	-- grapple retract
+	if (self.grapple_retract) then
+		self.grapple_x = approach(self.grapple_x, self.x, 12)
+		self.grapple_y = approach(self.grapple_y, self.y - 3, 6)
+
+		if (self.grapple_x == self.x and self.grapple_y == self.y - 3) then
+			self.grapple_retract = false
+		end
+	end
+
+	--[[
+		player states:
+			0 	- normal
+			1 	- throw grapple
+			2 	- grapple attached to solid
+			99 	- dead
+	]]
+
 	if (self.state == 0) then
 		-- normal state
 
@@ -160,8 +179,6 @@ player.update = function(self)
 			self:start_grapple()
 		end
 
-		self.grapple_x = self.x
-
 	elseif (self.state == 1) then
 		-- throw grapple state
 
@@ -175,9 +192,12 @@ player.update = function(self)
 				self.grapple_wave = 2
 				self.grapple_boost = false
 				freeze_time = 2
-			else
-				self.grapple_ice_timer = 0
-				self.state = 3
+			end
+
+			if (hit == 2 or (hit == 0 and abs(self.grapple_x - self.x) > 64)) then
+				self.grapple_retract = true
+				freeze_time = 2
+				self.state = 0
 			end
 		end
 
@@ -188,6 +208,7 @@ player.update = function(self)
 		-- release
 		if (not input_grapple) then
 			self.state = 0
+			self.grapple_retract = true
 		end
 
 	elseif (self.state == 2) then
@@ -216,22 +237,15 @@ player.update = function(self)
 		-- release
 		if (not input_grapple) then
 			self.state = 0
+			self.grapple_retract = true
 			self.facing *= -1
 			if (abs(self.speed_x) > 5) then
 				self.speed_x = sgn(self.speed_x) * 5
 			end
 		end
-	
-	-- grapple hit ice 
-	elseif (self.state == 3) then
-		self.grapple_ice_timer += 1
-		self.grapple_wave = 3
-		if (self.grapple_ice_timer > 5) then
-			self.state = 0
-		end
-
-	-- dead state
 	elseif (self.state == 99) then
+		-- dead state
+
 		self.dead_timer += 1
 		if (self.dead_timer > 20) then
 			room_load(room)
@@ -328,6 +342,11 @@ player.draw = function(self)
 		else
 			draw_sine_h(self.x, self.grapple_x, self.y - 3, 7, 2 * self.grapple_wave, 6, 0.08, 6)
 		end
+	end
+
+	-- failed grapple
+	if (self.grapple_retract) then
+		line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
 	end
 
 	-- sprite
