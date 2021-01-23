@@ -221,9 +221,10 @@ function _draw()
 end
 
 function draw_time(x,y)
-	local s = flr(frames / 30)
-	local m = flr(s / 60) % 60
-	local h = flr(flr(s / 60) / 60)
+	local ts = flr(frames / 30)
+	local s = ts % 60
+	local m = flr(ts / 60) % 60
+	local h = flr(flr(ts / 60) / 60)
 	
 	rectfill(x,y,x+32,y+6,0)
 	print((h<10 and "0"..h or h)..":"..(m<10 and "0"..m or m)..":"..(s<10 and "0"..s or s),x+1,y+1,7)
