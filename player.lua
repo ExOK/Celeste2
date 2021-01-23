@@ -97,6 +97,7 @@ player.init = function(self)
 end
 
 player.update = function(self)
+	local lookat = self.x;
 	local on_ground = self:check_solid(0, 1)
 	if (on_ground) then
 		self.jump_grace = 4
@@ -210,6 +211,10 @@ player.update = function(self)
 
 	end
 
+	if (self.state == 1 or self.state == 2) then
+		lookat = (self.x + self.grapple_x) / 2
+	end
+
 	-- apply
 	self:move_x(self.speed_x)
 	self:move_y(self.speed_y)
@@ -226,7 +231,7 @@ player.update = function(self)
 	end
 	self.spr = self.tile + self.frame
 
-	camera(self.x - 64, self.y - 64)
+	camera(max(0, min(128, lookat - 64)), 0)
 end
 
 player.on_collide_x = function(self, moved, target)

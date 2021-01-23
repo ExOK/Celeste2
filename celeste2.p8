@@ -167,6 +167,11 @@ function _draw()
 		snow[i].y += sin(time() * 0.25 + i * 0.1)
 	end
 
+	rectfill(-1000, -1000, 0, 1000, 1)
+	rectfill(-1000, -1000, 1000, 0, 1)
+	rectfill(128, -1000, 1000, 1000, 1)
+	rectfill(-1000, 128, 1000, 1000, 1)
+
 	-- debug
 	-- camera(0, 0)
 	-- print("cpu: " .. flr(stat(1) * 100) .. "/100", 9, 9, 4)
