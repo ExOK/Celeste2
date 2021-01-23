@@ -19,6 +19,7 @@ object.hit_w = 8
 object.hit_h = 8
 object.geom = g_none
 object.actor = true
+object.right = true
 
 object.move_x = function(self, x)	
 	self.remainder_x += x
@@ -70,7 +71,7 @@ end
 
 object.draw = function(self)
 	if (self.spr != nil) then
-		spr(self.spr, self.x, self.y)
+		spr(self.spr, self.x, self.y, 1, 1, not self.right)
 	end
 end
 

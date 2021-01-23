@@ -4,19 +4,19 @@ player.base = object
 player.jump_grace = 0
 
 player.state = 0
+player.frame = 0
 
 player.init = function(self)
 	self.spr = self.tile
 end
 
 player.update = function(self) 
-	
+
 	local on_ground = self:check_solid(0, 1)
 	if (on_ground) then
 		self.jump_grace = 4
 	elseif (self.jump_grace > 0) then
 		self.jump_grace -= 1
-	end
 
 	if (self.state == 0) then
 		-- normal state
@@ -46,6 +46,21 @@ player.update = function(self)
 	self:move_x(self.speed_x)
 	self:move_y(self.speed_y)
 
+	-- hacky sprite stuff
+	if (input_x != 0) then
+		self.right = input_x > 0
+		self.frame += 0.25
+	else
+		self.frame = 0
+	end
+	self.spr = self.tile + flr(self.frame) % 2
+
+end
+
+player.draw = function(self)
+	
+	-- draw sprite
+	object.draw(self)
 end
 
 setmetatable(player, lookup)
