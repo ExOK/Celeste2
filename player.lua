@@ -81,6 +81,14 @@ player.draw_grapple = function(self)
 
 end
 
+player.wall_jump = function(self, dir)
+	consume_jump_press()
+	self.speed_y = -3
+	self.speed_x = 3 * dir
+	self.var_jump_speed = self.speed_y
+	self.t_var_jump = 4
+end
+
 -- Events
 
 player.init = function(self)
@@ -152,15 +160,9 @@ player.update = function(self)
 				self.jump_grace = 0
 				self:move_y(self.jump_grace_y - self.y)
 			elseif (self:check_solid(2, 0)) then
-				self.speed_y = -4
-				self.speed_x = -2.5
-				self.var_jump_speed = self.speed_y
-				self.t_var_jump = 3
+				self:wall_jump(-1)
 			elseif (self:check_solid(-2, 0)) then
-				self.speed_y = -4
-				self.speed_x = 2.5
-				self.var_jump_speed = self.speed_y
-				self.t_var_jump = 3
+				self:wall_jump(1)
 			end
 		end
 
@@ -199,6 +201,10 @@ player.update = function(self)
 
 		if (self:check_solid(self.grapple_dir, 0)) then
 			self.frame = 2
+			if (consume_jump_press()) then
+				self.state = 0
+				self:wall_jump(-self.grapple_dir)
+			end
 		end
 
 		-- grapple wave
