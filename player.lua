@@ -1,4 +1,4 @@
-player = {}
+player = new_type()
 player.tile = 2
 player.base = object
 
@@ -306,6 +306,3 @@ player.draw = function(self)
 	-- sprite
 	spr(self.spr, self.x - 4, self.y - 8, 1, 1, self.facing ~= 1)
 end
-
-setmetatable(player, lookup)
-add(types, player)
