@@ -164,16 +164,24 @@ function _draw()
 
 	-- draw snow
 	for i=1,#snow do
-		circfill(camera_x + (snow[i].x - camera_x * 0.5) % 132 - 2, camera_y + (snow[i].y - camera_y * 0.5) % 132, i % 2, 7)
-		snow[i].x += (4 - i % 4)
-		snow[i].y += sin(time() * 0.25 + i * 0.1)
+		local s = snow[i]
+		circfill(camera_x + (s.x - camera_x * 0.5) % 132 - 2, camera_y + (s.y - camera_y * 0.5) % 132, i % 2, 7)
+		s.x += (4 - i % 4)
+		s.y += sin(time() * 0.25 + i * 0.1)
 	end
 
+	-- death fx
+	if (p.dead_timer > 5) then
+		local e = (p.dead_timer - 5) / 15
+		for i=0,127 do
+			s = (127 + 64) * e - 32 + sin(i * 0.2) * 16 + (127 - i) * 0.25
+			rectfill(camera_x,camera_y+i,camera_x+s,camera_y+i,0)
+		end
+	end
 
 	-- debug
 	if (false) do
-		for i=1,#objects do
-			local o = objects[i]
+		for o in all(objects) do
 			rect(o.x + o.hit_x, o.y + o .hit_y, o.x + o.hit_x + o.hit_w - 1, o.y + o.hit_y + o.hit_h - 1, 8)
 		end
 
@@ -202,6 +210,7 @@ end
 function room_load(index)
 	room = index
 	objects = {}
+	camera(0, 0)
 
 	for i = 0,15 do
 		for j = 0,15 do
