@@ -112,19 +112,26 @@ function _update()
 end
 -->8
 function _draw()
-	cls()
+
+	-- clear screen
+	cls(0)
+
+	-- draw tileset
 	map((room % 4) * 16, (room / 4) * 16, 0, 0, 16, 16, 1)
 
+	-- draw objects
 	for i=1,#objects do
 		objects[i]:draw()
 	end
 
+	-- draw snow
 	for i=1,#snow do
 		circfill(snow[i].x % 132 - 2, snow[i].y % 132, i % 2, 7)
 		snow[i].x += (4 - i % 4)
 		snow[i].y += sin(time() * 0.25 + i * 0.1)
 	end
 
+	-- debug
 	print("cpu: " .. flr(stat(1) * 100) .. "/100", 9, 9, 4)
 	print("mem: " .. flr(stat(0)) .. "/2048", 9, 15, 4)
 end
