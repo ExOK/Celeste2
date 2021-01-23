@@ -2,6 +2,7 @@ player = {}
 player.tile = 2
 player.base = object
 player.jump_grace = 0
+player.jump_grace_y = 0
 
 player.state = 0
 player.frame = 0
@@ -19,6 +20,7 @@ player.update = function(self)
 	local on_ground = self:check_solid(0, 1)
 	if (on_ground) then
 		self.jump_grace = 4
+		self.jump_grace_y = self.y
 	elseif (self.jump_grace > 0) then
 		self.jump_grace -= 1
 	end
@@ -44,6 +46,7 @@ player.update = function(self)
 		if (self.jump_grace > 0 and input_jump_pressed) then
 			self.speed_y = -8
 			self.jump_grace = 0
+			self:move_y(self.jump_grace_y - self.y)
 		end
 	end
 
@@ -62,12 +65,20 @@ player.update = function(self)
 
 end
 
-player.on_collide_y = function(self, moved, target)
-
-	if (target < 0 and self:corner_correct(0, -1, 2)) then
+player.on_collide_x = function(self, moved, target)
+	if (sign(target) == input_x and self:corner_correct(input_x, 0, 2, 1, -1)) then
 		return
 	end
 
+	object.on_collide_x(self, moved, target)
+end
+
+player.on_collide_y = function(self, moved, target)
+	if (target < 0 and self:corner_correct(0, -1, 2, 1, input_x)) then
+		return
+	end
+
+	object.on_collide_y(self, moved, target)
 end
 
 player.draw = function(self)
