@@ -8,8 +8,7 @@ player.t_var_jump = 0
 player.var_jump_speed = 0
 player.grapple_x = 0
 player.grapple_y = 0
-player.grapple_dir_x = 0
-player.grapple_dir_y = 0
+player.grapple_dir = 0
 player.grapple_hit = nil
 player.grapple_wave = 0
 
@@ -29,19 +28,14 @@ player.start_grapple = function(self)
 	self.grapple_y = self.y - 3	
 	self.grapple_wave = 0
 
-	if (input_y != 0) then
-		self.grapple_dir_x = 0
-		self.grapple_dir_y = input_y
-	elseif (input_x != 0) then
-		self.grapple_dir_x = input_x
-		self.grapple_dir_y = 0
+	if (input_x != 0) then
+		self.grapple_dir = input_x
 	else
 		if (self.right) then
-			self.grapple_dir_x = 1
+			self.grapple_dir = 1
 		else
-			self.grapple_dir_x = -1
+			self.grapple_dir = -1
 		end
-		self.grapple_dir_y = 0
 	end
 end
 
@@ -67,8 +61,7 @@ player.grapple_attach = function(self)
 	self.grapple_wave = 1.5
 	freeze_time = 2
 
-	self.speed_x = self.grapple_dir_x * 8
-	self.speed_y = self.grapple_dir_y * 8
+	self.speed_x = self.grapple_dir * 8
 end
 
 player.draw_grapple = function(self)
@@ -76,7 +69,7 @@ player.draw_grapple = function(self)
 	if (self.grapple_wave == 0) then
 		line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
 	else
-		if (self.grapple_dir_x != 0) then
+		if (self.grapple_dir != 0) then
 			--horizontal
 			draw_sine_h(self.x, self.grapple_x, self.y - 3, 7, 3 * self.grapple_wave, 0.2, 0.08, 6)
 		else
@@ -167,24 +160,12 @@ player.update = function(self)
 	elseif (self.state == 1) then
 		-- throw grapple state
 
-		-- grapple moves
-		if (self.grapple_dir_x != 0) then
-			local sign = sgn(self.grapple_dir_x)
-			for i = 1, 12 do
-				if (self:grapple_check(self.grapple_x + sign, self.grapple_y)) then
-					self:grapple_attach()
-				else
-					self.grapple_x += sign
-				end
-			end
-		else
-			local sign = sgn(self.grapple_dir_y)
-			for i = 1, 12 do
-				if (self:grapple_check(self.grapple_x, self.grapple_y + sign)) then
-					self:grapple_attach()
-				else
-					self.grapple_y += sign
-				end
+		-- grapple movement
+		for i = 1, 12 do
+			if (self:grapple_check(self.grapple_x + self.grapple_dir, self.grapple_y)) then
+				self:grapple_attach()
+			else
+				self.grapple_x += self.grapple_dir
 			end
 		end
 
@@ -197,15 +178,11 @@ player.update = function(self)
 		end
 
 	elseif (self.state == 2) then
-		-- grapple attached state
+		-- grapple attached state	
 
-		if (self.grapple_dir_x != 0) then			
-			self.speed_x = approach(self.speed_x, self.grapple_dir_x * 5, 0.25)
-			self.speed_y = approach(self.speed_y, 0, 0.4)
-		else
-			self.speed_x = approach(self.speed_x, 0, 0.4)
-			self.speed_y = approach(self.speed_y, self.grapple_dir_y * 5, 0.25)
-		end
+		-- acceleration
+		self.speed_x = approach(self.speed_x, self.grapple_dir * 5, 0.25)
+		self.speed_y = approach(self.speed_y, 0, 0.4)
 
 		-- grapple wave
 		self.grapple_wave = approach(self.grapple_wave, 0, 0.6)
