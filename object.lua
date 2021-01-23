@@ -72,7 +72,7 @@ end
 object.update = function() end
 object.draw = function(self)
 	if (self.spr != nil) then
-		spr(self.spr, self.x, self.y, 1, 1, not self.right)
+		spr(self.spr, self.x, self.y, 1, 1, self.flip_x, self.flip_y)
 	end
 end
 
@@ -106,8 +106,7 @@ object.check_solid = function(self, ox, oy)
 		end
 	end
 
-	for i=1,#objects do
-		local o = objects[i]
+	for o in all(objects) do
 		if (o.geom == g_solid and o != self and self:overlaps(o, ox, oy)) then
 			return true
 		end
@@ -165,5 +164,12 @@ function create(type, x, y)
 	setmetatable(obj, lookup)
 	add(objects, obj)
 	if (obj.init) then obj.init(obj) end
+	return obj
+end
+
+function new_type()
+	local obj = {}
+	setmetatable(obj, lookup)
+	add(types, obj)
 	return obj
 end
