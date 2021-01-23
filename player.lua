@@ -62,7 +62,7 @@ player.grapple_check = function(self, x, y)
 	return 0
 end
 
--- Jumps
+-- Helpers
 
 player.wall_jump = function(self, dir)
 	consume_jump_press()
@@ -71,6 +71,37 @@ player.wall_jump = function(self, dir)
 	self.var_jump_speed = self.speed_y
 	self.t_var_jump = 4
 	self.facing = dir
+end
+
+--[[
+	hazard types:
+		0 - not a hazard
+		1 - general hazard
+		2 - up-spike
+		3 - down-spike
+		4 - right-spike
+		5 - left-spike
+]]
+
+player.hazard_table = {
+	[1] = function(self) return true end,
+	[2] = function(self) return self.speed_y >= 0 end,
+	[3] = function(self) return self.speed_y <= 0 end,
+	[4] = function(self) return self.speed_x <= 0 end,
+	[5] = function(self) return self.speed_x >= 0 end
+}
+
+player.hazard_check = function(self, ox, oy)
+	if (ox == nil) then ox = 0 end
+	if (oy == nil) then oy = 0 end
+
+	for o in all(objects) do
+		if (o.hazard != 0 and self:overlaps(o, ox, oy) and self.hazard_table[o.hazard](self)) then
+			return true
+		end
+	end
+
+	return false
 end
 
 -- Events
@@ -268,13 +299,10 @@ player.update = function(self)
 	end
 	self.spr = self.tile + self.frame
 
-	-- hazard check
-	for o in all(objects) do
-		if (o.hazard and self:overlaps(o)) then
-			self.state = 99
-			shake = 5
-			break
-		end
+	-- death
+	if (self:hazard_check()) then
+		self.state = 99
+		shake = 5
 	end
 
 	camera(max(0, min(128, self.x - 64)), 0)

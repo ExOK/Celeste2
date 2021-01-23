@@ -19,13 +19,14 @@ end
 spike_v = new_type()
 spike_v.tile = 36
 spike_v.base = object
-spike_v.hazard = true
 spike_v.init = function(self)
 	self.spr = self.tile
 	if (self:check_solid(0, -1)) then
 		self.flip_y = true
+		self.hazard = 3
 	else
 		self.hit_y = 5
+		self.hazard = 2
 	end
 	self.hit_h = 3
 end
@@ -38,8 +39,10 @@ spike_h.init = function(self)
 	self.spr = self.tile
 	if (self:check_solid(-1, 0)) then
 		self.flip_x = true
+		self.hazard = 4
 	else
 		self.hit_x = 5
+		self.hazard = 5
 	end
 	self.hit_w = 3
 end

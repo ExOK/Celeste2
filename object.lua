@@ -19,6 +19,7 @@ object.hit_w = 8
 object.hit_h = 8
 object.geom = g_none
 object.actor = true
+object.hazard = 0
 object.facing = 1
 
 object.move_x = function(self, x)	
