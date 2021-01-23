@@ -7,6 +7,7 @@ room = 0
 objects = {}
 snow = {}
 clouds = {}
+infade = 0
 
 function _init()
 
@@ -124,6 +125,8 @@ function _update()
 			end
 		end
 	end
+
+	infade += 1
 end
 -->8
 function _draw()
@@ -170,12 +173,21 @@ function _draw()
 		s.y += sin(time() * 0.25 + i * 0.1)
 	end
 
-	-- death fx
+	-- screen wipes
+	-- very similar functions ... can they be compressed into one?
 	if (p.dead_timer > 5) then
-		local e = (p.dead_timer - 5) / 15
+		local e = (p.dead_timer - 5) / 12
 		for i=0,127 do
 			s = (127 + 64) * e - 32 + sin(i * 0.2) * 16 + (127 - i) * 0.25
 			rectfill(camera_x,camera_y+i,camera_x+s,camera_y+i,0)
+		end
+	end
+
+	if (infade < 15) then
+		local e = infade / 12
+		for i=0,127 do
+			s = (127 + 64) * e - 32 + sin(i * 0.2) * 16 + (127 - i) * 0.25
+			rectfill(camera_x+s,camera_y+i,camera_x+128,camera_y+i,0)
 		end
 	end
 
@@ -210,6 +222,7 @@ end
 function room_load(index)
 	room = index
 	objects = {}
+	infade = 0
 	camera(0, 0)
 
 	for i = 0,15 do
