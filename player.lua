@@ -96,7 +96,7 @@ player.init = function(self)
 	end
 end
 
-player.update = function(self) 
+player.update = function(self)
 	local on_ground = self:check_solid(0, 1)
 	if (on_ground) then
 		self.jump_grace = 4
@@ -216,6 +216,7 @@ player.update = function(self)
 	end
 	self.spr = self.tile + self.frame
 
+	camera(self.x - 64, self.y - 64)
 end
 
 player.on_collide_x = function(self, moved, target)
