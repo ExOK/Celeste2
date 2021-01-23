@@ -175,6 +175,7 @@ function _draw()
 		camera(0, 0)
 		print("cpu: " .. flr(stat(1) * 100) .. "/100", 9, 9, 8)
 		print("mem: " .. flr(stat(0)) .. "/2048", 9, 15, 8)
+		camera(camera_x, camera_y)
 	end
 end
 
