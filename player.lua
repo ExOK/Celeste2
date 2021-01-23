@@ -104,6 +104,10 @@ player.hazard_check = function(self, ox, oy)
 	return false
 end
 
+player.correction_func = function(self, ox, oy)
+	return not self:hazard_check(ox, oy)
+end
+
 -- Events
 
 player.init = function(self)
@@ -309,7 +313,7 @@ player.update = function(self)
 end
 
 player.on_collide_x = function(self, moved, target)
-	if (sgn(target) == input_x and self:corner_correct(input_x, 0, 2, 1, -1)) then
+	if (sgn(target) == input_x and self:corner_correct(input_x, 0, 2, 1, -1, self.correction_func)) then
 		return
 	end
 
@@ -317,7 +321,7 @@ player.on_collide_x = function(self, moved, target)
 end
 
 player.on_collide_y = function(self, moved, target)
-	if (target < 0 and self:corner_correct(0, -1, 2, 1, input_x)) then
+	if (target < 0 and self:corner_correct(0, -1, 2, 1, input_x, self.correction_func)) then
 		return
 	end
 

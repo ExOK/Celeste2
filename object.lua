@@ -116,7 +116,7 @@ object.check_solid = function(self, ox, oy)
 	return false
 end
 
-object.corner_correct = function(self, dir_x, dir_y, side_dist, look_ahead, only_sign)
+object.corner_correct = function(self, dir_x, dir_y, side_dist, look_ahead, only_sign, func)
 	if (look_ahead == nil) then look_ahead = 1 end
 	if (only_sign == nil) then only_sign = 0 end
 
@@ -127,7 +127,7 @@ object.corner_correct = function(self, dir_x, dir_y, side_dist, look_ahead, only
 					goto continue_x
 				end
 
-				if (not self:check_solid(dir_x, i * s)) then
+				if (not self:check_solid(dir_x, i * s) and (func == nil or func(self, dir_x, i * s))) then
 					self.x += dir_x
 					self.y += i * s
 					return true
@@ -143,7 +143,7 @@ object.corner_correct = function(self, dir_x, dir_y, side_dist, look_ahead, only
 					goto continue_y
 				end
 
-				if (not self:check_solid(i * s, dir_y)) then
+				if (not self:check_solid(i * s, dir_y) and (func == nil or func(self, i * s, dir_y))) then
 					self.x += i * s
 					self.y += dir_y
 					return true
