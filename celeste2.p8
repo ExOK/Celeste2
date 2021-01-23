@@ -22,7 +22,6 @@ end
 -->8
 
 freeze_time = 0
-game_time = 0
 
 input_x = 0
 input_y = 0
@@ -117,8 +116,6 @@ function _update()
 	if (freeze_time > 0) then
 		freeze_time -= 1
 	else
-		game_time += 1
-
 		--objects
 		for i = 1, #objects do
 			objects[i]:update()
@@ -239,7 +236,7 @@ function draw_sine_h(x0, x1, y, col, amplitude, time_freq, x_freq, fade_x_dist)
 		end
 
 		ax = x0 + i * x_sign
-		ay = y + sin(game_time * time_freq + i * x_freq) * amplitude * fade
+		ay = y + sin(time() * time_freq + i * x_freq) * amplitude * fade
 		pset(ax, ay, col)
 
 		this_y = ay
