@@ -11,6 +11,7 @@ infade = 0
 freeze_time = 0
 frames = 0
 shake = 0
+have_grapple = false
 input_x = 0
 input_y = 0
 input_x_turned = false

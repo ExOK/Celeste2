@@ -211,7 +211,7 @@ player.update = function(self)
 		end
 
 		-- throw grapple
-		if (self.t_grapple_cooldown <= 0 and consume_grapple_press()) then
+		if (have_grapple and self.t_grapple_cooldown <= 0 and consume_grapple_press()) then
 			self:start_grapple()
 		end
 
@@ -316,6 +316,14 @@ player.update = function(self)
 		end
 	end
 	self.spr = self.tile + self.frame
+
+	-- object interactions
+	for o in all(objects) do
+		if (o.tile == 20 and o.visible and self:overlaps(o)) then
+			o.visible = false
+			have_grapple = true
+		end
+	end
 
 	-- death
 	if (self:hazard_check()) then
