@@ -85,6 +85,14 @@ object.overlaps = function(self, b, ox, oy)
 		oy + self.y + self.hit_y < b.y + b.hit_y + b.hit_h
 end
 
+object.contains = function(self, px, py)
+	return
+		px >= self.x + self.hit_x and
+		px < self.x + self.hit_x + self.hit_w and
+		py >= self.y + self.hit_y and
+		py < self.y + self.hit_y + self.hit_h
+end
+
 object.check_solid = function(self, ox, oy)
 	if (ox == nil) then ox = 0 end
 	if (oy == nil) then oy = 0 end
