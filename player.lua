@@ -250,17 +250,17 @@ player.draw = function(self)
 		-- don't let it get too far
 		local dx = s.x - last.x
 		local dy = s.y - last.y
-		local dist = sqrt(dx * dx, dy * dy)
-		if (dist > 2) then
+		local dist = sqrt(dx * dx + dy * dy)
+		if (dist > 1.5) then
 			local nx = (s.x - last.x) / dist
 			local ny = (s.y - last.y) / dist
-			s.x = s.x + nx * 2
-			s.y = s.y + ny * 2
+			s.x = last.x + nx * 1.5
+			s.y = last.y + ny * 1.5
 		end
 
 		-- fill
-		rectfill(s.x, s.y, s.x, s.y + 1, 10)
-		rectfill((s.x + last.x) / 2, (s.y + last.y) / 2, (s.x + last.x) / 2, (s.y + last.y) / 2 + 1, 10)
+		rectfill(s.x, s.y, s.x, s.y, 10)
+		rectfill((s.x + last.x) / 2, (s.y + last.y) / 2, (s.x + last.x) / 2, (s.y + last.y) / 2, 10)
 		last = s
 	end
 
