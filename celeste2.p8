@@ -179,16 +179,6 @@ function room_load(index)
 	end
 end
 
-function sign(x)
-	if (x < 0) then
-		return -1
-	elseif (x > 0) then
-		return 1
-	else
-		return 0
-	end
-end
-
 function approach(x, target, max_delta)
 	if (x < target) then
 		return min(x + max_delta, target)

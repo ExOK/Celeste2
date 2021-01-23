@@ -79,7 +79,7 @@ player.update = function(self)
 		-- normal state
 
 		-- running
-		if (abs(self.speed_x) > 2 and input_x == sign(self.speed_x)) then
+		if (abs(self.speed_x) > 2 and input_x == sgn(self.speed_x)) then
 			self.speed_x = approach(self.speed_x, input_x * 2, 0.1)
 		elseif (on_ground) then
 			self.speed_x = approach(self.speed_x, input_x * 2, 0.6)
@@ -167,7 +167,7 @@ player.update = function(self)
 end
 
 player.on_collide_x = function(self, moved, target)
-	if (sign(target) == input_x and self:corner_correct(input_x, 0, 2, 1, -1)) then
+	if (sgn(target) == input_x and self:corner_correct(input_x, 0, 2, 1, -1)) then
 		return
 	end
 
