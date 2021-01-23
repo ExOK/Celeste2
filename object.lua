@@ -69,6 +69,7 @@ object.on_collide_y = function(self, moved, target)
 	self.speed_y = 0
 end
 
+object.update = function() end
 object.draw = function(self)
 	if (self.spr != nil) then
 		spr(self.spr, self.x, self.y, 1, 1, not self.right)
