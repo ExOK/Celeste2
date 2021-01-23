@@ -3,6 +3,8 @@ player.tile = 2
 player.base = object
 player.jump_grace = 0
 player.jump_grace_y = 0
+player.t_var_jump = 0
+player.var_jump_speed = 0
 
 player.state = 0
 player.frame = 0
@@ -28,11 +30,6 @@ player.update = function(self)
 	if (self.state == 0) then
 		-- normal state
 
-		-- gravity
-		if (not on_ground) then
-			self.speed_y = min(self.speed_y + 0.8, 6)
-		end
-
 		-- running
 		if (on_ground) then
 			self.speed_x = approach(self.speed_x, input_x * 2, 0.6)
@@ -42,11 +39,21 @@ player.update = function(self)
 			self.speed_x = approach(self.speed_x, 0, 0.1)
 		end
 
+		-- gravity
+		if (input_jump and self.t_var_jump > 0) then
+			self.speed_y = self.var_jump_speed
+			self.t_var_jump -= 1
+		elseif (not on_ground) then
+			self.speed_y = min(self.speed_y + 0.8, 6)
+		end
+
 		-- jumping
 		if (self.jump_grace > 0 and consume_jump_press()) then
-			self.speed_y = -8
+			self.speed_y = -4
 			self.jump_grace = 0
 			self:move_y(self.jump_grace_y - self.y)
+			self.t_var_jump = 4
+			self.var_jump_speed = self.speed_y
 		end
 	end
 
