@@ -222,13 +222,18 @@ player.update = function(self)
 	self:move_y(self.speed_y)
 
 	-- hacky sprite stuff
-	if (input_x != 0) then
-		self.right = input_x > 0
-		self.frame += 0.25
+	if (self.state == 2) then
+		self.frame = 2
 	else
-		self.frame = 0
+		if (input_x != 0) then
+			self.right = input_x > 0
+			self.frame += 0.25
+			self.frame = self.frame % 2
+		else
+			self.frame = 0
+		end
 	end
-	self.spr = self.tile + flr(self.frame) % 2
+	self.spr = self.tile + self.frame
 
 end
 
