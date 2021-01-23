@@ -10,8 +10,6 @@ clouds = {}
 infade = 0
 freeze_time = 0
 frames = 0
-seconds = 0
-minutes = 0
 shake = 0
 input_x = 0
 input_y = 0
@@ -50,13 +48,7 @@ end
 function _update()
 
 	-- timers
-	frames = ((frames + 1)%30)
-	if frames == 0 then
-		seconds = ((seconds + 1)%60)
-		if seconds == 0 then
-			minutes += 1
-		end
-	end
+	frames += 1
 
 	-- screenshake
 	shake -= 1
@@ -224,14 +216,14 @@ function _draw()
 		print("cpu: " .. flr(stat(1) * 100) .. "/100", 9, 9, 8)
 		print("mem: " .. flr(stat(0)) .. "/2048", 9, 15, 8)
 	end
-	
+
 	camera(camera_x, camera_y)
 end
 
 function draw_time(x,y)
-	local s=seconds
-	local m=minutes%60
-	local h=flr(minutes/60)
+	local s = flr(frames / 30)
+	local m = flr(s / 60) % 60
+	local h = flr(flr(s / 60) / 60)
 	
 	rectfill(x,y,x+32,y+6,0)
 	print((h<10 and "0"..h or h)..":"..(m<10 and "0"..m or m)..":"..(s<10 and "0"..s or s),x+1,y+1,7)
