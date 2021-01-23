@@ -36,17 +36,22 @@ player.update = function(self)
 		elseif (on_ground) then
 			self.speed_x = approach(self.speed_x, input_x * 2, 0.6)
 		elseif (input_x != 0) then
-			self.speed_x = approach(self.speed_x, input_x * 2, 0.3)
+			self.speed_x = approach(self.speed_x, input_x * 2, 0.4)
 		else
 			self.speed_x = approach(self.speed_x, 0, 0.1)
 		end
 
 		-- gravity
 		if (not on_ground) then
+			local max = 5
+			if (input_jump) then
+				max = 4
+			end
+
 			if (abs(self.speed_y) < 0.2) then
-				self.speed_y = min(self.speed_y + 0.4, 5)
+				self.speed_y = min(self.speed_y + 0.4, max)
 			else
-				self.speed_y = min(self.speed_y + 0.8, 5)
+				self.speed_y = min(self.speed_y + 0.8, max)
 			end
 		end
 
@@ -61,13 +66,16 @@ player.update = function(self)
 		end		
 
 		-- jumping
-		if (self.jump_grace > 0 and consume_jump_press()) then
-			self.speed_y = -4
-			self.speed_x += input_x * 0.2
-			self.jump_grace = 0
-			self:move_y(self.jump_grace_y - self.y)
-			self.t_var_jump = 4
-			self.var_jump_speed = self.speed_y
+		if (input_jump_pressed > 0) then
+			if (self.jump_grace > 0) then
+				consume_jump_press()
+				self.speed_y = -4
+				self.speed_x += input_x * 0.2
+				self.var_jump_speed = self.speed_y
+				self.t_var_jump = 4
+				self.jump_grace = 0
+				self:move_y(self.jump_grace_y - self.y)
+			end
 		end
 	end
 
@@ -99,6 +107,7 @@ player.on_collide_y = function(self, moved, target)
 		return
 	end
 
+	t_var_jump = 0
 	object.on_collide_y(self, moved, target)
 end
 
