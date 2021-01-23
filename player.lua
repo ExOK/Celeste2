@@ -60,7 +60,7 @@ end
 
 player.draw = function(self)
 	
-	local facing = self.right and 1 or -1
+	local facing = 1
 	for i=0,3 do
 		local tx = self.x + 4 -facing * 4 - facing * i * 1
 		local ty = self.y + 5 + sin(i * 0.25 + time() * 2)
