@@ -122,10 +122,7 @@ player.update = function(self)
 
 		-- gravity
 		if (not on_ground) then
-			local max = 5
-			if (input_jump) then
-				max = 4
-			end
+			local max = 4.5
 
 			if (abs(self.speed_y) < 0.2) then
 				self.speed_y = min(self.speed_y + 0.4, max)
@@ -270,13 +267,13 @@ player.draw = function(self)
 		last = s
 	end
 
-	-- draw sprite
-	spr(self.spr, self.x - 4, self.y - 8, 1, 1, not self.right)
-
-	-- draw grapple
+	-- grapple
 	if (self.state != 0) then
 		self:draw_grapple()
 	end
+
+	-- sprite
+	spr(self.spr, self.x - 4, self.y - 8, 1, 1, not self.right)
 end
 
 setmetatable(player, lookup)
