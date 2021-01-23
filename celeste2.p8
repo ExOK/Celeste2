@@ -128,6 +128,9 @@ end
 -->8
 function _draw()
 
+	local camera_x = peek2(0x5f28)
+	local camera_y = peek2(0x5f2a)
+
 	-- clear screen
 	cls(0)
 
@@ -135,9 +138,9 @@ function _draw()
 	local cc = 13
 	for i=0,#clouds do
 		local c = clouds[i]
-		local x = c.x % (128 + c.s) - c.s / 2
-		local y = c.y
-		clip(x - c.s / 2, y - c.s / 2, c.s, c.s / 2)
+		local x = camera_x + (c.x - camera_x * 0.9) % (128 + c.s) - c.s / 2
+		local y = camera_y + (c.y - camera_y * 0.9) % (128 + c.s / 2)
+		clip(x - c.s / 2 - camera_x, y - c.s / 2 - camera_y, c.s, c.s / 2)
 		circfill(x, y, c.s / 3, cc)
 		if (i % 2 == 0) then
 			circfill(x - c.s / 3, y, c.s / 5, cc)
@@ -159,12 +162,13 @@ function _draw()
 
 	-- draw snow
 	for i=1,#snow do
-		circfill(snow[i].x % 132 - 2, snow[i].y % 132, i % 2, 7)
+		circfill(camera_x + (snow[i].x - camera_x * 0.5) % 132 - 2, camera_y + (snow[i].y - camera_y * 0.5) % 132, i % 2, 7)
 		snow[i].x += (4 - i % 4)
 		snow[i].y += sin(time() * 0.25 + i * 0.1)
 	end
 
 	-- debug
+	-- camera(0, 0)
 	-- print("cpu: " .. flr(stat(1) * 100) .. "/100", 9, 9, 4)
 	-- print("mem: " .. flr(stat(0)) .. "/2048", 9, 15, 4)
 end
