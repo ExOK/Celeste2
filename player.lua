@@ -22,7 +22,7 @@ player.frame = 0
 -- Grapple Functions
 
 player.start_grapple = function(self)
-	self.state = 1
+	self.state = 10
 
 	self.speed_x = 0
 	self.speed_y = 0
@@ -149,8 +149,8 @@ player.update = function(self)
 	--[[
 		player states:
 			0 	- normal
-			1 	- throw grapple
-			2 	- grapple attached to solid
+			10 	- throw grapple
+			11 	- grapple attached to solid
 			99 	- dead
 	]]
 
@@ -214,7 +214,7 @@ player.update = function(self)
 			self:start_grapple()
 		end
 
-	elseif (self.state == 1) then
+	elseif (self.state == 10) then
 		-- throw grapple state
 
 		-- grapple movement
@@ -223,7 +223,7 @@ player.update = function(self)
 			if (hit == 0) then
 				self.grapple_x += self.grapple_dir
 			elseif (hit == 1) then
-				self.state = 2
+				self.state = 11
 				self.grapple_wave = 2
 				self.grapple_boost = false
 				freeze_time = 2
@@ -246,7 +246,7 @@ player.update = function(self)
 			self.grapple_retract = true
 		end
 
-	elseif (self.state == 2) then
+	elseif (self.state == 11) then
 		-- grapple attached state
 		
 		if (not self.grapple_boost) then
