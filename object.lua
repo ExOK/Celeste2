@@ -106,8 +106,7 @@ object.check_solid = function(self, ox, oy)
 		end
 	end
 
-	for i=1,#objects do
-		local o = objects[i]
+	for o in all(objects) do
 		if (o.geom == g_solid and o != self and self:overlaps(o, ox, oy)) then
 			return true
 		end

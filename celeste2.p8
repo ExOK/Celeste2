@@ -117,8 +117,11 @@ function _update()
 		freeze_time -= 1
 	else
 		--objects
-		for i = 1, #objects do
-			objects[i]:update()
+		for o in all(objects) do
+			o:update()
+			if (o.destroyed) then
+				del(objects, o)
+			end
 		end
 	end
 end
@@ -153,9 +156,11 @@ function _draw()
 	map((room % 4) * 16, (room / 4) * 16, 0, 0, 32, 16, 1)
 
 	-- draw objects
-	for i=1,#objects do
-		objects[i]:draw()
+	local p = nil
+	for o in all(objects) do
+		if (o.base == player) then p = o else o:draw() end
 	end
+	if (p) then p:draw() end
 
 	-- draw snow
 	for i=1,#snow do
@@ -166,7 +171,7 @@ function _draw()
 
 
 	-- debug
-	if (true) do
+	if (false) do
 		for i=1,#objects do
 			local o = objects[i]
 			rect(o.x + o.hit_x, o.y + o .hit_y, o.x + o.hit_x + o.hit_w - 1, o.y + o.hit_y + o.hit_h - 1, 8)

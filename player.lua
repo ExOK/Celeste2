@@ -14,6 +14,7 @@ player.grapple_wave = 0
 player.grapple_boost = false
 player.t_grapple_cooldown = 0
 player.grapple_ice_timer = 0
+player.dead_timer = 0
 
 player.state = 0
 player.frame = 0
@@ -50,8 +51,7 @@ player.grapple_check = function(self, x, y)
 		return fget(tile, 2) and 2 or 1
 	end
 
-	for i=1,#objects do
-		local o = objects[i]
+	for o in all(objects) do
 		if (o.geom == g_solid and o:contains(x, y)) then
 			self.grapple_hit = on_collide_x
 			return 1
@@ -229,6 +229,14 @@ player.update = function(self)
 		if (self.grapple_ice_timer > 5) then
 			self.state = 0
 		end
+
+	-- dead state
+	elseif (self.state == 99) then
+		self.dead_timer += 1
+		if (self.dead_timer >= 30) then
+			room_load(room)
+		end
+		return
 	end
 
 	-- apply
@@ -245,6 +253,14 @@ player.update = function(self)
 		end
 	end
 	self.spr = self.tile + self.frame
+
+	-- hazard check
+	for o in all(objects) do
+		if (o.hazard and self:overlaps(o)) then
+			self.state = 99
+			break
+		end
+	end
 
 	camera(max(0, min(128, self.x - 64)), 0)
 end
@@ -267,6 +283,17 @@ player.on_collide_y = function(self, moved, target)
 end
 
 player.draw = function(self)
+
+	-- death fx
+	if (self.state == 99) then
+		local e = self.dead_timer / 10
+		if (e <= 1) then
+			for i=0,7 do
+				circfill(self.x + cos(i / 8) * 32 * e, self.y - 4 + sin(i / 8) * 32 * e, (1 - e) * 8, 10)
+			end
+		end
+		return
+	end
 
 	-- scarf
 	local last = { x = self.x - self.facing,y = self.y - 3 }
