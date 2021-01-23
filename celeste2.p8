@@ -230,6 +230,76 @@ function approach(x, target, max_delta)
 	end
 end
 
+function draw_sine_h(x0, x1, y, col, amplitude, time_freq, x_freq, fade_x_dist)
+	pset(x0, y, col)
+	pset(x1, y, col)
+
+	local x_sign = sgn(x1 - x0)
+	local x_max = abs(x1 - x0) - 2
+	local last_y = y
+	local this_y = 0
+	local ax = 0
+	local ay = 0
+	local fade = 1
+
+	for i = 1, x_max do
+		
+		if (i <= fade_x_dist) then
+			fade = i / (fade_x_dist + 1)
+		elseif (i > x_max - fade_x_dist + 1) then
+			fade = (x_max + 1 - i) / (fade_x_dist + 1)
+		else
+			fade = 1
+		end
+
+		ax = x0 + i * x_sign
+		ay = y + sin(time() * time_freq + i * x_freq) * amplitude * fade
+		pset(ax, ay, col)
+
+		this_y = ay
+		while (abs(ay - last_y) > 1) do
+			ay -= sgn(this_y - last_y)
+			pset(ax - x_sign, ay, col)
+		end
+		last_y = this_y
+	end
+end
+
+function draw_sine_v(y0, y1, x, col, amplitude, time_freq, y_freq, fade_y_dist)
+	pset(x, y0, col)
+	pset(x, y1, col)
+
+	local y_sign = sgn(y1 - y0)
+	local y_max = abs(y1 - y0) - 2
+	local last_x = x
+	local this_x = 0
+	local ax = 0
+	local ay = 0
+	local fade = 1
+
+	for i = 1, y_max do
+		
+		if (i <= fade_y_dist) then
+			fade = i / (fade_y_dist + 1)
+		elseif (i > y_max - fade_y_dist + 1) then
+			fade = (y_max + 1 - i) / (fade_y_dist + 1)
+		else
+			fade = 1
+		end
+
+		ay = y0 + i * y_sign
+		ax = x + sin(time() * time_freq + i * y_freq) * amplitude * fade
+		pset(ax, ay, col)
+
+		this_x = ax
+		while (abs(ax - last_x) > 1) do
+			ax -= sgn(this_x - last_x)
+			pset(ax, ay - y_sign, col)
+		end
+		last_x = this_x
+	end
+end
+
 __gfx__
 00000000777777770011110001111110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000700000070111111011144411000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

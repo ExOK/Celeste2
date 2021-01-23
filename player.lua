@@ -11,6 +11,7 @@ player.grapple_y = 0
 player.grapple_dir_x = 0
 player.grapple_dir_y = 0
 player.grapple_hit = nil
+player.grapple_wave = 0
 
 player.state = 0
 player.frame = 0
@@ -32,6 +33,7 @@ player.start_grapple = function(self)
 	self.remainder_y = 0
 	self.grapple_x = self.x
 	self.grapple_y = self.y - 3	
+	self.grapple_wave = 0
 
 	if (input_y != 0) then
 		self.grapple_dir_x = 0
@@ -50,14 +52,14 @@ player.start_grapple = function(self)
 end
 
 player.grapple_check = function(self, x, y)
-	if (fget(room_tile_at(flr(x / 8), flr(y / 8)))) then
+	if (fget(room_tile_at(flr(x / 8), flr(y / 8)), 1)) then
 		self.grapple_hit = nil
 		return true
 	end
 
 	for i=1,#objects do
 		local o = objects[i]
-		if (o.geom == g_solid and o.contains(x, y)) then
+		if (o.geom == g_solid and o:contains(x, y)) then
 			self.grapple_hit = on_collide_x
 			return true
 		end
@@ -66,8 +68,23 @@ player.grapple_check = function(self, x, y)
 	return false
 end
 
-player.update = function(self) 
+player.draw_grapple = function(self)
 
+	if (self.grapple_wave == 0) then
+		line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
+	else
+		if (self.grapple_dir_x != 0) then
+			--horizontal
+			draw_sine_h(self.x, self.grapple_x, self.y - 3, 7, 3 * self.grapple_wave, 20, 0.08, 6)
+		else
+			--vertical
+			draw_sine_v(self.y - 3, self.grapple_y, self.x, 7, 3 * self.grapple_wave, 20, 0.08, 6)
+		end
+	end
+
+end
+
+player.update = function(self) 
 	local on_ground = self:check_solid(0, 1)
 	if (on_ground) then
 		self.jump_grace = 4
@@ -138,6 +155,7 @@ player.update = function(self)
 			for i = 1, 12 do
 				if (self:grapple_check(self.grapple_x + sign, self.grapple_y)) then
 					self.state = 2
+					self.grapple_wave = 1.5
 				else
 					self.grapple_x += sign
 				end
@@ -147,11 +165,15 @@ player.update = function(self)
 			for i = 1, 12 do
 				if (self:grapple_check(self.grapple_x, self.grapple_y + sign)) then
 					self.state = 2
+					self.grapple_wave = 1.5
 				else
 					self.grapple_y += sign
 				end
 			end
 		end
+
+		-- grapple wave
+		self.grapple_wave = approach(self.grapple_wave, 1, 0.2)
 
 		-- release
 		if (not input_grapple) then
@@ -160,6 +182,9 @@ player.update = function(self)
 
 	elseif (self.state == 2) then
 		-- grapple attached state
+
+		-- grapple wave
+		self.grapple_wave = approach(self.grapple_wave, 0, 0.3)
 
 		-- release
 		if (not input_grapple) then
@@ -213,8 +238,8 @@ player.draw = function(self)
 	spr(self.spr, self.x - 4, self.y - 8, 1, 1, not self.right)
 
 	-- draw grapple
-	if (self.state == 1) then
-		line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
+	if (self.state != 0) then
+		self:draw_grapple()
 	end
 end
 
