@@ -272,6 +272,7 @@ player.update = function(self)
 	for o in all(objects) do
 		if (o.hazard and self:overlaps(o)) then
 			self.state = 99
+			shake = 5
 			break
 		end
 	end

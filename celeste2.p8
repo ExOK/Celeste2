@@ -8,6 +8,19 @@ objects = {}
 snow = {}
 clouds = {}
 infade = 0
+freeze_time = 0
+frames = 0
+seconds = 0
+minutes = 0
+shake = 0
+input_x = 0
+input_y = 0
+input_x_turned = false
+input_y_turned = false
+input_jump = false
+input_jump_pressed = 0
+input_grapple = false
+input_grapple_pressed = 0
 
 function _init()
 
@@ -20,18 +33,7 @@ function _init()
 
 	room_load(0)
 end
--->8
 
-freeze_time = 0
-
-input_x = 0
-input_y = 0
-input_x_turned = false
-input_y_turned = false
-input_jump = false
-input_jump_pressed = 0
-input_grapple = false
-input_grapple_pressed = 0
 
 function consume_jump_press()
 	local val = input_jump_pressed > 0
@@ -46,6 +48,18 @@ function consume_grapple_press()
 end
 
 function _update()
+
+	-- timers
+	frames = ((frames + 1)%30)
+	if frames == 0 then
+		seconds = ((seconds + 1)%60)
+		if seconds == 0 then
+			minutes += 1
+		end
+	end
+
+	-- screenshake
+	shake -= 1
 
 	-- input_x
 	local prev_x = input_x
@@ -134,6 +148,10 @@ function _draw()
 	local camera_x = peek2(0x5f28)
 	local camera_y = peek2(0x5f2a)
 
+	if shake > 0 then
+		camera(camera_x - 2 + rnd(5),camera_y - 2 + rnd(5))
+	end
+
 	-- clear screen
 	cls(0)
 
@@ -191,6 +209,11 @@ function _draw()
 		end
 	end
 
+	-- game timer
+	if (infade < 45) then
+		draw_time(camera_x + 4, camera_y + 4)
+	end
+
 	-- debug
 	if (false) do
 		for o in all(objects) do
@@ -200,8 +223,18 @@ function _draw()
 		camera(0, 0)
 		print("cpu: " .. flr(stat(1) * 100) .. "/100", 9, 9, 8)
 		print("mem: " .. flr(stat(0)) .. "/2048", 9, 15, 8)
-		camera(camera_x, camera_y)
 	end
+	
+	camera(camera_x, camera_y)
+end
+
+function draw_time(x,y)
+	local s=seconds
+	local m=minutes%60
+	local h=flr(minutes/60)
+	
+	rectfill(x,y,x+32,y+6,0)
+	print((h<10 and "0"..h or h)..":"..(m<10 and "0"..m or m)..":"..(s<10 and "0"..s or s),x+1,y+1,7)
 end
 
 -->8
