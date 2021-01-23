@@ -41,7 +41,11 @@ player.update = function(self)
 
 		-- gravity
 		if (not on_ground) then
-			self.speed_y = min(self.speed_y + 0.8, 6)
+			if (abs(self.speed_y) < 0.2) then
+				self.speed_y = min(self.speed_y + 0.4, 6)
+			else
+				self.speed_y = min(self.speed_y + 0.8, 6)
+			end
 		end
 
 		-- variable jumping
