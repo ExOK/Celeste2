@@ -8,6 +8,10 @@ player.frame = 0
 
 player.init = function(self)
 	self.spr = self.tile
+	self.hit_x = -3
+	self.hit_y = -6
+	self.hit_w = 6
+	self.hit_h = 6
 end
 
 player.update = function(self) 
@@ -66,8 +70,9 @@ player.draw = function(self)
 		local ty = self.y + 5 + sin(i * 0.25 + time() * 2)
 		rect(tx, ty, tx, ty, 10)
 	end
+
 	-- draw sprite
-	object.draw(self)
+	spr(self.spr, self.x - 4, self.y - 8, 1, 1, not self.right)
 end
 
 setmetatable(player, lookup)
