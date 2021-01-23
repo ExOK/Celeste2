@@ -20,16 +20,10 @@ object.hit_h = 8
 object.geom = g_none
 object.actor = true
 
-object.move_x = function(self, x)
-	local mx = 0;
-	self.remainder_x += x;
-	if (self.remainder_x < 0) then
-		mx = flr(self.remainder_x - 0.5)
-	else
-		mx = flr(self.remainder_x + 0.5)
-	end
-
-	self.remainder_x -= mx;
+object.move_x = function(self, x)	
+	self.remainder_x += x
+	local mx = flr(self.remainder_x + 0.5)
+	self.remainder_x -= mx
 
 	local total = mx
 	local mxs = sign(mx)
@@ -46,15 +40,9 @@ object.move_x = function(self, x)
 end
 
 object.move_y = function(self, y)
-	local my = 0;	
-	self.remainder_y += y;
-	if (self.remainder_y < 0) then
-		my = flr(self.remainder_y - 0.5)
-	else
-		my = flr(self.remainder_y + 0.5)
-	end
-
-	self.remainder_y -= my;
+	self.remainder_y += y
+	local my = flr(self.remainder_y + 0.5)
+	self.remainder_y -= my
 	
 	local total = my
 	local mys = sign(my)
