@@ -228,7 +228,7 @@ player.update = function(self)
 	end
 	self.spr = self.tile + self.frame
 
-	camera(max(0, min(128, (self.x + self.grapple_x) / 2 - 64)), 0)
+	camera(max(0, min(128, self.x - 64)), 0)
 end
 
 player.on_collide_x = function(self, moved, target)
