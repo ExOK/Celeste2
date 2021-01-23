@@ -21,6 +21,12 @@ player.init = function(self)
 	self.hit_y = -6
 	self.hit_w = 6
 	self.hit_h = 6
+
+	self.scarf = {}
+	for i = 0,4 do
+		add(self.scarf, { x = self.x, y = self.y })
+	end
+
 end
 
 player.start_grapple = function(self)
@@ -201,12 +207,32 @@ player.on_collide_y = function(self, moved, target)
 end
 
 player.draw = function(self)
-	
-	local facing = 1
-	for i=0,3 do
-		local tx = self.x - facing * 4 - facing * i * 1
-		local ty = self.y - 4 + sin(i * 0.25 + time() * 2)
-		rect(tx, ty, tx, ty, 10)
+
+	-- scarf
+	local facing = (self.right and 1 or -1)
+	local last = { x = self.x - facing,y = self.y - 3 }
+	for i=1,#self.scarf do
+		local s = self.scarf[i]
+
+		-- approach last pos with an offset
+		s.x += (last.x - s.x - facing) / 1.5
+		s.y += ((last.y - s.y) + sin(i * 0.25 + time()) * i * 0.3) / 2
+
+		-- don't let it get too far
+		local dx = s.x - last.x
+		local dy = s.y - last.y
+		local dist = sqrt(dx * dx, dy * dy)
+		if (dist > 2) then
+			local nx = (s.x - last.x) / dist
+			local ny = (s.y - last.y) / dist
+			s.x = s.x + nx * 2
+			s.y = s.y + ny * 2
+		end
+
+		-- fill
+		rectfill(s.x, s.y, s.x, s.y + 1, 10)
+		rectfill((s.x + last.x) / 2, (s.y + last.y) / 2, (s.x + last.x) / 2, (s.y + last.y) / 2 + 1, 10)
+		last = s
 	end
 
 	-- draw sprite
