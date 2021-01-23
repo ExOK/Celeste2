@@ -71,6 +71,7 @@ player.wall_jump = function(self, dir)
 	self.var_jump_speed = self.speed_y
 	self.t_var_jump = 4
 	self.facing = dir
+	self:move_x(-dir * 3, true)
 end
 
 --[[
@@ -201,7 +202,7 @@ player.update = function(self)
 				self.var_jump_speed = self.speed_y
 				self.t_var_jump = 4
 				self.t_jump_grace = 0
-				self:move_y(self.jump_grace_y - self.y)
+				self:move_y(self.jump_grace_y - self.y, true)
 			elseif (self:check_solid(2, 0)) then
 				self:wall_jump(-1)
 			elseif (self:check_solid(-2, 0)) then
@@ -258,11 +259,24 @@ player.update = function(self)
 		self.speed_x = approach(self.speed_x, self.grapple_dir * 5, 0.25)
 		self.speed_y = approach(self.speed_y, 0, 0.4)
 
+		-- wall pose
 		if (self:check_solid(self.grapple_dir, 0)) then
 			self.frame = 2
-			if (consume_jump_press()) then
+		end
+
+		-- wall jump
+		if (consume_jump_press()) then
+			if (self:check_solid(self.grapple_dir * 3, 0)) then
 				self.state = 0
 				self:wall_jump(-self.grapple_dir)
+			else
+				self.state = 0
+				self.speed_y = -3
+				self.var_jump_speed = self.speed_y
+				self.t_var_jump = 4
+				if (abs(self.speed_x) > 5) then
+					self.speed_x = sgn(self.speed_x) * 5
+				end
 			end
 		end
 

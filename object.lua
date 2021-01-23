@@ -22,7 +22,7 @@ object.actor = true
 object.hazard = 0
 object.facing = 1
 
-object.move_x = function(self, x)	
+object.move_x = function(self, x, no_func)	
 	self.remainder_x += x
 	local mx = flr(self.remainder_x + 0.5)
 	self.remainder_x -= mx
@@ -32,7 +32,9 @@ object.move_x = function(self, x)
 	while (mx != 0)
 	do
 		if (self:check_solid(mxs, 0)) then
-			self:on_collide_x(total - mx, total)
+			if (not no_func) then
+				self:on_collide_x(total - mx, total)
+			end
 			break
 		else
 			self.x += mxs
@@ -41,7 +43,7 @@ object.move_x = function(self, x)
 	end
 end
 
-object.move_y = function(self, y)
+object.move_y = function(self, y, no_func)
 	self.remainder_y += y
 	local my = flr(self.remainder_y + 0.5)
 	self.remainder_y -= my
@@ -51,7 +53,9 @@ object.move_y = function(self, y)
 	while (my != 0)
 	do
 		if (self:check_solid(0, mys)) then
-			self:on_collide_y(total - my, total)
+			if (not no_func) then
+				self:on_collide_y(total - my, total)
+			end
 			break
 		else
 			self.y += mys
