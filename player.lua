@@ -9,6 +9,7 @@ player.grapple_x = 0
 player.grapple_y = 0
 player.grapple_dir_x = 0
 player.grapple_dir_y = 0
+player.grapple_hit = nil
 
 player.state = 0
 player.frame = 0
@@ -45,6 +46,23 @@ player.start_grapple = function(self)
 		end
 		self.grapple_dir_y = 0
 	end
+end
+
+player.grapple_check = function(self, x, y)
+	if (fget(room_tile_at(flr(x / 8), flr(y / 8)))) then
+		self.grapple_hit = nil
+		return true
+	end
+
+	for i=1,#objects do
+		local o = objects[i]
+		if (o.geom == g_solid and o.contains(x, y)) then
+			self.grapple_hit = on_collide_x
+			return true
+		end
+	end
+
+	return false
 end
 
 player.update = function(self) 
@@ -119,7 +137,7 @@ player.update = function(self)
 		else
 
 		end
-		
+
 		self.grapple_x += self.grapple_dir_x * 12
 		self.grapple_y += self.grapple_dir_y * 12
 
