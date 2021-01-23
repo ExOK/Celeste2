@@ -211,7 +211,7 @@ player.update = function(self)
 		end
 
 		-- throw grapple
-		if (self.t_grapple_cooldown <= 0 and consume_grapple_press()) then
+		if (have_grapple and self.t_grapple_cooldown <= 0 and consume_grapple_press()) then
 			self:start_grapple()
 		end
 
@@ -317,13 +317,21 @@ player.update = function(self)
 	end
 	self.spr = self.tile + self.frame
 
+	-- object interactions
+	for o in all(objects) do
+		if (o.tile == 20 and o.visible and self:overlaps(o)) then
+			o.visible = false
+			have_grapple = true
+		end
+	end
+
 	-- death
 	if (self:hazard_check()) then
 		self.state = 99
 		shake = 5
 	end
 
-	camera(max(0, min(128, self.x - 64)), 0)
+	camera(max(0, min(8 * 96, self.x - 36)), 0)
 end
 
 player.on_collide_x = function(self, moved, target)
