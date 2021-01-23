@@ -1,6 +1,7 @@
 player = {}
 player.tile = 2
 player.base = object
+
 player.jump_grace = 0
 player.jump_grace_y = 0
 player.t_var_jump = 0
@@ -133,13 +134,24 @@ player.update = function(self)
 
 		-- grapple moves
 		if (self.grapple_dir_x != 0) then
-
+			local sign = sgn(self.grapple_dir_x)
+			for i = 1, 12 do
+				if (self:grapple_check(self.grapple_x + sign, self.grapple_y)) then
+					self.state = 2
+				else
+					self.grapple_x += sign
+				end
+			end
 		else
-
+			local sign = sgn(self.grapple_dir_y)
+			for i = 1, 12 do
+				if (self:grapple_check(self.grapple_x, self.grapple_y + sign)) then
+					self.state = 2
+				else
+					self.grapple_y += sign
+				end
+			end
 		end
-
-		self.grapple_x += self.grapple_dir_x * 12
-		self.grapple_y += self.grapple_dir_y * 12
 
 		-- release
 		if (not input_grapple) then
@@ -148,6 +160,11 @@ player.update = function(self)
 
 	elseif (self.state == 2) then
 		-- grapple attached state
+
+		-- release
+		if (not input_grapple) then
+			self.state = 0
+		end
 
 	end
 
