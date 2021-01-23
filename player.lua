@@ -40,12 +40,19 @@ player.update = function(self)
 		end
 
 		-- gravity
-		if (input_jump and self.t_var_jump > 0) then
-			self.speed_y = self.var_jump_speed
-			self.t_var_jump -= 1
-		elseif (not on_ground) then
+		if (not on_ground) then
 			self.speed_y = min(self.speed_y + 0.8, 6)
 		end
+
+		-- variable jumping
+		if (self.t_var_jump > 0) then
+			if (input_jump) then
+				self.speed_y = self.var_jump_speed
+				self.t_var_jump -= 1
+			else
+				self.t_var_jump = 0
+			end
+		end		
 
 		-- jumping
 		if (self.jump_grace > 0 and consume_jump_press()) then
