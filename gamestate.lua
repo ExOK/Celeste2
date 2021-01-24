@@ -50,9 +50,20 @@ tile_y = function(py)
 end
 
 function goto_level(index)
+
+	-- set level
 	level = levels[index]
 	level_index = index
-    music(level.music)
+
+	-- load into ram
+	local function vget(x, y) return peek(0x4300 + (x % 128) + y * 128) end
+	local function vset(x, y, v) return poke(0x4300 + (x % 128) + y * 128, v)end
+	px9_decomp(0, 0, 0x1000 + level.offset, vget, vset)
+
+	-- start music
+	music(level.music)
+	
+	-- load level contents
     restart_level()
 end
 
@@ -66,15 +77,6 @@ function restart_level()
 	objects = {}
 	infade = 0
 	camera(0, 0)
-
-	local function vget(x, y)
-		return peek(0x4300 + (x % 128) + y * 128)
-	end
-	local function vset(x, y, v)
-		return poke(0x4300 + (x % 128) + y * 128, v)
-	end
-
-	px9_decomp(0, 0, 0x1000 + level.offset, vget, vset)
 
 	for i = 0,level.width-1 do
 		for j = 0,level.height-1 do
