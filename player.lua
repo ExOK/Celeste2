@@ -473,7 +473,7 @@ player.update = function(self)
 	for o in all(objects) do
 		if (o.base == grapple_pickup and o.visible and self:overlaps(o)) then
 			--grapple pickup
-			o.visible = false
+			o.destroyed = true
 			have_grapple = true
 		elseif (o.base == bridge and not o.falling and self:overlaps(o)) then
 			--falling bridge tile
@@ -493,6 +493,8 @@ player.update = function(self)
 			end
 		elseif (o.base == berry and self:overlaps(o)) then
 			o:collect()
+		elseif (o.base == crumble and self:overlaps(o, 0, 1)) then
+			o:fall()
 		end
 	end
 

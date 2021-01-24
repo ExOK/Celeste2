@@ -1,11 +1,8 @@
 grapple_pickup = new_type()
 grapple_pickup.tile = 20
 grapple_pickup.base = object
-grapple_pickup.visible = true
 grapple_pickup.draw = function(self)
-	if (self.visible) then
-		spr(self.tile, self.x, self.y + sin(time()) * 2, 1, 1, not self.right)
-	end
+	spr(self.tile, self.x, self.y + sin(time()) * 2, 1, 1, not self.right)
 end
 
 spike_v = new_type()
@@ -37,17 +34,6 @@ spike_h.init = function(self)
 		self.hazard = 5
 	end
 	self.hit_w = 3
-end
-
-crate = new_type()
-crate.tile = 19
-crate.base = object
-crate.geom = g_solid
-crate.init = function(self)
-	self.spr = self.tile
-end
-crate.update = function(self) 
-	self:move_y(1)
 end
 
 snowball = new_type()
@@ -130,10 +116,57 @@ end
 berry = new_type()
 berry.tile = 21
 berry.base = object
-berry.visible = true
 berry.draw = grapple_pickup.draw
 berry.collect = function(self)
 	set_collected(flr(self.x / 8), flr(self.y / 8))
 	berry_count += 1
 	self.destroyed = true
+end
+
+crumble = new_type()
+crumble.tile = 19
+crumble.geom = g_solid
+crumble.base = object
+crumble.init = function(self)
+	self.time = 0
+	self.breaking = false
+	self.ox = self.x
+	self.oy = self.y
+end
+crumble.update = function(self)
+	if (self.breaking) then
+		self.time += 1
+		if (self.time > 10) then
+			self.x = -32
+			self.y = -32
+		end
+		if (self.time > 60) then
+			self.x = self.ox
+			self.y = self.oy
+
+			local can_respawn = true
+			for o in all(objects) do
+				if (self:overlaps(o)) then can_respawn = false break end
+			end
+
+			if (can_respawn) then
+				self.breaking = false
+				self.time = 0
+			else
+				self.x = -32
+				self.y = -32
+			end
+		end
+	end
+end
+crumble.draw = function(self)
+	spr(self.tile, self.x, self.y)
+	if (self.time > 2) then
+		fillp(0b1010010110100101.1)
+		rectfill(self.x, self.y, self.x + 7, self.y + 7, 1)
+		fillp()
+	end
+end
+crumble.fall = function(self)
+	self.breaking = true
 end
