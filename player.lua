@@ -578,7 +578,7 @@ player.update = function(self)
 			--crumble
 			if self.state == 0 then
 				if self:overlaps(o, 0, 1) then
-					o:fall()
+					o.breaking = true
 				end
 			elseif self.state == 11 then
 				if self:overlaps(o, self.grapple_dir) or self:overlaps(o, self.grapple_dir, 2) or self:overlaps(o, self.grapple_dir, -2) then
