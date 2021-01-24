@@ -151,14 +151,19 @@ end
 
 -- Grappled Objects
 
-player.grapple_object = function(self, obj)
-
+pull_collide_x = function(self, moved, target)
+	if (self:corner_correct(sgn(target), 0, 2, 2, 0)) then
+		return false
+	end
+	return true
 end
 
-pull_collide_x = function(self, moved, target)
-	if (false) then
-
-	end
+player.release_holding = function(self, obj, x, y)
+	obj.held = false
+	obj.speed_x = x
+	obj.speed_y = y
+	obj:on_release()
+	self.holding = nil
 end
 
 -- Events
@@ -212,6 +217,8 @@ player.update = function(self)
 	--[[
 		player states:
 			0 	- normal
+			1	- lift
+			2 	- holding
 			10 	- throw grapple
 			11 	- grapple attached to solid
 			12	- grapple pulling in holdable
@@ -269,15 +276,32 @@ player.update = function(self)
 			end
 		end
 
+		-- throw holding
+		if (self.holding and not input_grapple) then
+			self:release_holding(self.holding, 3 * self.facing, -3)
+		end
+
 		-- throw grapple
-		if (have_grapple and self.t_grapple_cooldown <= 0 and consume_grapple_press()) then
+		if (have_grapple and not self.holding and self.t_grapple_cooldown <= 0 and consume_grapple_press()) then
 			self:start_grapple()
+		end
+
+	elseif (self.state == 1) then
+		-- lift state
+		hold = self.grapple_hit
+
+		hold.x = approach(hold.x, self.x - 4, 4)
+		hold.y = approach(hold.y, self.y - 14, 4)
+
+		if (hold.x == self.x - 4 and hold.y == self.y - 14) then
+			self.state = 0
+			self.holding = hold
 		end
 
 	elseif (self.state == 10) then
 		-- throw grapple state
 
-		-- grapple movement
+		-- grapple movement and hitting stuff
 		for i = 1, 12 do
 			local hit = self:grapple_check(self.grapple_x + self.grapple_dir, self.grapple_y)
 			local mode = self.grapple_hit and self.grapple_hit.grapple_mode or 0
@@ -382,28 +406,33 @@ player.update = function(self)
 		local obj = self.grapple_hit
 
 		-- pull
-		if (obj:move_x(-self.grapple_dir * 4, pull_collide_x)) then
+		if (obj:move_x(-self.grapple_dir * 6, pull_collide_x)) then
 			self.state = 0
 			self.grapple_retract = true
 			obj:on_release(-self.grapple_dir)
 			return
 		else
-			self.grapple_x = approach(self.grapple_x, self.x, 4)
+			self.grapple_x = approach(self.grapple_x, self.x, 6)
 		end
 
 		-- y-correct
-		if (obj.y + 4 != self.y - 3) then
-			obj:move_y(sgn(self.y - obj.y) * 0.5)
+		if (obj.y != self.y - 7) then
+			obj:move_y(sgn(self.y - obj.y - 7) * 0.5)
 		end
 
 		-- grapple wave
 		self.grapple_wave = approach(self.grapple_wave, 0, 0.6)
 
+		-- hold
+		if (self:overlaps(obj)) then
+			self.state = 1
+		end
+
 		-- release
-		if (not input_grapple or abs(obj.y + 4 - (self.y - 3)) > 8) then
+		if (not input_grapple or abs(obj.y - self.y + 7) > 8) then
 			self.state = 0
 			self.grapple_retract = true
-			obj:on_release(-self.grapple_dir)
+			self:release_holding(self.grapple_hit, -self.grapple_dir * 3, 0)
 		end
 
 	elseif (self.state == 99) then
@@ -419,6 +448,12 @@ player.update = function(self)
 	-- apply
 	self:move_x(self.speed_x, self.on_collide_x)
 	self:move_y(self.speed_y, self.on_collide_y)
+
+	-- holding
+	if (self.holding) then
+		self.holding.x = self.x - 4
+		self.holding.y = self.y - 14
+	end
 
 	-- sprite
 	if (self.state != 2 and self.state != 1) then
@@ -450,11 +485,11 @@ player.update = function(self)
 				if (o.speed_x == 0) then
 					o.destroyed = true
 				else
-					o.freeze = 2
+					o.freeze = 1
 					o.speed_x = 0
 					o.speed_y = -1
 				end
-			elseif (o.speed_x != 0) then
+			elseif (o.speed_x != 0 and o.thrown_timer <= 0) then
 				self:die()
 				return
 			end
