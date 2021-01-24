@@ -16,7 +16,6 @@ player.grapple_retract = false
 player.holding = nil
 player.dead_timer = 0
 player.t_grapple_jump_grace = 0
-player.spinning = false
 
 player.state = 0
 player.frame = 0
@@ -92,7 +91,6 @@ player.wall_jump = function(self, dir)
 	self.speed_x = 3 * dir	
 	self.t_var_jump = 4
 	self.facing = dir
-	self.spinning = true
 	self:move_x(-dir * 3)
 end
 
@@ -104,7 +102,6 @@ player.grapple_jump = function(self)
 	self.speed_y = -3
 	self.var_jump_speed = -3
 	self.t_var_jump = 4
-	self.spinning = true
 	if (abs(self.speed_x) > 4) then
 		self.speed_x = sgn(self.speed_x) * 4
 	end
@@ -231,8 +228,6 @@ player.update = function(self)
 	if (self.state == 0) then
 		-- normal state
 
-		self.spinning = false
-
 		-- facing
 		if (input_x ~= 0) then
 			self.facing = input_x
@@ -307,7 +302,8 @@ player.update = function(self)
 		-- throw grapple state
 
 		-- grapple movement and hitting stuff
-		for i = 1, 12 do
+		local amount = min(64 - abs(self.grapple_x - self.x), 12)
+		for i = 1, amount do
 			local hit = self:grapple_check(self.grapple_x + self.grapple_dir, self.grapple_y)
 			local mode = self.grapple_hit and self.grapple_hit.grapple_mode or 0
 
@@ -327,7 +323,7 @@ player.update = function(self)
 				self.freeze = 2
 			end
 
-			if (hit == 2 or (hit == 0 and abs(self.grapple_x - self.x) > 64)) then
+			if (hit == 2 or (hit == 0 and abs(self.grapple_x - self.x) >= 64)) then
 				self.grapple_retract = true
 				self.freeze = 2
 				self.state = 0
@@ -399,7 +395,7 @@ player.update = function(self)
 		if (sgn(self.x - self.grapple_x) == self.grapple_dir) then
 			self.state = 0
 			if (self.grapple_hit != nil and self.grapple_hit.grapple_mode == 2) then
-				self.t_grapple_jump_grace = 30
+				self.t_grapple_jump_grace = 3
 				self.grapple_jump_grace_y = self.y
 			end
 			if (abs(self.speed_x) > 5) then
@@ -461,10 +457,10 @@ player.update = function(self)
 	end
 
 	-- sprite
-	self.flip_x = false
-	self.flip_y = false
-	if (self.state != 2 and self.state != 1) then
-		if (input_x != 0) then
+	if (self.state != 11) then
+		if (not on_ground) then
+			self.frame = 1
+		elseif (input_x != 0) then
 			self.frame += 0.25
 			self.frame = self.frame % 2
 		else
@@ -477,7 +473,7 @@ player.update = function(self)
 	for o in all(objects) do
 		if (o.base == grapple_pickup and o.visible and self:overlaps(o)) then
 			--grapple pickup
-			o.visible = false
+			o.destroyed = true
 			have_grapple = true
 		elseif (o.base == bridge and not o.falling and self:overlaps(o)) then
 			--falling bridge tile
@@ -495,6 +491,10 @@ player.update = function(self)
 				self:die()
 				return
 			end
+		elseif (o.base == berry and self:overlaps(o)) then
+			o:collect()
+		elseif (o.base == crumble and self:overlaps(o, 0, 1)) then
+			o:fall()
 		end
 	end
 
@@ -518,7 +518,7 @@ player.update = function(self)
 	end
 
 	-- camera
-	camera_modes[level.camera_mode](self.x, self.y)
+	camera_modes[level.camera_mode](self.x, self.y, on_ground)
 	camera_x = approach(camera_x, camera_target_x, 5)
 	camera_y = approach(camera_y, camera_target_y, 5)
 	camera(camera_x, camera_y)
@@ -553,9 +553,11 @@ player.draw = function(self)
 	-- death fx
 	if (self.state == 99) then
 		local e = self.dead_timer / 10
+		local dx = mid(camera_x, self.x, camera_x + 128)
+		local dy = mid(camera_y, self.y - 4, camera_y + 128)
 		if (e <= 1) then
 			for i=0,7 do
-				circfill(self.x + cos(i / 8) * 32 * e, self.y - 4 + sin(i / 8) * 32 * e, (1 - e) * 8, 10)
+				circfill(dx + cos(i / 8) * 32 * e, dy + sin(i / 8) * 32 * e, (1 - e) * 8, 10)
 			end
 		end
 		return

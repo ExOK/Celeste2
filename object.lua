@@ -90,6 +90,7 @@ object.draw = function(self)
 end
 
 object.overlaps = function(self, b, ox, oy)
+	if (self == b) then return false end
 	if (ox == nil) then ox = 0 end
 	if (oy == nil) then oy = 0 end
 	return
