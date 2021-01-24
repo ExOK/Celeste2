@@ -1,9 +1,10 @@
 levels = {
 
     {
-        width = 768,
-        height = 128,
-        camera_mode = 2
+        width = 96,
+        height = 16,
+        camera_mode = 2,
+        music = 0
     }
 
 }
@@ -12,15 +13,15 @@ camera_modes = {
 
     -- 1: Basic Horizontal Mode
     function(px, py)
-        camera(max(0, min(level.width - 128, px - 56)), 0)
+        camera_target_x = max(0, min(level.width * 8 - 128, px - 56))
     end,
 
     -- 2: Intro Mode
     function(px, py)
-        if (px < 32) then
-            camera(0, 0)
+        if (px < 42) then
+            camera_target_x = 0
         else
-            camera(max(32, min(level.width - 128, px - 48)), 0)
+            camera_target_x = max(40, min(level.width * 8 - 128, px - 48))
         end
     end
 
@@ -33,12 +34,15 @@ camera_y = 0
 camera_target_x = 0
 camera_target_y = 0
 
-start_level = function(index)
-    level = levels[index]
+on_restart_level = function()
+    camera_target_x = 0
+    camera_target_y = 0
+end
 
-    level.camera_mode(0, 0)
-    camera_x = camera_target_x
-    camera_y = camera_target_y
+on_start_level = function(index)
+    level = levels[index]
+    music(level.music)
+    on_restart_level()
 end
 
 snap_camera = function()
@@ -48,5 +52,5 @@ snap_camera = function()
 end
 
 tile_y = function(py)
-    return max(0, min(flr(py / 8), level.height / 8 - 1))
+    return max(0, min(flr(py / 8), level.height - 1))
 end

@@ -1,19 +1,8 @@
-crate = new_type()
-crate.tile = 19
-crate.base = object
-crate.geom = g_solid
-crate.init = function(self)
-	self.spr = self.tile
-end
-crate.update = function(self) 
-	self:move_y(1)
-end
-
-grapple = new_type()
-grapple.tile = 20
-grapple.base = object
-grapple.visible = true
-grapple.draw = function(self)
+grapple_pickup = new_type()
+grapple_pickup.tile = 20
+grapple_pickup.base = object
+grapple_pickup.visible = true
+grapple_pickup.draw = function(self)
 	if (self.visible) then
 		spr(self.tile, self.x, self.y + sin(time()) * 2, 1, 1, not self.right)
 	end
@@ -48,4 +37,43 @@ spike_h.init = function(self)
 		self.hazard = 5
 	end
 	self.hit_w = 3
+end
+
+crate = new_type()
+crate.tile = 19
+crate.base = object
+crate.geom = g_solid
+crate.init = function(self)
+	self.spr = self.tile
+end
+crate.update = function(self) 
+	self:move_y(1)
+end
+
+snowball = new_type()
+snowball.tile = 62
+snowball.spr = 62
+snowball.base = object
+snowball.grapple_mode = 3
+snowball.holdable = true
+snowball.hit_w = 8
+snowball.hit_h = 8
+
+grappler = new_type()
+grappler.tile = 46
+grappler.spr = 46
+grappler.base = object
+grappler.grapple_mode = 2
+grappler.hit_x = 1
+grappler.hit_y = 1
+grappler.hit_w = 6
+grappler.hit_h = 6
+
+bridge = new_type()
+bridge.tile = 63
+bridge.spr = bridge.tile
+bridge.base = object
+bridge.falling = false
+bridge.update = function(self)
+	self.y += 3 * (self.falling and 1 or 0)
 end

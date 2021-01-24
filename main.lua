@@ -1,5 +1,4 @@
 -- globals
-room = 0
 objects = {}
 snow = {}
 clouds = {}
@@ -17,7 +16,8 @@ function _init()
 		clouds[i] = { x = rnd(132), y = rnd(132), s = 16 + rnd(32) }
 	end
 
-	room_load(0)
+	on_start_level(1)
+	load()
 end
 
 function _update()
@@ -77,7 +77,14 @@ function _draw()
 	clip(0,0,128,128)
 
 	-- draw tileset
-	map((room % 4) * 16, (room / 4) * 16, 0, 0, 96, 16, 1)
+	for x=0,96 do
+		for y=0,16 do
+			local tile = tile_at(x, y)
+			if (tile != 0 and fget(tile, 0)) then
+				spr(tile, x * 8, y * 8)
+			end
+		end
+	end
 
 	-- draw objects
 	local p = nil
@@ -96,7 +103,7 @@ function _draw()
 
 	-- screen wipes
 	-- very similar functions ... can they be compressed into one?
-	if (p.dead_timer > 5) then
+	if (p ~= nil and p.dead_timer > 5) then
 		local e = (p.dead_timer - 5) / 12
 		for i=0,127 do
 			s = (127 + 64) * e - 32 + sin(i * 0.2) * 16 + (127 - i) * 0.25
@@ -142,21 +149,35 @@ function draw_time(x,y)
 end
 
 -- gets the tile at the given location in the CURRENT room
-function room_tile_at(x, y)
-	return mget((room % 4) * 16 + x, (room / 4) * 16 + y)
+function tile_at(x, y)
+	if (raw_level) then
+		return mget(x, y)
+	else
+		return peek(0x4300 + (x % 128) + y * 128)
+	end
 end
 
 -- loads the given room
-function room_load(index)
-	room = index
+function load()
+	on_restart_level()
+
 	objects = {}
 	infade = 0
 	camera(0, 0)
 
-	for i = 0,15 do
-		for j = 0,15 do
+	local function vget(x, y)
+		return peek(0x4300 + (x % 128) + y * 128)
+	end
+	local function vset(x, y, v)
+		return poke(0x4300 + (x % 128) + y * 128, v)
+	end
+
+	px9_decomp(0, 0, 0x2000, vget, vset)
+
+	for i = 0,level.width-1 do
+		for j = 0,level.height-1 do
 			for n=1,#types do
-				if (room_tile_at(i, j) == types[n].tile) then
+				if (tile_at(i, j) == types[n].tile) then
 					create(types[n], i * 8, j * 8)
 				end
 			end
