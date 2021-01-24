@@ -520,10 +520,10 @@ player.update = function(self)
 
 		if self.state == 100 then
 			self.x += 1
+			if self.wipe_timer == 5 and level_index > 1 then sfx(17, 3, 24, 9) end
 		end
 
 		self.wipe_timer += 1
-		if self.wipe_timer == 5 then sfx(17, 3, 24, 9) end
 		if self.wipe_timer > 20 then
 			if self.state == 99 then restart_level() else next_level() end
 		end

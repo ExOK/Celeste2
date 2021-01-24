@@ -56,6 +56,7 @@ snowball.on_collide_x = function(self, moved, total)
 	self.speed_x *= -1
 	self.remainder_x = 0
 	self.freeze = 1
+	sfx(17, 3, 0, 2)
 	return true
 end
 snowball.on_collide_y = function(self, moved, total)
@@ -67,6 +68,7 @@ snowball.on_collide_y = function(self, moved, total)
 		self.speed_y = 0
 	end
 	self.remainder_y = 0
+	sfx(17, 3, 0, 2)
 	return true
 end
 snowball.on_release = function(self, thrown)

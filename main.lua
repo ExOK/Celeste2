@@ -33,18 +33,15 @@ function _update()
 
 	if level_intro > 0 then
 		level_intro -= 1
+		if level_intro == 0 then sfx(17, 3, 24, 9) end
 	else
 
 		-- timers
+		infade += 1
 		shake -= 1
 		frames += 1
 		if frames == 30 then seconds += 1 frames = 0 end
 		if seconds == 60 then minutes += 1 seconds = 0 end
-
-		if infade == 0 then
-			sfx(17, 3, 24, 9)
-		end
-		infade += 1
 
 		update_input()
 
