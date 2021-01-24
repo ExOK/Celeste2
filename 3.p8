@@ -10,7 +10,7 @@ __lua__
 #include player.lua
 #include px9_decomp.lua
 
-single_level = true
+standalone = true
 level_index = 3
 
 __gfx__

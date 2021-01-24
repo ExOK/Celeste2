@@ -105,8 +105,8 @@ function _draw()
 
 	-- screen wipes
 	-- very similar functions ... can they be compressed into one?
-	if p ~= nil and p.dead_timer > 5 then
-		local e = (p.dead_timer - 5) / 12
+	if p ~= nil and p.wipe_timer > 5 then
+		local e = (p.wipe_timer - 5) / 12
 		for i=0,127 do
 			s = (127 + 64) * e - 32 + sin(i * 0.2) * 16 + (127 - i) * 0.25
 			rectfill(camera_x,camera_y+i,camera_x+s,camera_y+i,0)
