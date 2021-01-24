@@ -398,7 +398,7 @@ player.update = function(self)
 
 		self.dead_timer += 1
 		if (self.dead_timer > 20) then
-			load()
+			restart_level()
 		end
 		return
 	end

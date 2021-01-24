@@ -8,9 +8,10 @@ __lua__
 #include object.lua
 #include objects.lua
 #include player.lua
-#include px9_comp.lua
 #include px9_decomp.lua
+
 single_level = true
+level_index = 1
 
 __gfx__
 00000000777777770011110001111110011111000000000000000000000000000000000000000022000000000000000000000000000000000000000000000000
