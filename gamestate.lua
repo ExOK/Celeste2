@@ -1,8 +1,8 @@
 levels = {
 
     {
-        width = 768,
-        height = 128,
+        width = 96,
+        height = 16,
         camera_mode = 2
     }
 
@@ -12,7 +12,7 @@ camera_modes = {
 
     -- 1: Basic Horizontal Mode
     function(px, py)
-        camera(max(0, min(level.width - 128, px - 56)), 0)
+        camera(max(0, min(level.width * 8 - 128, px - 56)), 0)
     end,
 
     -- 2: Intro Mode
@@ -20,7 +20,7 @@ camera_modes = {
         if (px < 32) then
             camera(0, 0)
         else
-            camera(max(32, min(level.width - 128, px - 48)), 0)
+            camera(max(32, min(level.width * 8 - 128, px - 48)), 0)
         end
     end
 
@@ -48,5 +48,5 @@ snap_camera = function()
 end
 
 tile_y = function(py)
-    return max(0, min(flr(py / 8), level.height / 8 - 1))
+    return max(0, min(flr(py / 8), level.height - 1))
 end
