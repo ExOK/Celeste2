@@ -1,10 +1,8 @@
 -- globals
 level_index = 1
-level_checkpoint = nil
 objects = {}
 snow = {}
 clouds = {}
-infade = 0
 freeze_time = 0
 frames = 0
 shake = 0

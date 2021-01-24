@@ -84,9 +84,7 @@ end
 
 object.update = function() end
 object.draw = function(self)
-	if self.spr != nil then
-		spr(self.spr, self.x, self.y, 1, 1, self.flip_x, self.flip_y)
-	end
+	spr(self.spr, self.x, self.y, 1, 1, self.flip_x, self.flip_y)
 end
 
 object.overlaps = function(self, b, ox, oy)
@@ -186,6 +184,7 @@ end
 
 function new_type()
 	local obj = {}
+	obj.base = object
 	setmetatable(obj, lookup)
 	add(types, obj)
 	return obj

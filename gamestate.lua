@@ -3,16 +3,14 @@ levels = {
         width = 96,
         height = 16,
         camera_mode = 1,
-		music = -1,
 		offset = 0
 	},
 	{
         width = 32,
         height = 32,
         camera_mode = 2,
-		music = -1,
 		fog = true,
-		offset = 312
+		offset = 308
     },
     {
         width = 128,
@@ -21,7 +19,7 @@ levels = {
         camera_barriers_x = { 38 },
         camera_barrier_y = 6,
         music = 2,
-        offset = 648
+        offset = 644
     }
 }
 
@@ -79,12 +77,6 @@ camera_modes = {
     end
 }
 
-have_grapple = true
-camera_x = 0
-camera_y = 0
-camera_target_x = 0
-camera_target_y = 0
-
 snap_camera = function()
     camera_x = camera_target_x
     camera_y = camera_target_y
@@ -108,7 +100,7 @@ function goto_level(index)
 	px9_decomp(0, 0, 0x1000 + level.offset, vget, vset)
 
 	-- start music
-	if current_music != level.music and level.music >= 0 then
+	if current_music != level.music and level.music then
 		current_music = level.music
 		music(level.music)
 	end
@@ -127,18 +119,19 @@ function next_level()
 end
 
 function restart_level()
+	camera_x = 0
+	camera_y = 0
     camera_target_x = 0
 	camera_target_y = 0
 	objects = {}
 	infade = 0
 	have_grapple = level_index > 2
-	camera(0, 0)
 
 	for i = 0,level.width-1 do
 		for j = 0,level.height-1 do
 			for t in all(types) do
 				if level_checkpoint == nil or t != player then
-					if tile_at(i, j) == t.tile and not collected[id(i, j)] then
+					if tile_at(i, j) == t.spr and not collected[id(i, j)] then
 						create(t, i * 8, j * 8)
 					end
 				end

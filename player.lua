@@ -1,5 +1,5 @@
 player = new_type()
-player.tile = 2
+player.spr = 2
 player.base = object
 
 player.t_jump_grace = 0
@@ -20,7 +20,6 @@ player.t_grapple_jump_grace = 0
 player.t_grapple_pickup = 0
 
 player.state = 0
-player.frame = 0
 
 -- Grapple Functions
 
@@ -192,7 +191,6 @@ end
 -- Events
 
 player.init = function(self)
-	self.spr = self.tile
 	self.hit_x = -3
 	self.hit_y = -6
 	self.hit_w = 6
@@ -383,7 +381,7 @@ player.update = function(self)
 
 		-- grapple wave
 		self.grapple_wave = approach(self.grapple_wave, 1, 0.2)
-		self.frame = 1
+		self.spr = 3
 
 		-- release
 		if not input_grapple or abs(self.y - self.grapple_y) > 8 then
@@ -415,8 +413,8 @@ player.update = function(self)
 		end
 
 		-- wall pose
-		if self.frame != 2 and self:check_solid(self.grapple_dir, 0) then
-			self.frame = 2
+		if self.spr != 4 and self:check_solid(self.grapple_dir, 0) then
+			self.spr = 4
 			sfx(14, 3, 8, 3)
 		end
 
@@ -532,18 +530,17 @@ player.update = function(self)
 
 	-- sprite
 	if self.state == 50 and self.t_grapple_pickup > 5 then
-		self.frame = 3
+		self.spr = 5
 	elseif (self.state != 11) then
 		if (not on_ground) then
-			self.frame = 1
+			self.spr = 3
 		elseif (input_x != 0) then
-			self.frame += 0.25
-			self.frame = self.frame % 2
+			self.spr += 0.25
+			self.spr = 2 + self.spr % 2
 		else
-			self.frame = 0
+			self.spr = 2
 		end
 	end
-	self.spr = self.tile + self.frame
 
 	-- object interactions
 	for o in all(objects) do

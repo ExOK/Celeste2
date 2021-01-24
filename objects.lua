@@ -1,15 +1,12 @@
 grapple_pickup = new_type()
-grapple_pickup.tile = 20
-grapple_pickup.base = object
+grapple_pickup.spr = 20
 grapple_pickup.draw = function(self)
-	spr(self.tile, self.x, self.y + sin(time()) * 2, 1, 1, not self.right)
+	spr(self.spr, self.x, self.y + sin(time()) * 2, 1, 1, not self.right)
 end
 
 spike_v = new_type()
-spike_v.tile = 36
-spike_v.base = object
+spike_v.spr = 36
 spike_v.init = function(self)
-	self.spr = self.tile
 	if self:check_solid(0, -1) then
 		self.flip_y = true
 		self.hazard = 3
@@ -21,11 +18,8 @@ spike_v.init = function(self)
 end
 
 spike_h = new_type()
-spike_h.tile = 37
-spike_h.base = object
-spike_h.hazard = true
+spike_h.spr = 37
 spike_h.init = function(self)
-	self.spr = self.tile
 	if self:check_solid(-1, 0) then
 		self.flip_x = true
 		self.hazard = 4
@@ -37,9 +31,7 @@ spike_h.init = function(self)
 end
 
 snowball = new_type()
-snowball.tile = 62
 snowball.spr = 62
-snowball.base = object
 snowball.grapple_mode = 3
 snowball.holdable = true
 snowball.thrown_timer = 0
@@ -93,9 +85,7 @@ snowball.on_release = function(self, thrown)
 end
 
 springboard = new_type()
-springboard.tile = 11
 springboard.spr = 11
-springboard.base = object
 springboard.grapple_mode = 3
 springboard.holdable = true
 springboard.thrown_timer = 0
@@ -145,9 +135,7 @@ springboard.on_release = function(self, thrown)
 end
 
 grappler = new_type()
-grappler.tile = 46
 grappler.spr = 46
-grappler.base = object
 grappler.grapple_mode = 2
 grappler.hit_x = -1
 grappler.hit_y = -1
@@ -155,17 +143,14 @@ grappler.hit_w = 10
 grappler.hit_h = 10
 
 bridge = new_type()
-bridge.tile = 63
-bridge.spr = bridge.tile
-bridge.base = object
+bridge.spr = 63
 bridge.falling = false
 bridge.update = function(self)
 	self.y += 3 * (self.falling and 1 or 0)
 end
 
 berry = new_type()
-berry.tile = 21
-berry.base = object
+berry.spr = 21
 berry.update = function(self)
 	if self.collected then
 		self.timer += 1
@@ -209,9 +194,8 @@ berry.draw = function(self)
 end
 
 crumble = new_type()
-crumble.tile = 19
+crumble.spr = 19
 crumble.geom = g_solid
-crumble.base = object
 crumble.grapple_mode = 1
 crumble.init = function(self)
 	self.time = 0
@@ -246,7 +230,7 @@ crumble.update = function(self)
 	end
 end
 crumble.draw = function(self)
-	spr(self.tile, self.x, self.y)
+	spr(self.spr, self.x, self.y)
 	if self.time > 2 then
 		fillp(0b1010010110100101.1)
 		rectfill(self.x, self.y, self.x + 7, self.y + 7, 1)
@@ -258,8 +242,7 @@ crumble.fall = function(self)
 end
 
 checkpoint = new_type()
-checkpoint.tile = 13
-checkpoint.base = object
+checkpoint.spr = 13
 checkpoint.init = function(self)
 	if level_checkpoint == self.id then
 		create(player, self.x, self.y)
