@@ -8,15 +8,24 @@ freeze_time = 0
 frames = 0
 shake = 0
 
-function _init()
-	for i=0,25 do
-		snow[i] = { x = rnd(132), y = rnd(132) }
-	end
-	for i=0,25 do
-		clouds[i] = { x = rnd(132), y = rnd(132), s = 16 + rnd(32) }
+function game_start()
+	
+	for i=0,25 do snow[i] = { x = rnd(132), y = rnd(132) } end
+	for i=0,25 do clouds[i] = { x = rnd(132), y = rnd(132), s = 16 + rnd(32) } end
+
+	-- reset state
+	frames = 0
+	berry_count = 0
+	collected = {}
+	for lvl in all(levels) do
+		add(collected, {})
 	end
 
 	goto_level(2)
+end
+
+function _init()
+	game_start()
 end
 
 function _update()

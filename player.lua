@@ -488,6 +488,8 @@ player.update = function(self)
 				self:die()
 				return
 			end
+		elseif (o.base == berry and self:overlaps(o)) then
+			o:collect()
 		end
 	end
 
