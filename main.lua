@@ -1,5 +1,7 @@
 -- globals
 level_index = 1
+level_intro = 0
+titlescreen = false
 snow = {}
 clouds = {}
 freeze_time = 0
@@ -27,27 +29,32 @@ end
 
 function _update()
 
-	-- timers
-	frames += 1
-	shake -= 1
-	infade += 1
-
-	update_input()
-
-	--freeze
-	if freeze_time > 0 then
-		freeze_time -= 1
+	if level_intro > 0 then
+		level_intro -= 1
 	else
-		--objects
-		for o in all(objects) do
-			if o.freeze > 0 then
-				o.freeze -= 1
-			else
-				o:update()
-			end
 
-			if o.destroyed then
-				del(objects, o)
+		-- timers
+		frames += 1
+		shake -= 1
+		infade += 1
+
+		update_input()
+
+		--freeze
+		if freeze_time > 0 then
+			freeze_time -= 1
+		else
+			--objects
+			for o in all(objects) do
+				if o.freeze > 0 then
+					o.freeze -= 1
+				else
+					o:update()
+				end
+
+				if o.destroyed then
+					del(objects, o)
+				end
 			end
 		end
 	end
@@ -55,15 +62,23 @@ end
 
 function _draw()
 
+	-- clear screen
+	cls(0)
+
+	if level_intro > 0 then
+		camera(0, 0)
+		draw_time(4, 4)
+		print(level.title, 64 - 10, 64 - 8)
+		print("0 km hiked", 64 - 16, 64)
+		return
+	end
+
 	local camera_x = peek2(0x5f28)
 	local camera_y = peek2(0x5f2a)
 
 	if shake > 0 then
 		camera(camera_x - 2 + rnd(5), camera_y - 2 + rnd(5))
 	end
-
-	-- clear screen
-	cls(0)
 
 	-- draw clouds
 	draw_clouds(1, 0, 0, 1, 1, 13)

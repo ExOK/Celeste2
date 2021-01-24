@@ -3,14 +3,14 @@ levels = {
         width = 96,
         height = 16,
         camera_mode = 1,
-		offset = 0
-	},
-	{
+        offset = 0
+    },
+    {
         width = 32,
         height = 32,
         camera_mode = 2,
-		fog = true,
-		offset = 308
+        fog = true,
+        offset = 308
     },
     {
         width = 128,
@@ -19,7 +19,8 @@ levels = {
         camera_barriers_x = { 38 },
         camera_barrier_y = 6,
         music = 2,
-        offset = 644
+		offset = 644,
+		title = "level 1"
     }
 }
 
@@ -93,6 +94,10 @@ function goto_level(index)
 	level = levels[index]
 	level_index = index
 	level_checkpoint = nil
+
+	if level.title then
+		level_intro = 60
+	end
 
 	-- load into ram
 	local function vget(x, y) return peek(0x4300 + (x % 128) + y * 128) end

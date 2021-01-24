@@ -298,7 +298,7 @@ player.update = function(self)
 
 		-- throw holding
 		if (self.holding and not input_grapple) then
-			if input_y == 1 then
+			if btn(3) then
 				self:release_holding(self.holding, 2 * self.facing, 0, false)
 			else
 				self:release_holding(self.holding, 4 * self.facing, -3, true)
