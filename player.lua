@@ -354,7 +354,7 @@ player.update = function(self)
 				self.grapple_wave = 2
 				self.grapple_boost = false
 				self.freeze = 2
-				sfx(7, 3, 0, 5)
+				sfx(14, 3, 0, 5)
 			end
 
 			if (hit == 2 or (hit == 0 and abs(self.grapple_x - self.x) >= 64)) then
@@ -399,8 +399,9 @@ player.update = function(self)
 		end
 
 		-- wall pose
-		if (self:check_solid(self.grapple_dir, 0)) then
+		if self.frame != 2 and self:check_solid(self.grapple_dir, 0) then
 			self.frame = 2
+			sfx(14, 3, 8, 3)
 		end
 
 		-- jumps
