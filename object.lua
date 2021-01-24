@@ -37,12 +37,14 @@ object.move_x = function(self, x, on_collide)
 			if (on_collide) then
 				on_collide(self, total - mx, total)
 			end
-			break
+			return true
 		else
 			self.x += mxs
 			mx -= mxs
 		end
 	end
+
+	return false
 end
 
 object.move_y = function(self, y, on_collide)
@@ -58,12 +60,14 @@ object.move_y = function(self, y, on_collide)
 			if (on_collide) then
 				on_collide(self, total - my, total)
 			end
-			break
+			return true
 		else
 			self.y += mys
 			my -= mys
 		end
 	end
+
+	return false
 end
 
 object.on_collide_x = function(self, moved, target)
