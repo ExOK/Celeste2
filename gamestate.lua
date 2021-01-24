@@ -27,7 +27,7 @@ camera_modes = {
 
     -- 1: Intro
     function(px, py, g)
-        if (px < 42) then
+        if px < 42 then
             camera_target_x = 0
         else
             camera_target_x = max(40, min(level.width * 8 - 128, px - 48))
@@ -36,9 +36,9 @@ camera_modes = {
 
     -- 2: Intro 2
     function(px, py, g)
-        if (px < 120) then
+        if px < 120 then
             camera_target_x = 0
-        elseif (px > 136) then
+        elseif px > 136 then
             camera_target_x = 128
         else
             camera_target_x = px - 64
@@ -106,7 +106,7 @@ function restart_level()
 	for i = 0,level.width-1 do
 		for j = 0,level.height-1 do
 			for n=1,#types do
-				if (tile_at(i, j) == types[n].tile and not is_collected(i, j)) then
+				if tile_at(i, j) == types[n].tile and not is_collected(i, j) then
 					create(types[n], i * 8, j * 8)
 				end
 			end
@@ -116,7 +116,7 @@ end
 
 -- gets the tile at the given location from the loaded level
 function tile_at(x, y)
-	if (single_level) then
+	if single_level then
 		return mget(x, y)
 	else
 		return peek(0x4300 + (x % 128) + y * 128)
@@ -128,6 +128,6 @@ function is_collected(x, y)
 end
 
 function set_collected(x, y)
-	if (not collected[x]) then collected[x] = {} end
+	if not collected[x] then collected[x] = {} end
 	collected[x][y] = true
 end
