@@ -88,6 +88,17 @@ player.jump = function(self)
 	sfx(7, 3, 0, 4)
 end
 
+player.spring = function(self, y)
+	consume_jump_press()
+	self.state = 0
+	self.speed_y = -5
+	self.var_jump_speed = -5
+	self.t_var_jump = 6
+	self.t_jump_grace = 0
+	self.remainder_y = 0
+	sfx(7, 3, 0, 4)
+end
+
 player.wall_jump = function(self, dir)
 	consume_jump_press()
 	self.state = 0
@@ -291,7 +302,11 @@ player.update = function(self)
 
 		-- throw holding
 		if (self.holding and not input_grapple) then
-			self:release_holding(self.holding, 4 * self.facing, -3, true)
+			if input_y == 1 then
+				self:release_holding(self.holding, 2 * self.facing, 0, false)
+			else
+				self:release_holding(self.holding, 4 * self.facing, -3, true)
+			end
 		end
 
 		-- throw grapple
@@ -317,13 +332,13 @@ player.update = function(self)
 		local at_x = approach(self.x, self.springboard.x + 4, 0.5)
 		self:move_x(at_x - self.x)
 
-		local at_y = approach(self.y, self.springboard.y + 4, 0.25)
+		local at_y = approach(self.y, self.springboard.y + 4, 0.2)
 		self:move_y(at_y - self.y)
 
 		if self.springboard.spr == 11 and self.y >= self.springboard.y + 2 then
 			self.springboard.spr = 12
 		elseif self.y == self.springboard.y + 4 then
-			self:jump()
+			self:spring(self.springboard.y + 4)
 			self.springboard.spr = 11
 		end
 
@@ -555,7 +570,10 @@ player.update = function(self)
 			self.state = 2
 			self.speed_x = 0
 			self.speed_y = 0
+			self.t_jump_grace = 0
 			self.springboard = o
+			self.remainder_y = 0
+			self:move_y(o.y + 4 - self.y)
 		elseif o.base == berry and self:overlaps(o) then
 			--berry
 			o:collect(self)

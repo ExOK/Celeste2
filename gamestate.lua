@@ -18,7 +18,8 @@ levels = {
         width = 128,
         height = 16,
         camera_mode = 3,
-        music = 0,
+        camera_barriers = { 38 },
+        music = 2,
         offset = 648
     }
 }
@@ -34,7 +35,7 @@ camera_modes = {
         end
     end,
 
-    -- 2: Intro 2
+    -- 2: Horizontal Barriers
     function(px, py, g)
         if px < 120 then
             camera_target_x = 0
@@ -46,12 +47,25 @@ camera_modes = {
         camera_target_y = max(0, min(level.height * 8 - 128, py - 64))
     end,
 
-    -- 3: Basic Horizontal
+    -- 3: Horizontal with Barriers
+    function(px, py, g)
+        camera_target_x = max(0, min(level.width * 8 - 128, px - 56))
+        for i,b in ipairs(level.camera_barriers) do
+            local bx = b * 8
+            if px < bx - 8 then
+                camera_target_x = min(camera_target_x, bx - 128)
+            elseif px > bx + 8 then
+                camera_target_x = max(camera_target_x, bx)
+            end
+        end
+    end,
+
+    -- 4: Basic Horizontal
     function(px, py, g)
         camera_target_x = max(0, min(level.width * 8 - 128, px - 56))
     end,
 
-    -- 4: Basic Freeform
+    -- 5: Basic Freeform
     function(px, py, g)
         camera_target_x = max(0, min(level.width * 8 - 128, px - 64))
         camera_target_y = max(0, min(level.height * 8 - 128, py - 64))
