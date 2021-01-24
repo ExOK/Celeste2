@@ -81,8 +81,8 @@ function _draw()
 	clip(0,0,128,128)
 
 	-- draw tileset
-	for x=0,96 do
-		for y=0,16 do
+	for x = mid(0, flr(camera_x / 8), level.width),mid(0, flr((camera_x + 128) / 8), level.width) do
+		for y = mid(0, flr(camera_y / 8), level.height),mid(0, flr((camera_y + 128) / 8), level.height) do
 			local tile = tile_at(x, y)
 			if (tile != 0 and fget(tile, 0)) then
 				spr(tile, x * 8, y * 8)
@@ -129,7 +129,7 @@ function _draw()
 	end
 
 	-- debug
-	if (false) do
+	if (true) do
 		for o in all(objects) do
 			rect(o.x + o.hit_x, o.y + o .hit_y, o.x + o.hit_x + o.hit_w - 1, o.y + o.hit_y + o.hit_h - 1, 8)
 		end
@@ -151,15 +151,6 @@ function draw_time(x,y)
 	
 	rectfill(x,y,x+32,y+6,0)
 	print((h<10 and "0"..h or h)..":"..(m<10 and "0"..m or m)..":"..(s<10 and "0"..s or s),x+1,y+1,7)
-end
-
--- gets the tile at the given location in the CURRENT room
-function tile_at(x, y)
-	if (single_level) then
-		return mget(x, y)
-	else
-		return peek(0x4300 + (x % 128) + y * 128)
-	end
 end
 
 function approach(x, target, max_delta)
