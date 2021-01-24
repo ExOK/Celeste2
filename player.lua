@@ -119,6 +119,7 @@ player.grapple_jump = function(self)
 	self.speed_y = -3
 	self.var_jump_speed = -3
 	self.t_var_jump = 4
+	self.grapple_retract = true
 	if (abs(self.speed_x) > 4) then
 		self.speed_x = sgn(self.speed_x) * 4
 	end
@@ -439,8 +440,10 @@ player.update = function(self)
 			self.grapple_jump_grace_y = self.y
 			self.grapple_retract = true
 			self.facing *= -1
-			if (abs(self.speed_x) > 5) then
+			if abs(self.speed_x) > 5 then
 				self.speed_x = sgn(self.speed_x) * 5
+			elseif abs(self.speed_x) <= 0.5 then
+				self.speed_x = 0
 			end
 		end
 
@@ -579,8 +582,14 @@ player.update = function(self)
 			o:collect(self)
 		elseif o.base == crumble then
 			--crumble
-			if (self.state == 0 and self:overlaps(o, 0, 1)) or (self.state == 11 and self:overlaps(o, self.grapple_dir)) then
-				o:fall()
+			if self.state == 0 then
+				if self:overlaps(o, 0, 1) then
+					o:fall()
+				end
+			elseif self.state == 11 then
+				if self:overlaps(o, self.grapple_dir) or self:overlaps(o, self.grapple_dir, 2) or self:overlaps(o, self.grapple_dir, -2) then
+					o:fall()
+				end
 			end
 		elseif o.base == checkpoint and self:overlaps(o) then
 			o:set()

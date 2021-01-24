@@ -16,9 +16,10 @@ levels = {
     },
     {
         width = 128,
-        height = 16,
+        height = 22,
         camera_mode = 3,
-        camera_barriers = { 38 },
+        camera_barriers_x = { 38 },
+        camera_barrier_y = 6,
         music = 2,
         offset = 648
     }
@@ -35,7 +36,7 @@ camera_modes = {
         end
     end,
 
-    -- 2: Horizontal Barriers
+    -- 2: Intro 2
     function(px, py, g)
         if px < 120 then
             camera_target_x = 0
@@ -47,16 +48,22 @@ camera_modes = {
         camera_target_y = max(0, min(level.height * 8 - 128, py - 64))
     end,
 
-    -- 3: Horizontal with Barriers
+    -- 3: Level 1
     function(px, py, g)
         camera_target_x = max(0, min(level.width * 8 - 128, px - 56))
-        for i,b in ipairs(level.camera_barriers) do
+        for i,b in ipairs(level.camera_barriers_x) do
             local bx = b * 8
             if px < bx - 8 then
                 camera_target_x = min(camera_target_x, bx - 128)
             elseif px > bx + 8 then
                 camera_target_x = max(camera_target_x, bx)
             end
+        end
+
+        if py < level.camera_barrier_y * 8 + 3 then
+            camera_target_y = 0
+        else
+            camera_target_y = level.camera_barrier_y * 8
         end
     end,
 
