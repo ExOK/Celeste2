@@ -81,6 +81,7 @@ player.jump = function(self)
 	self.t_var_jump = 4
 	self.t_jump_grace = 0
 	self:move_y(self.jump_grace_y - self.y)
+	sfx(7, 3, 0, 4)
 end
 
 player.wall_jump = function(self, dir)
@@ -92,6 +93,7 @@ player.wall_jump = function(self, dir)
 	self.t_var_jump = 4
 	self.facing = dir
 	self:move_x(-dir * 3)
+	sfx(7, 3, 4, 4)
 end
 
 player.grapple_jump = function(self)
