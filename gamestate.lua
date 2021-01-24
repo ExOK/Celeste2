@@ -21,6 +21,14 @@ levels = {
         music = 2,
 		offset = 644,
 		title = "level 1"
+    },
+    {
+        width = 128,
+        height = 32,
+        camera_mode = 4,
+        music = 2,
+        offset = 0,
+        title = "level 2"
     }
 }
 
@@ -63,6 +71,20 @@ camera_modes = {
             camera_target_y = 0
         else
             camera_target_y = level.camera_barrier_y * 8
+        end
+    end,
+
+    -- 4: Level 2
+    function(px, py, g)
+        if px % 128 > 8 and px % 128 < 120 then
+            camera_target_x = flr(px / 128) * 128
+        else
+            camera_target_x = max(0, min(level.width * 8 - 128, px - 64))
+        end
+        if py % 128 > 8 and py % 128 < 120 then
+            camera_target_y = flr(py / 128) * 128
+        else
+            camera_target_y = max(0, min(level.height * 8 - 128, py - 64))
         end
     end,
 

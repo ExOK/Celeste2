@@ -84,6 +84,16 @@ player.jump = function(self)
 	sfx(7, 3, 0, 4)
 end
 
+player.bounce = function(self, x, y)
+	self.state = 0
+	self.speed_y = -4
+	self.var_jump_speed = -4
+	self.t_var_jump = 4
+	self.t_jump_grace = 0
+	self:move_y(y - self.y)
+	self.speed_x += sgn(self.x - x)
+end
+
 player.spring = function(self, y)
 	consume_jump_press()
 	self.state = 0
@@ -553,8 +563,7 @@ player.update = function(self)
 		elseif o.base == snowball and not o.held and self:overlaps(o) then
 			--snowball
 			if self:bounce_check(o) then
-				self.jump_grace_y = o.y
-				self:jump()
+				self:bounce(o.x + 4, o.y)
 				o.freeze = 1
 				o.speed_y = -1
 			elseif o.speed_x != 0 and o.thrown_timer <= 0 then
