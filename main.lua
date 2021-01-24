@@ -1,4 +1,5 @@
 -- globals
+start_level = 1
 objects = {}
 snow = {}
 clouds = {}
@@ -6,6 +7,7 @@ infade = 0
 freeze_time = 0
 frames = 0
 shake = 0
+
 
 function _init()
 	for i=0,25 do
@@ -15,8 +17,7 @@ function _init()
 		clouds[i] = { x = rnd(132), y = rnd(132), s = 16 + rnd(32) }
 	end
 
-	on_start_level(1)
-	load()
+	goto_level(start_level)
 end
 
 function _update()
@@ -158,34 +159,6 @@ function tile_at(x, y)
 		return mget(x, y)
 	else
 		return peek(0x4300 + (x % 128) + y * 128)
-	end
-end
-
--- loads the given room
-function load()
-	on_restart_level()
-
-	objects = {}
-	infade = 0
-	camera(0, 0)
-
-	local function vget(x, y)
-		return peek(0x4300 + (x % 128) + y * 128)
-	end
-	local function vset(x, y, v)
-		return poke(0x4300 + (x % 128) + y * 128, v)
-	end
-
-	px9_decomp(0, 0, 0x2000, vget, vset)
-
-	for i = 0,level.width-1 do
-		for j = 0,level.height-1 do
-			for n=1,#types do
-				if (tile_at(i, j) == types[n].tile) then
-					create(types[n], i * 8, j * 8)
-				end
-			end
-		end
 	end
 end
 

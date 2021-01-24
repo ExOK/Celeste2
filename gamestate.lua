@@ -1,12 +1,16 @@
 levels = {
-
     {
         width = 96,
         height = 16,
         camera_mode = 2,
         music = 0
+	},
+	{
+        width = 128,
+        height = 16,
+        camera_mode = 1,
+        music = 0
     }
-
 }
 
 camera_modes = {
@@ -28,22 +32,10 @@ camera_modes = {
 }
 
 have_grapple = true
-level = levels[1]
 camera_x = 0
 camera_y = 0
 camera_target_x = 0
 camera_target_y = 0
-
-on_restart_level = function()
-    camera_target_x = 0
-    camera_target_y = 0
-end
-
-on_start_level = function(index)
-    level = levels[index]
-    music(level.music)
-    on_restart_level()
-end
 
 snap_camera = function()
     camera_x = camera_target_x
@@ -53,4 +45,42 @@ end
 
 tile_y = function(py)
     return max(0, min(flr(py / 8), level.height - 1))
+end
+
+function goto_level(index)
+	level = levels[index]
+	level_index = index
+    music(level.music)
+    restart_level()
+end
+
+function next_level()
+	goto_level(level_index + 1)
+end
+
+function restart_level()
+    camera_target_x = 0
+	camera_target_y = 0
+	objects = {}
+	infade = 0
+	camera(0, 0)
+
+	local function vget(x, y)
+		return peek(0x4300 + (x % 128) + y * 128)
+	end
+	local function vset(x, y, v)
+		return poke(0x4300 + (x % 128) + y * 128, v)
+	end
+
+	px9_decomp(0, 0, 0x2000, vget, vset)
+
+	for i = 0,level.width-1 do
+		for j = 0,level.height-1 do
+			for n=1,#types do
+				if (tile_at(i, j) == types[n].tile) then
+					create(types[n], i * 8, j * 8)
+				end
+			end
+		end
+	end
 end
