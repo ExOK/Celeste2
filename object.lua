@@ -1,6 +1,5 @@
 objects = {}
 types = {}
-
 lookup = {}
 lookup.__index = function(self, i) return self.base[i] end
 
@@ -13,7 +12,6 @@ object.hit_x = 0
 object.hit_y = 0
 object.hit_w = 8
 object.hit_h = 8
-object.actor = true
 object.grapple_mode = 0
 object.hazard = 0
 object.facing = 1
@@ -84,8 +82,8 @@ end
 
 object.overlaps = function(self, b, ox, oy)
 	if self == b then return false end
-	if not ox then ox = 0 end
-	if not oy then oy = 0 end
+	ox = ox or 0
+	oy = oy or 0
 	return
 		ox + self.x + self.hit_x + self.hit_w > b.x + b.hit_x and
 		oy + self.y + self.hit_y + self.hit_h > b.y + b.hit_y and
@@ -102,8 +100,8 @@ object.contains = function(self, px, py)
 end
 
 object.check_solid = function(self, ox, oy)
-	if not ox then ox = 0 end
-	if not oy then oy = 0 end
+	ox = ox or 0
+	oy = oy or 0
 
 	for i = flr((ox + self.x + self.hit_x) / 8),flr((ox + self.x + self.hit_x + self.hit_w - 1) / 8) do
 		for j = tile_y(oy + self.y + self.hit_y),tile_y(oy + self.y + self.hit_y + self.hit_h - 1) do
@@ -123,8 +121,8 @@ object.check_solid = function(self, ox, oy)
 end
 
 object.corner_correct = function(self, dir_x, dir_y, side_dist, look_ahead, only_sign, func)
-	if not look_ahead then look_ahead = 1 end
-	if not only_sign then only_sign = 0 end
+	look_ahead = look_ahead or 1
+	only_sign = only_sign or 1
 
 	if dir_x ~= 0 then
 		for i = 1, side_dist do

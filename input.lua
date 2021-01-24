@@ -38,10 +38,8 @@ function update_input()
 	local jump = btn(4)
 	if jump and not input_jump then		
 		input_jump_pressed = 4
-	elseif jump then
-		input_jump_pressed = max(0, input_jump_pressed - 1)
 	else
-		input_jump_pressed = 0
+		input_jump_pressed = jump and max(0, input_jump_pressed - 1) or 0
 	end
 	input_jump = jump
 
@@ -49,10 +47,8 @@ function update_input()
 	local grapple = btn(5)
 	if grapple and not input_grapple then
 		input_grapple_pressed = 4
-	elseif grapple then
-		input_grapple_pressed = max(0, input_grapple_pressed - 1)
 	else
-		input_grapple_pressed = 0
+		input_grapple_pressed = grapple and max(0, input_grapple_pressed - 1) or 0
 	end
 	input_grapple = grapple
 end

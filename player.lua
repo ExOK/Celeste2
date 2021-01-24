@@ -151,8 +151,8 @@ player.hazard_table = {
 }
 
 player.hazard_check = function(self, ox, oy)
-	if (not ox) then ox = 0 end
-	if (not oy) then oy = 0 end
+	ox = ox or 0
+	oy = oy or 0
 
 	for o in all(objects) do
 		if (o.hazard != 0 and self:overlaps(o, ox, oy) and self.hazard_table[o.hazard](self)) then

@@ -1,6 +1,5 @@
 -- globals
 level_index = 1
-objects = {}
 snow = {}
 clouds = {}
 freeze_time = 0

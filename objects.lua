@@ -38,13 +38,10 @@ snowball.update = function(self)
 		end
 
 		--speed
-		if self.speed_x != 0 then
-			self.speed_x = approach(self.speed_x, sgn(self.speed_x) * 2, 0.1)
-		end
+		self.speed_x = approach(self.speed_x, sgn(self.speed_x) * 2, 0.1)
 
 		--gravity
-		local on_ground = self:check_solid(0, 1)
-		if not on_ground then
+		if not self:check_solid(0, 1) then
 			self.speed_y = approach(self.speed_y, 4, 0.4)
 		end
 
@@ -86,14 +83,10 @@ springboard.holdable = true
 springboard.thrown_timer = 0
 springboard.update = function(self)
 	if not self.held then
-		local on_ground = self:check_solid(0, 1)
-
-		if self.thrown_timer > 0 then
-			self.thrown_timer -= 1
-		end
+		self.thrown_timer -= 1
 
 		--friction and gravity	
-		if on_ground then
+		if self:check_solid(0, 1) then
 			self.speed_x = approach(self.speed_x, 0, 0.6)
 		else
 			self.speed_y = approach(self.speed_y, 4, 0.4)
@@ -146,12 +139,8 @@ berry = new_type(21)
 berry.update = function(self)
 	if self.collected then
 		self.timer += 1
-		if self.timer > 5 then
-			self.y -= 0.2
-		end
-		if self.timer > 30 then
-			self.destroyed = true
-		end
+		self.y -= 0.2 * (self.timer > 5 and 1 or 0)
+		self.destroyed = self.timer > 30
 	elseif self.player then
 		self.x += (self.player.x - self.x) / 8
 		self.y += (self.player.y - 4 - self.y) / 8
@@ -173,9 +162,9 @@ berry.collect = function(self, player)
 	end
 end
 berry.draw = function(self)
-	if not self.timer or self.timer < 5 then
+	if (self.timer or 0) < 5 then
 		grapple_pickup.draw(self)
-		if self.flash and self.flash > 0 then
+		if (self.flash or 0) > 0 then
 			circ(self.x + 4, self.y + 4, self.flash * 3, 7)
 			circfill(self.x + 4, self.y + 4, 5, 7)
 		end
