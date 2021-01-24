@@ -17,9 +17,6 @@ function game_start()
 	frames = 0
 	berry_count = 0
 	collected = {}
-	for lvl in all(levels) do
-		add(collected, {})
-	end
 
 	goto_level(level_index)
 end

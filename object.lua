@@ -170,11 +170,14 @@ object.corner_correct = function(self, dir_x, dir_y, side_dist, look_ahead, only
 	return false
 end
 
+function id(tx, ty) return level_index * 100 + flr(tx) + flr(ty) * 128 end
+
 function create(type, x, y)
 	local obj = {}
 	obj.base = type
 	obj.x = x
 	obj.y = y
+	obj.id = id(flr(x/8), flr(y/8))
 	setmetatable(obj, lookup)
 	add(objects, obj)
 	if obj.init then obj.init(obj) end
