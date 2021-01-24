@@ -52,6 +52,7 @@ player.start_grapple = function(self)
 	end
 	self.facing = self.grapple_dir
 
+	sfx(8, 3)
 end
 
 -- 0 = nothing, 1 = hit!, 2 = fail
@@ -351,9 +352,11 @@ player.update = function(self)
 				self.grapple_wave = 2
 				self.grapple_boost = false
 				self.freeze = 2
+				sfx(7, 3, 0, 5)
 			end
 
 			if (hit == 2 or (hit == 0 and abs(self.grapple_x - self.x) >= 64)) then
+				sfx(14, 3, 8, 3)
 				self.grapple_retract = true
 				self.freeze = 2
 				self.state = 0
@@ -368,6 +371,7 @@ player.update = function(self)
 		if (not input_grapple or abs(self.y - self.grapple_y) > 8) then
 			self.state = 0
 			self.grapple_retract = true
+			sfx(-2, 3)
 		end
 
 	elseif self.state == 11 then
