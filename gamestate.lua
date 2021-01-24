@@ -3,7 +3,8 @@ levels = {
     {
         width = 96,
         height = 16,
-        camera_mode = 2
+        camera_mode = 2,
+        music = 0
     }
 
 }
@@ -33,10 +34,15 @@ camera_y = 0
 camera_target_x = 0
 camera_target_y = 0
 
-start_level = function(index)
-    level = levels[index]
+on_restart_level = function()
     camera_target_x = 0
     camera_target_y = 0
+end
+
+on_start_level = function(index)
+    level = levels[index]
+    music(level.music)
+    on_restart_level()
 end
 
 snap_camera = function()

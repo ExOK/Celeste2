@@ -16,6 +16,7 @@ function _init()
 		clouds[i] = { x = rnd(132), y = rnd(132), s = 16 + rnd(32) }
 	end
 
+	on_start_level(1)
 	load()
 end
 
@@ -158,6 +159,8 @@ end
 
 -- loads the given room
 function load()
+	on_restart_level()
+
 	objects = {}
 	infade = 0
 	camera(0, 0)
