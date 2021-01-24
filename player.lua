@@ -46,7 +46,7 @@ end
 
 -- 0 = nothing, 1 = solid, 2 = ice
 player.grapple_check = function(self, x, y)
-	local tile = room_tile_at(flr(x / 8), flr(y / 8))
+	local tile = room_tile_at(flr(x / 8), tile_y(y))
 	if (fget(tile, 1)) then
 		self.grapple_hit = nil
 		return fget(tile, 2) and 2 or 1
@@ -331,7 +331,8 @@ player.update = function(self)
 		shake = 5
 	end
 
-	camera(max(0, min(8 * 96 - 128, self.x - 48)), 0)
+	-- camera
+	camera_modes[level.camera_mode](self.x, self.y)
 end
 
 player.on_collide_x = function(self, moved, target)
