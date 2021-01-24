@@ -1,17 +1,20 @@
-- Jump
-- Wall jump (reuse)
-- Grapple out
-- Grapple pull
-- Grapple cling
-- Grapple fail (ice)
-- Death
+X Jump
+X Wall jump (reuse)
+X Grapple out
+X Grapple pull
+X Grapple cling
+X Grapple fail (ice)
+X Death
 - Bridge collapse
 - Grapple get
-- Snowball pick up
-- Snowball throw (reuse?)
-- Snowball jump
+X Snowball pick up
+X Snowball throw (reuse?)
+X Snowball jump
 - Berry get
-- Crumble
+- Block Crumble
+X Spring jump
+X Cartoony fall
+X Screen woosh
 
 Music
 
@@ -20,6 +23,8 @@ Music
 
 TO IMPLEMENT:
 
+14 - Death (16-32)
+17 - Snowball bounce/jump (0-1) Spring jump (2-4) Cartoony fall (8-23) Screen woosh (24-32)
 
 SFX:
 
