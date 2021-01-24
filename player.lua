@@ -16,6 +16,7 @@ player.t_grapple_cooldown = 0
 player.grapple_retract = false
 player.holding = nil
 player.dead_timer = 0
+player.t_grapple_jump_grace = 0
 
 player.state = 0
 player.frame = 0
@@ -53,7 +54,7 @@ player.start_grapple = function(self)
 
 end
 
--- 0 = nothing, 1 = solid, 2 = ice
+-- 0 = nothing, 1 = hit!, 2 = fail
 player.grapple_check = function(self, x, y)
 	local tile = room_tile_at(flr(x / 8), tile_y(y))
 	if (fget(tile, 1)) then
@@ -62,8 +63,14 @@ player.grapple_check = function(self, x, y)
 	end
 
 	for o in all(objects) do
-		if ((o.geom == g_solid or o.grabbable) and o:contains(x, y)) then
+		if (o.grapple_mode != 0 and o:contains(x, y)) then
 			self.grapple_hit = o
+
+			if (o.grapple_mode == 2) then
+				self.grapple_x = o.x + 4
+				self.grapple_y = o.y + 4
+			end
+
 			return 1
 		end
 	end
@@ -75,12 +82,26 @@ end
 
 player.wall_jump = function(self, dir)
 	consume_jump_press()
+	self.state = 0
 	self.speed_y = -3
 	self.speed_x = 3 * dir
 	self.var_jump_speed = self.speed_y
 	self.t_var_jump = 4
 	self.facing = dir
 	self:move_x(-dir * 3, true)
+end
+
+player.grapple_jump = function(self)
+	consume_jump_press()
+	self.state = 0
+	self.t_grapple_jump_grace = 0
+	self.state = 0
+	self.speed_y = -3
+	self.var_jump_speed = self.speed_y
+	self.t_var_jump = 4
+	if (abs(self.speed_x) > 4) then
+		self.speed_x = sgn(self.speed_x) * 4
+	end
 end
 
 --[[
@@ -140,6 +161,10 @@ player.update = function(self)
 		self.jump_grace_y = self.y
 	else
 		self.t_jump_grace = max(0, self.t_jump_grace - 1)
+	end
+
+	if (self.t_grapple_jump_grace > 0) then
+		self.t_grapple_jump_grace -= 1
 	end
 
 	if (self.t_grapple_cooldown > 0 and self.state < 1) then
@@ -216,6 +241,8 @@ player.update = function(self)
 				self:wall_jump(-1)
 			elseif (self:check_solid(-2, 0)) then
 				self:wall_jump(1)
+			elseif (self.t_grapple_jump_grace > 0) then
+				self:grapple_jump()
 			end
 		end
 
@@ -286,18 +313,9 @@ player.update = function(self)
 		-- jumps
 		if (consume_jump_press()) then
 			if (self:check_solid(self.grapple_dir * 3, 0)) then
-				-- wall jump
-				self.state = 0
 				self:wall_jump(-self.grapple_dir)
 			else
-				-- grapple jump
-				self.state = 0
-				self.speed_y = -3
-				self.var_jump_speed = self.speed_y
-				self.t_var_jump = 4
-				if (abs(self.speed_x) > 4) then
-					self.speed_x = sgn(self.speed_x) * 4
-				end
+				self:grapple_jump()
 			end
 		end
 
@@ -307,6 +325,7 @@ player.update = function(self)
 		-- release
 		if (not input_grapple) then
 			self.state = 0
+			self.t_grapple_jump_grace = 2
 			self.grapple_retract = true
 			self.facing *= -1
 			if (abs(self.speed_x) > 5) then
@@ -314,9 +333,12 @@ player.update = function(self)
 			end
 		end
 
-		-- behind grapple point
+		-- release if beyond grapple point
 		if (sgn(self.x - self.grapple_x) == self.grapple_dir) then
 			self.state = 0
+			if (self.grapple_hit != nil and self.grapple_hit.grapple_mode == 2) then
+				self.t_grapple_jump_grace = 30
+			end
 			if (abs(self.speed_x) > 5) then
 				self.speed_x = sgn(self.speed_x) * 5
 			end
