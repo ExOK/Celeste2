@@ -13,6 +13,13 @@ levels = {
 		music = 0,
 		fog = true,
 		offset = 312
+    },
+    {
+        width = 128,
+        height = 16,
+        camera_mode = 3,
+        music = 0,
+        offset = 0
     }
 }
 
