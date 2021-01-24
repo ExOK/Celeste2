@@ -12,20 +12,24 @@ end
 grapple = new_type()
 grapple.tile = 20
 grapple.base = object
+grapple.visible = true
 grapple.draw = function(self)
-	spr(self.tile, self.x, self.y + sin(time()) * 2, 1, 1, not self.right)
+	if (self.visible) then
+		spr(self.tile, self.x, self.y + sin(time()) * 2, 1, 1, not self.right)
+	end
 end
 
 spike_v = new_type()
 spike_v.tile = 36
 spike_v.base = object
-spike_v.hazard = true
 spike_v.init = function(self)
 	self.spr = self.tile
 	if (self:check_solid(0, -1)) then
 		self.flip_y = true
+		self.hazard = 3
 	else
 		self.hit_y = 5
+		self.hazard = 2
 	end
 	self.hit_h = 3
 end
@@ -38,8 +42,10 @@ spike_h.init = function(self)
 	self.spr = self.tile
 	if (self:check_solid(-1, 0)) then
 		self.flip_x = true
+		self.hazard = 4
 	else
 		self.hit_x = 5
+		self.hazard = 5
 	end
 	self.hit_w = 3
 end

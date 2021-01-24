@@ -19,9 +19,10 @@ object.hit_w = 8
 object.hit_h = 8
 object.geom = g_none
 object.actor = true
+object.hazard = 0
 object.facing = 1
 
-object.move_x = function(self, x)	
+object.move_x = function(self, x, no_func)	
 	self.remainder_x += x
 	local mx = flr(self.remainder_x + 0.5)
 	self.remainder_x -= mx
@@ -31,7 +32,9 @@ object.move_x = function(self, x)
 	while (mx != 0)
 	do
 		if (self:check_solid(mxs, 0)) then
-			self:on_collide_x(total - mx, total)
+			if (not no_func) then
+				self:on_collide_x(total - mx, total)
+			end
 			break
 		else
 			self.x += mxs
@@ -40,7 +43,7 @@ object.move_x = function(self, x)
 	end
 end
 
-object.move_y = function(self, y)
+object.move_y = function(self, y, no_func)
 	self.remainder_y += y
 	local my = flr(self.remainder_y + 0.5)
 	self.remainder_y -= my
@@ -50,7 +53,9 @@ object.move_y = function(self, y)
 	while (my != 0)
 	do
 		if (self:check_solid(0, mys)) then
-			self:on_collide_y(total - my, total)
+			if (not no_func) then
+				self:on_collide_y(total - my, total)
+			end
 			break
 		else
 			self.y += mys
@@ -99,7 +104,7 @@ object.check_solid = function(self, ox, oy)
 	if (oy == nil) then oy = 0 end
 
 	for i = flr((ox + self.x + self.hit_x) / 8),flr((ox + self.x + self.hit_x + self.hit_w - 1) / 8) do
-		for j = flr((oy + self.y + self.hit_y) / 8),flr((oy + self.y + self.hit_y + self.hit_h - 1) / 8) do
+		for j = tile_y(oy + self.y + self.hit_y),tile_y(oy + self.y + self.hit_y + self.hit_h - 1) do
 			if (fget(room_tile_at(i, j), 1)) then
 				return true
 			end
@@ -115,7 +120,7 @@ object.check_solid = function(self, ox, oy)
 	return false
 end
 
-object.corner_correct = function(self, dir_x, dir_y, side_dist, look_ahead, only_sign)
+object.corner_correct = function(self, dir_x, dir_y, side_dist, look_ahead, only_sign, func)
 	if (look_ahead == nil) then look_ahead = 1 end
 	if (only_sign == nil) then only_sign = 0 end
 
@@ -126,7 +131,7 @@ object.corner_correct = function(self, dir_x, dir_y, side_dist, look_ahead, only
 					goto continue_x
 				end
 
-				if (not self:check_solid(dir_x, i * s)) then
+				if (not self:check_solid(dir_x, i * s) and (func == nil or func(self, dir_x, i * s))) then
 					self.x += dir_x
 					self.y += i * s
 					return true
@@ -142,7 +147,7 @@ object.corner_correct = function(self, dir_x, dir_y, side_dist, look_ahead, only
 					goto continue_y
 				end
 
-				if (not self:check_solid(i * s, dir_y)) then
+				if (not self:check_solid(i * s, dir_y) and (func == nil or func(self, i * s, dir_y))) then
 					self.x += i * s
 					self.y += dir_y
 					return true

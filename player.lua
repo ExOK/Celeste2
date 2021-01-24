@@ -22,7 +22,7 @@ player.frame = 0
 -- Grapple Functions
 
 player.start_grapple = function(self)
-	self.state = 1
+	self.state = 10
 
 	self.speed_x = 0
 	self.speed_y = 0
@@ -46,7 +46,7 @@ end
 
 -- 0 = nothing, 1 = solid, 2 = ice
 player.grapple_check = function(self, x, y)
-	local tile = room_tile_at(flr(x / 8), flr(y / 8))
+	local tile = room_tile_at(flr(x / 8), tile_y(y))
 	if (fget(tile, 1)) then
 		self.grapple_hit = nil
 		return fget(tile, 2) and 2 or 1
@@ -62,7 +62,7 @@ player.grapple_check = function(self, x, y)
 	return 0
 end
 
--- Jumps
+-- Helpers
 
 player.wall_jump = function(self, dir)
 	consume_jump_press()
@@ -71,6 +71,42 @@ player.wall_jump = function(self, dir)
 	self.var_jump_speed = self.speed_y
 	self.t_var_jump = 4
 	self.facing = dir
+	self:move_x(-dir * 3, true)
+end
+
+--[[
+	hazard types:
+		0 - not a hazard
+		1 - general hazard
+		2 - up-spike
+		3 - down-spike
+		4 - right-spike
+		5 - left-spike
+]]
+
+player.hazard_table = {
+	[1] = function(self) return true end,
+	[2] = function(self) return self.speed_y >= 0 end,
+	[3] = function(self) return self.speed_y <= 0 end,
+	[4] = function(self) return self.speed_x <= 0 end,
+	[5] = function(self) return self.speed_x >= 0 end
+}
+
+player.hazard_check = function(self, ox, oy)
+	if (ox == nil) then ox = 0 end
+	if (oy == nil) then oy = 0 end
+
+	for o in all(objects) do
+		if (o.hazard != 0 and self:overlaps(o, ox, oy) and self.hazard_table[o.hazard](self)) then
+			return true
+		end
+	end
+
+	return false
+end
+
+player.correction_func = function(self, ox, oy)
+	return not self:hazard_check(ox, oy)
 end
 
 -- Events
@@ -114,8 +150,8 @@ player.update = function(self)
 	--[[
 		player states:
 			0 	- normal
-			1 	- throw grapple
-			2 	- grapple attached to solid
+			10 	- throw grapple
+			11 	- grapple attached to solid
 			99 	- dead
 	]]
 
@@ -166,7 +202,7 @@ player.update = function(self)
 				self.var_jump_speed = self.speed_y
 				self.t_var_jump = 4
 				self.t_jump_grace = 0
-				self:move_y(self.jump_grace_y - self.y)
+				self:move_y(self.jump_grace_y - self.y, true)
 			elseif (self:check_solid(2, 0)) then
 				self:wall_jump(-1)
 			elseif (self:check_solid(-2, 0)) then
@@ -175,11 +211,11 @@ player.update = function(self)
 		end
 
 		-- throw grapple
-		if (self.t_grapple_cooldown <= 0 and consume_grapple_press()) then
+		if (have_grapple and self.t_grapple_cooldown <= 0 and consume_grapple_press()) then
 			self:start_grapple()
 		end
 
-	elseif (self.state == 1) then
+	elseif (self.state == 10) then
 		-- throw grapple state
 
 		-- grapple movement
@@ -188,7 +224,7 @@ player.update = function(self)
 			if (hit == 0) then
 				self.grapple_x += self.grapple_dir
 			elseif (hit == 1) then
-				self.state = 2
+				self.state = 11
 				self.grapple_wave = 2
 				self.grapple_boost = false
 				freeze_time = 2
@@ -211,9 +247,10 @@ player.update = function(self)
 			self.grapple_retract = true
 		end
 
-	elseif (self.state == 2) then
+	elseif (self.state == 11) then
 		-- grapple attached state
 		
+		-- start boost
 		if (not self.grapple_boost) then
 			self.grapple_boost = true
 			self.speed_x = self.grapple_dir * 8
@@ -223,11 +260,35 @@ player.update = function(self)
 		self.speed_x = approach(self.speed_x, self.grapple_dir * 5, 0.25)
 		self.speed_y = approach(self.speed_y, 0, 0.4)
 
+		-- y-correction
+		if (self.speed_y == 0) then
+			if (self.y - 3 > self.grapple_y) then
+				self:move_y(-0.5, true)
+			elseif (self.y - 3 < self.grapple_y) then
+				self:move_y(0.5, true)
+			end
+		end
+
+		-- wall pose
 		if (self:check_solid(self.grapple_dir, 0)) then
 			self.frame = 2
-			if (consume_jump_press()) then
+		end
+
+		-- jumps
+		if (consume_jump_press()) then
+			if (self:check_solid(self.grapple_dir * 3, 0)) then
+				-- wall jump
 				self.state = 0
 				self:wall_jump(-self.grapple_dir)
+			else
+				-- grapple jump
+				self.state = 0
+				self.speed_y = -3
+				self.var_jump_speed = self.speed_y
+				self.t_var_jump = 4
+				if (abs(self.speed_x) > 4) then
+					self.speed_x = sgn(self.speed_x) * 4
+				end
 			end
 		end
 
@@ -243,11 +304,19 @@ player.update = function(self)
 				self.speed_x = sgn(self.speed_x) * 5
 			end
 		end
+
+		-- behind grapple point
+		if (sgn(self.x - self.grapple_x) == self.grapple_dir) then
+			self.state = 0
+			if (abs(self.speed_x) > 5) then
+				self.speed_x = sgn(self.speed_x) * 5
+			end
+		end
 	elseif (self.state == 99) then
 		-- dead state
 
 		self.dead_timer += 1
-		if (self.dead_timer >= 20) then
+		if (self.dead_timer > 20) then
 			room_load(room)
 		end
 		return
@@ -268,27 +337,54 @@ player.update = function(self)
 	end
 	self.spr = self.tile + self.frame
 
-	-- hazard check
+	-- object interactions
 	for o in all(objects) do
-		if (o.hazard and self:overlaps(o)) then
-			self.state = 99
-			break
+		if (o.tile == 20 and o.visible and self:overlaps(o)) then
+			o.visible = false
+			have_grapple = true
 		end
 	end
 
-	camera(max(0, min(128, self.x - 64)), 0)
+	-- death
+	if (self:hazard_check() or self.y > level.height + 16) then
+		self.state = 99
+		shake = 5
+	end
+
+	-- bounds
+	if (self.y < -16) then
+		self.y = -16
+		self.speed_y = 0
+	end
+	if (self.x < 3) then
+		self.x = 3
+		self.speed_x = 0
+	elseif (self.x > level.width - 3) then
+		self.x = level.width - 3
+		self.speed_x = 0
+	end
+
+	-- camera
+	camera_modes[level.camera_mode](self.x, self.y)
 end
 
 player.on_collide_x = function(self, moved, target)
-	if (sgn(target) == input_x and self:corner_correct(input_x, 0, 2, 1, -1)) then
-		return
+
+	if (self.state == 0) then
+		if (sgn(target) == input_x and self:corner_correct(input_x, 0, 2, 2, -1, self.correction_func)) then
+			return
+		end
+	elseif (self.state == 11) then
+		if (self:corner_correct(self.grapple_dir, 0, 4, 2, 0, self.correction_func)) then
+			return
+		end
 	end
 
 	object.on_collide_x(self, moved, target)
 end
 
 player.on_collide_y = function(self, moved, target)
-	if (target < 0 and self:corner_correct(0, -1, 2, 1, input_x)) then
+	if (target < 0 and self:corner_correct(0, -1, 2, 1, input_x, self.correction_func)) then
 		return
 	end
 
