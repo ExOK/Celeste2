@@ -326,9 +326,22 @@ player.update = function(self)
 	end
 
 	-- death
-	if (self:hazard_check()) then
+	if (self:hazard_check() or self.y > level.height + 16) then
 		self.state = 99
 		shake = 5
+	end
+
+	-- bounds
+	if (self.y < -16) then
+		self.y = -16
+		self.speed_y = 0
+	end
+	if (self.x < 3) then
+		self.x = 3
+		self.speed_x = 0
+	elseif (self.x > level.width - 3) then
+		self.x = level.width - 3
+		self.speed_x = 0
 	end
 
 	-- camera
