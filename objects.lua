@@ -178,6 +178,7 @@ berry.update = function(self)
 	elseif self.player then
 		self.x += (self.player.x - self.x) / 8
 		self.y += (self.player.y - 4 - self.y) / 8
+		self.flash -= 1
 
 		if self.player:check_solid(0, 1) then
 			collected[self.id] = true
@@ -189,11 +190,18 @@ berry.update = function(self)
 	end
 end
 berry.collect = function(self, player)
-	self.player = player
+	if not self.player then
+		self.player = player
+		self.flash = 5
+	end
 end
 berry.draw = function(self)
 	if not self.timer or self.timer < 5 then
 		grapple_pickup.draw(self)
+		if self.flash and self.flash > 0 then
+			circ(self.x + 4, self.y + 4, self.flash * 3, 7)
+			circfill(self.x + 4, self.y + 4, 5, 7)
+		end
 	else
 		print("1000", self.x - 4, self.y + 1, 8)
 		print("1000", self.x - 4, self.y, self.timer % 4 < 2 and 7 or 14)
