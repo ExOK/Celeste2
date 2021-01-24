@@ -56,7 +56,7 @@ end
 
 -- 0 = nothing, 1 = hit!, 2 = fail
 player.grapple_check = function(self, x, y)
-	local tile = room_tile_at(flr(x / 8), tile_y(y))
+	local tile = tile_at(flr(x / 8), tile_y(y))
 	if (fget(tile, 1)) then
 		self.grapple_hit = nil
 		return fget(tile, 2) and 2 or 1
@@ -360,7 +360,7 @@ player.update = function(self)
 
 		self.dead_timer += 1
 		if (self.dead_timer > 20) then
-			room_load(room)
+			load()
 		end
 		return
 	end
@@ -382,9 +382,13 @@ player.update = function(self)
 
 	-- object interactions
 	for o in all(objects) do
-		if (o.tile == 20 and o.visible and self:overlaps(o)) then
+		if (o.base == grapple_pickup and o.visible and self:overlaps(o)) then
 			o.visible = false
 			have_grapple = true
+		elseif (o.base == bridge and not o.falling and self:overlaps(o)) then
+			o.falling = true
+			freeze_time = 1
+			shake = 2
 		end
 	end
 
