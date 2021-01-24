@@ -526,10 +526,10 @@ player.update = function(self)
 			--grapple pickup
 			o.destroyed = true
 			have_grapple = true
+			self.x = o.x+4
 			self.state = 50
 			self.speed_x = 0
 			self.speed_y = 0.25
-			freeze_time = 5
 			music(22)
 		elseif o.base == bridge and not o.falling and self:overlaps(o) then
 			--falling bridge tile
@@ -681,7 +681,9 @@ player.draw = function(self)
 			local s = sin(time() * 4 + i/16)
 			local c = cos(time() * 4 + i/16)
 			local ty = self.y - 14
-			line(self.x + s * 8, ty + c * 8, self.x + s * 32, ty + c * 32, 7)
+			line(self.x + s * 16, ty + c * 16, self.x + s * 40, ty + c * 40, 7)
+			line(self.x + s * 16, ty + c * 16, self.x + s * 40 + 1, ty + c * 40 + 1, 7)
+			line(self.x + s * 16, ty + c * 16, self.x + s * 40 - 1, ty + c * 40 - 1, 7)
 		end
 	end
 end

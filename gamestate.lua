@@ -19,7 +19,7 @@ levels = {
         height = 16,
         camera_mode = 3,
         music = 0,
-        offset = 0
+        offset = 648
     }
 }
 
