@@ -1,0 +1,40 @@
+- Jump
+- Wall jump (reuse)
+- Grapple out
+- Grapple pull
+- Grapple cling
+- Grapple fail (ice)
+- Death
+- Bridge collapse
+- Grapple get
+- Snowball pick up
+- Snowball throw (reuse?)
+- Snowball jump
+- Berry get
+- Crumble
+
+Music
+
+22 - Lowkey Loop Start
+00 or 02 - Full track start
+
+SFX:
+
+07 - Jump (0-3) Wall Jump (4-7)
+08
+14
+17
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
