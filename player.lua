@@ -336,13 +336,13 @@ player.update = function(self)
 			local hit = self:grapple_check(self.grapple_x + self.grapple_dir, self.grapple_y)
 			local mode = self.grapple_hit and self.grapple_hit.grapple_mode or 0
 
-			if (hit == 0) then
+			if hit == 0 then
 				self.grapple_x += self.grapple_dir
-			elseif (hit == 1) then
-				if (mode == 2) then
+			elseif hit == 1 then
+				if mode == 2 then
 					self.grapple_x = self.grapple_hit.x + 4
 					self.grapple_y = self.grapple_hit.y + 4
-				elseif (mode == 3) then
+				elseif mode == 3 then
 					self.grapple_hit.held = true
 				end
 
@@ -357,7 +357,7 @@ player.update = function(self)
 				sfx(14, 3, 0, 5)
 			end
 
-			if (hit == 2 or (hit == 0 and abs(self.grapple_x - self.x) >= 64)) then
+			if hit == 2 or (hit == 0 and abs(self.grapple_x - self.x) >= 64) then
 				sfx(14, 3, 8, 3)
 				self.grapple_retract = true
 				self.freeze = 2
@@ -370,7 +370,7 @@ player.update = function(self)
 		self.frame = 1
 
 		-- release
-		if (not input_grapple or abs(self.y - self.grapple_y) > 8) then
+		if not input_grapple or abs(self.y - self.grapple_y) > 8 then
 			self.state = 0
 			self.grapple_retract = true
 			sfx(-2, 3)
@@ -595,12 +595,12 @@ end
 
 player.on_collide_x = function(self, moved, target)
 
-	if (self.state == 0) then
-		if (sgn(target) == input_x and self:corner_correct(input_x, 0, 2, 2, -1, self.correction_func)) then
+	if self.state == 0 then
+		if sgn(target) == input_x and self:corner_correct(input_x, 0, 2, 2, -1, self.correction_func) then
 			return false
 		end
-	elseif (self.state == 11) then
-		if (self:corner_correct(self.grapple_dir, 0, 4, 2, 0, self.correction_func)) then
+	elseif self.state == 11 then
+		if self:corner_correct(self.grapple_dir, 0, 4, 2, 0, self.correction_func) then
 			return false
 		end
 	end
@@ -609,7 +609,7 @@ player.on_collide_x = function(self, moved, target)
 end
 
 player.on_collide_y = function(self, moved, target)
-	if (target < 0 and self:corner_correct(0, -1, 2, 1, input_x, self.correction_func)) then
+	if target < 0 and self:corner_correct(0, -1, 2, 1, input_x, self.correction_func) then
 		return false
 	end
 
@@ -620,7 +620,7 @@ end
 player.draw = function(self)
 
 	-- death fx
-	if (self.state == 99) then
+	if self.state == 99 then
 		local e = self.wipe_timer / 10
 		local dx = mid(camera_x, self.x, camera_x + 128)
 		local dy = mid(camera_y, self.y - 4, camera_y + 128)
@@ -658,18 +658,18 @@ player.draw = function(self)
 		last = s
 	end
 
-	if (self.state >= 10 and self.state <= 12) then
+	if self.state >= 10 and self.state <= 12 then
 		-- grapple
 		if (self.grapple_wave == 0) then
 			line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
 		else
 			draw_sine_h(self.x, self.grapple_x, self.y - 3, 7, 2 * self.grapple_wave, 6, 0.08, 6)
 		end
+	end
 
-		-- failed grapple
-		if (self.grapple_retract) then
-			line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
-		end
+	-- retracting grapple
+	if self.grapple_retract then
+		line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
 	end
 
 	-- sprite
