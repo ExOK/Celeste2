@@ -558,7 +558,7 @@ player.update = function(self)
 			self.springboard = o
 		elseif o.base == berry and self:overlaps(o) then
 			--berry
-			o:collect()
+			o:collect(self)
 		elseif o.base == crumble then
 			--crumble
 			if (self.state == 0 and self:overlaps(o, 0, 1)) or (self.state == 11 and self:overlaps(o, self.grapple_dir)) then

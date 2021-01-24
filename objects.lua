@@ -166,11 +166,38 @@ end
 berry = new_type()
 berry.tile = 21
 berry.base = object
-berry.draw = grapple_pickup.draw
-berry.collect = function(self)
-	collected[self.id] = true
-	berry_count += 1
-	self.destroyed = true
+berry.update = function(self)
+	if self.collected then
+		self.timer += 1
+		if self.timer > 5 then
+			self.y -= 0.2
+		end
+		if self.timer > 30 then
+			self.destroyed = true
+		end
+	elseif self.player then
+		self.x += (self.player.x - self.x) / 8
+		self.y += (self.player.y - 4 - self.y) / 8
+
+		if self.player:check_solid(0, 1) then
+			collected[self.id] = true
+			berry_count += 1
+			self.collected = true
+			self.timer = 0
+			self.draw = score
+		end
+	end
+end
+berry.collect = function(self, player)
+	self.player = player
+end
+berry.draw = function(self)
+	if not self.timer or self.timer < 5 then
+		grapple_pickup.draw(self)
+	else
+		print("1000", self.x - 4, self.y + 1, 8)
+		print("1000", self.x - 4, self.y, self.timer % 4 < 2 and 7 or 14)
+	end
 end
 
 crumble = new_type()
