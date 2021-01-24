@@ -250,6 +250,7 @@ player.update = function(self)
 	elseif (self.state == 11) then
 		-- grapple attached state
 		
+		-- start boost
 		if (not self.grapple_boost) then
 			self.grapple_boost = true
 			self.speed_x = self.grapple_dir * 8
@@ -259,23 +260,34 @@ player.update = function(self)
 		self.speed_x = approach(self.speed_x, self.grapple_dir * 5, 0.25)
 		self.speed_y = approach(self.speed_y, 0, 0.4)
 
+		-- y-correction
+		if (self.speed_y == 0) then
+			if (self.y - 3 > self.grapple_y) then
+				self:move_y(-0.5, true)
+			elseif (self.y - 3 < self.grapple_y) then
+				self:move_y(0.5, true)
+			end
+		end
+
 		-- wall pose
 		if (self:check_solid(self.grapple_dir, 0)) then
 			self.frame = 2
 		end
 
-		-- wall jump
+		-- jumps
 		if (consume_jump_press()) then
 			if (self:check_solid(self.grapple_dir * 3, 0)) then
+				-- wall jump
 				self.state = 0
 				self:wall_jump(-self.grapple_dir)
 			else
+				-- grapple jump
 				self.state = 0
 				self.speed_y = -3
 				self.var_jump_speed = self.speed_y
 				self.t_var_jump = 4
-				if (abs(self.speed_x) > 5) then
-					self.speed_x = sgn(self.speed_x) * 5
+				if (abs(self.speed_x) > 4) then
+					self.speed_x = sgn(self.speed_x) * 4
 				end
 			end
 		end
@@ -349,8 +361,15 @@ player.update = function(self)
 end
 
 player.on_collide_x = function(self, moved, target)
-	if (sgn(target) == input_x and self:corner_correct(input_x, 0, 2, 1, -1, self.correction_func)) then
-		return
+
+	if (self.state == 0) then
+		if (sgn(target) == input_x and self:corner_correct(input_x, 0, 2, 2, -1, self.correction_func)) then
+			return
+		end
+	elseif (self.state == 11) then
+		if (self:corner_correct(self.grapple_dir, 0, 4, 2, 0, self.correction_func)) then
+			return
+		end
 	end
 
 	object.on_collide_x(self, moved, target)
