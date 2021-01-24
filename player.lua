@@ -16,7 +16,6 @@ player.grapple_retract = false
 player.holding = nil
 player.dead_timer = 0
 player.t_grapple_jump_grace = 0
-player.spinning = false
 
 player.state = 0
 player.frame = 0
@@ -92,7 +91,6 @@ player.wall_jump = function(self, dir)
 	self.speed_x = 3 * dir	
 	self.t_var_jump = 4
 	self.facing = dir
-	self.spinning = true
 	self:move_x(-dir * 3)
 end
 
@@ -104,7 +102,6 @@ player.grapple_jump = function(self)
 	self.speed_y = -3
 	self.var_jump_speed = -3
 	self.t_var_jump = 4
-	self.spinning = true
 	if (abs(self.speed_x) > 4) then
 		self.speed_x = sgn(self.speed_x) * 4
 	end
@@ -230,8 +227,6 @@ player.update = function(self)
 
 	if (self.state == 0) then
 		-- normal state
-
-		self.spinning = false
 
 		-- facing
 		if (input_x ~= 0) then
@@ -461,8 +456,6 @@ player.update = function(self)
 	end
 
 	-- sprite
-	self.flip_x = false
-	self.flip_y = false
 	if (self.state != 2 and self.state != 1) then
 		if (input_x != 0) then
 			self.frame += 0.25
