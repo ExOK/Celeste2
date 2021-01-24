@@ -124,6 +124,7 @@ function restart_level()
 	camera_target_y = 0
 	objects = {}
 	infade = 0
+	have_grapple = level_index > 2
 	camera(0, 0)
 
 	for i = 0,level.width-1 do
