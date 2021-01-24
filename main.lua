@@ -130,7 +130,7 @@ function _draw()
 	end
 
 	-- debug
-	if false then do
+	if false then
 		for o in all(objects) do
 			rect(o.x + o.hit_x, o.y + o .hit_y, o.x + o.hit_x + o.hit_w - 1, o.y + o.hit_y + o.hit_h - 1, 8)
 		end
