@@ -317,6 +317,10 @@ player.update = function(self)
 					self.grapple_hit.held = true
 				end
 
+				if self.grapple_hit and self.grapple_hit.on_grappled then
+					self.grapple_hit:on_grappled()
+				end
+
 				self.state = mode == 3 and 12 or 11
 				self.grapple_wave = 2
 				self.grapple_boost = false
@@ -381,7 +385,7 @@ player.update = function(self)
 		self.grapple_wave = approach(self.grapple_wave, 0, 0.6)
 
 		-- release
-		if (not input_grapple) then
+		if (not input_grapple or (self.grapple_hit and self.grapple_hit.destroyed)) then
 			self.state = 0
 			self.t_grapple_jump_grace = 2
 			self.grapple_retract = true
