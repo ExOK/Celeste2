@@ -1,5 +1,5 @@
 -- globals
-start_level = 1
+level_index = 1
 objects = {}
 snow = {}
 clouds = {}
@@ -7,7 +7,6 @@ infade = 0
 freeze_time = 0
 frames = 0
 shake = 0
-
 
 function _init()
 	for i=0,25 do
@@ -17,7 +16,7 @@ function _init()
 		clouds[i] = { x = rnd(132), y = rnd(132), s = 16 + rnd(32) }
 	end
 
-	goto_level(start_level)
+	goto_level(level_index)
 end
 
 function _update()
@@ -138,6 +137,7 @@ function _draw()
 		camera(0, 0)
 		print("cpu: " .. flr(stat(1) * 100) .. "/100", 9, 9, 8)
 		print("mem: " .. flr(stat(0)) .. "/2048", 9, 15, 8)
+		print("idx: " .. level.offset, 9, 21, 8)
 	end
 
 	camera(camera_x, camera_y)

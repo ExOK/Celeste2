@@ -3,13 +3,15 @@ levels = {
         width = 96,
         height = 16,
         camera_mode = 2,
-        music = 0
+		music = 0,
+		offset = 0
 	},
 	{
         width = 128,
         height = 16,
         camera_mode = 1,
-        music = 0
+		music = 0,
+		offset = 312
     }
 }
 
@@ -72,7 +74,7 @@ function restart_level()
 		return poke(0x4300 + (x % 128) + y * 128, v)
 	end
 
-	px9_decomp(0, 0, 0x2000, vget, vset)
+	px9_decomp(0, 0, 0x2000 + level.offset, vget, vset)
 
 	for i = 0,level.width-1 do
 		for j = 0,level.height-1 do
