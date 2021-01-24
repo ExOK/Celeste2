@@ -76,8 +76,8 @@ end
 player.jump = function(self)
 	consume_jump_press()
 	self.speed_y = -4
+	self.var_jump_speed = -4
 	self.speed_x += input_x * 0.2
-	self.var_jump_speed = self.speed_y
 	self.t_var_jump = 4
 	self.t_jump_grace = 0
 	self:move_y(self.jump_grace_y - self.y)
@@ -87,8 +87,8 @@ player.wall_jump = function(self, dir)
 	consume_jump_press()
 	self.state = 0
 	self.speed_y = -3
-	self.speed_x = 3 * dir
-	self.var_jump_speed = self.speed_y
+	self.var_jump_speed = -3
+	self.speed_x = 3 * dir	
 	self.t_var_jump = 4
 	self.facing = dir
 	self:move_x(-dir * 3)
@@ -100,12 +100,18 @@ player.grapple_jump = function(self)
 	self.t_grapple_jump_grace = 0
 	self.state = 0
 	self.speed_y = -3
-	self.var_jump_speed = self.speed_y
+	self.var_jump_speed = -3
 	self.t_var_jump = 4
 	if (abs(self.speed_x) > 4) then
 		self.speed_x = sgn(self.speed_x) * 4
 	end
 	self:move_y(self.grapple_jump_grace_y - self.y)
+end
+
+player.die = function(self)
+	self.state = 99
+	freeze_time = 2
+	shake = 5
 end
 
 --[[
@@ -141,6 +147,18 @@ end
 
 player.correction_func = function(self, ox, oy)
 	return not self:hazard_check(ox, oy)
+end
+
+-- Grappled Objects
+
+player.grapple_object = function(self, obj)
+
+end
+
+pull_collide_x = function(self, moved, target)
+	if (false) then
+
+	end
 end
 
 -- Events
@@ -292,7 +310,7 @@ player.update = function(self)
 		self.frame = 1
 
 		-- release
-		if (not input_grapple) then
+		if (not input_grapple or abs(self.y - self.grapple_y) > 8) then
 			self.state = 0
 			self.grapple_retract = true
 		end
@@ -361,18 +379,31 @@ player.update = function(self)
 		end
 	elseif (self.state == 12) then
 		-- grapple pull state
+		local obj = self.grapple_hit
 
 		-- pull
+		if (obj:move_x(-self.grapple_dir * 4, pull_collide_x)) then
+			self.state = 0
+			self.grapple_retract = true
+			obj:on_release(-self.grapple_dir)
+			return
+		else
+			self.grapple_x = approach(self.grapple_x, self.x, 4)
+		end
 
+		-- y-correct
+		if (obj.y + 4 != self.y - 3) then
+			obj:move_y(sgn(self.y - obj.y) * 0.5)
+		end
 
 		-- grapple wave
 		self.grapple_wave = approach(self.grapple_wave, 0, 0.6)
 
 		-- release
-		if (not input_grapple) then
+		if (not input_grapple or abs(obj.y + 4 - (self.y - 3)) > 8) then
 			self.state = 0
 			self.grapple_retract = true
-			self.grapple_hit:on_release(-self.grapple_dir)
+			obj:on_release(-self.grapple_dir)
 		end
 
 	elseif (self.state == 99) then
@@ -403,27 +434,37 @@ player.update = function(self)
 	-- object interactions
 	for o in all(objects) do
 		if (o.base == grapple_pickup and o.visible and self:overlaps(o)) then
+			--grapple pickup
 			o.visible = false
 			have_grapple = true
 		elseif (o.base == bridge and not o.falling and self:overlaps(o)) then
+			--falling bridge tile
 			o.falling = true
 			self.freeze = 1
 			shake = 2
-		elseif (o.base == snowball and o.speed_x != 0 and self:overlaps(o)) then
-			if (self.y - self.speed_y + o.speed_y < o.y + 2) then
-				o.speed_x = 0
-				o.speed_y = 3
+		elseif (o.base == snowball and not o.held and self:overlaps(o)) then
+			--snowball
+			if (self.speed_y >= 0 and self.y - self.speed_y + o.speed_y < o.y + 2) then
 				self.jump_grace_y = o.y
 				self:jump()
+				if (o.speed_x == 0) then
+					o.destroyed = true
+				else
+					o.freeze = 2
+					o.speed_x = 0
+					o.speed_y = -1
+				end
+			elseif (o.speed_x != 0) then
+				self:die()
+				return
 			end
 		end
 	end
 
 	-- death
 	if (self.state != 99 and (self.y > level.height * 8 + 16 or self:hazard_check())) then
-		self.state = 99
-		freeze_time = 2
-		shake = 5
+		self:die()
+		return
 	end
 
 	-- bounds
@@ -450,24 +491,24 @@ player.on_collide_x = function(self, moved, target)
 
 	if (self.state == 0) then
 		if (sgn(target) == input_x and self:corner_correct(input_x, 0, 2, 2, -1, self.correction_func)) then
-			return
+			return false
 		end
 	elseif (self.state == 11) then
 		if (self:corner_correct(self.grapple_dir, 0, 4, 2, 0, self.correction_func)) then
-			return
+			return false
 		end
 	end
 
-	object.on_collide_x(self, moved, target)
+	return object.on_collide_x(self, moved, target)
 end
 
 player.on_collide_y = function(self, moved, target)
 	if (target < 0 and self:corner_correct(0, -1, 2, 1, input_x, self.correction_func)) then
-		return
+		return false
 	end
 
-	t_var_jump = 0
-	object.on_collide_y(self, moved, target)
+	self.t_var_jump = 0
+	return object.on_collide_y(self, moved, target)
 end
 
 player.draw = function(self)
