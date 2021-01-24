@@ -14,12 +14,21 @@ player.grapple_wave = 0
 player.grapple_boost = false
 player.t_grapple_cooldown = 0
 player.grapple_retract = false
+player.holding = nil
 player.dead_timer = 0
 
 player.state = 0
 player.frame = 0
 
 -- Grapple Functions
+
+--[[
+	object grapple modes:
+		0 - no grapple
+		1 - solid
+		2 - solid centered
+		2 - holdable
+]]
 
 player.start_grapple = function(self)
 	self.state = 10
