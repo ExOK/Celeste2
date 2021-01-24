@@ -45,8 +45,8 @@ axis_y = {}
 setmetatable(axis_y, axis)
 axis_y.value = 0
 axis_y.turned = false
-axis_y.positive = 2
-axis_y.negative = 3
+axis_y.positive = 3
+axis_y.negative = 2
 
 function update_input()
     -- axes
