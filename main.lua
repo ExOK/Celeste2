@@ -1,5 +1,5 @@
 -- globals
-level_index = 1
+level_index = 0
 objects = {}
 snow = {}
 clouds = {}
@@ -16,7 +16,7 @@ function _init()
 		clouds[i] = { x = rnd(132), y = rnd(132), s = 16 + rnd(32) }
 	end
 
-	goto_level(level_index)
+	goto_level(2)
 end
 
 function _update()

@@ -2,14 +2,14 @@ levels = {
     {
         width = 96,
         height = 16,
-        camera_mode = 2,
+        camera_mode = 1,
 		music = 0,
 		offset = 0
 	},
 	{
-        width = 128,
-        height = 16,
-        camera_mode = 1,
+        width = 32,
+        height = 32,
+        camera_mode = 3,
 		music = 0,
 		offset = 312
     }
@@ -17,20 +17,25 @@ levels = {
 
 camera_modes = {
 
-    -- 1: Basic Horizontal Mode
-    function(px, py)
-        camera_target_x = max(0, min(level.width * 8 - 128, px - 56))
-    end,
-
-    -- 2: Intro Mode
+    -- 1: Intro
     function(px, py)
         if (px < 42) then
             camera_target_x = 0
         else
             camera_target_x = max(40, min(level.width * 8 - 128, px - 48))
         end
-    end
+    end,
 
+    -- 2: Basic Horizontal
+    function(px, py)
+        camera_target_x = max(0, min(level.width * 8 - 128, px - 56))
+    end,
+
+    -- 3: Basic Freeform
+    function(px, py)
+        camera_target_x = max(0, min(level.width * 8 - 128, px - 64))
+        camera_target_y = max(0, min(level.height * 8 - 128, py - 64))
+    end
 }
 
 have_grapple = true
