@@ -3,7 +3,6 @@ player.tile = 2
 player.base = object
 
 player.t_jump_grace = 0
-player.jump_grace_y = 0
 player.t_var_jump = 0
 player.var_jump_speed = 0
 player.grapple_x = 0
@@ -82,7 +81,7 @@ player.wall_jump = function(self, dir)
 	self.var_jump_speed = self.speed_y
 	self.t_var_jump = 4
 	self.facing = dir
-	self:move_x(-dir * 3, true)
+	self:move_x(-dir * 3)
 end
 
 player.grapple_jump = function(self)
@@ -96,6 +95,7 @@ player.grapple_jump = function(self)
 	if (abs(self.speed_x) > 4) then
 		self.speed_x = sgn(self.speed_x) * 4
 	end
+	self:move_y(self.grapple_jump_grace_y - self.y)
 end
 
 --[[
@@ -237,7 +237,7 @@ player.update = function(self)
 				self.var_jump_speed = self.speed_y
 				self.t_var_jump = 4
 				self.t_jump_grace = 0
-				self:move_y(self.jump_grace_y - self.y, true)
+				self:move_y(self.jump_grace_y - self.y)
 			elseif (self:check_solid(2, 0)) then
 				self:wall_jump(-1)
 			elseif (self:check_solid(-2, 0)) then
@@ -266,17 +266,19 @@ player.update = function(self)
 				if (mode == 2) then
 					self.grapple_x = self.grapple_hit.x + 4
 					self.grapple_y = self.grapple_hit.y + 4
+				elseif (mode == 3) then
+					self.grapple_hit.held = true
 				end
 
 				self.state = mode == 3 and 12 or 11
 				self.grapple_wave = 2
 				self.grapple_boost = false
-				freeze_time = 2
+				self.freeze = 2
 			end
 
 			if (hit == 2 or (hit == 0 and abs(self.grapple_x - self.x) > 64)) then
 				self.grapple_retract = true
-				freeze_time = 2
+				self.freeze = 2
 				self.state = 0
 			end
 		end
@@ -307,9 +309,9 @@ player.update = function(self)
 		-- y-correction
 		if (self.speed_y == 0) then
 			if (self.y - 3 > self.grapple_y) then
-				self:move_y(-0.5, true)
+				self:move_y(-0.5)
 			elseif (self.y - 3 < self.grapple_y) then
-				self:move_y(0.5, true)
+				self:move_y(0.5)
 			end
 		end
 
@@ -323,6 +325,7 @@ player.update = function(self)
 			if (self:check_solid(self.grapple_dir * 3, 0)) then
 				self:wall_jump(-self.grapple_dir)
 			else
+				self.grapple_jump_grace_y = self.y
 				self:grapple_jump()
 			end
 		end
@@ -346,6 +349,7 @@ player.update = function(self)
 			self.state = 0
 			if (self.grapple_hit != nil and self.grapple_hit.grapple_mode == 2) then
 				self.t_grapple_jump_grace = 30
+				self.grapple_jump_grace_y = self.y
 			end
 			if (abs(self.speed_x) > 5) then
 				self.speed_x = sgn(self.speed_x) * 5
@@ -354,6 +358,9 @@ player.update = function(self)
 	elseif (self.state == 12) then
 		-- grapple pull state
 
+		-- pull
+
+
 		-- grapple wave
 		self.grapple_wave = approach(self.grapple_wave, 0, 0.6)
 
@@ -361,6 +368,7 @@ player.update = function(self)
 		if (not input_grapple) then
 			self.state = 0
 			self.grapple_retract = true
+			self.grapple_hit:on_release(-self.grapple_dir)
 		end
 
 	elseif (self.state == 99) then
@@ -374,8 +382,8 @@ player.update = function(self)
 	end
 
 	-- apply
-	self:move_x(self.speed_x)
-	self:move_y(self.speed_y)
+	self:move_x(self.speed_x, self.on_collide_x)
+	self:move_y(self.speed_y, self.on_collide_y)
 
 	-- sprite
 	if (self.state != 2 and self.state != 1) then
@@ -395,7 +403,7 @@ player.update = function(self)
 			have_grapple = true
 		elseif (o.base == bridge and not o.falling and self:overlaps(o)) then
 			o.falling = true
-			freeze_time = 1
+			self.freeze = 1
 			shake = 2
 		end
 	end

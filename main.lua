@@ -35,7 +35,12 @@ function _update()
 	else
 		--objects
 		for o in all(objects) do
-			o:update()
+			if (o.freeze > 0) then
+				o.freeze -= 1
+			else
+				o:update()
+			end
+			
 			if (o.destroyed) then
 				del(objects, o)
 			end
