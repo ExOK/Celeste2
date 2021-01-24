@@ -3,14 +3,14 @@ levels = {
         width = 96,
         height = 16,
         camera_mode = 1,
-		music = 0,
+		music = -1,
 		offset = 0
 	},
 	{
         width = 32,
         height = 32,
         camera_mode = 2,
-		music = 0,
+		music = -1,
 		fog = true,
 		offset = 312
     },
@@ -86,7 +86,7 @@ function goto_level(index)
 	px9_decomp(0, 0, 0x1000 + level.offset, vget, vset)
 
 	-- start music
-	if current_music != level.music then
+	if current_music != level.music and level.music >= 0 then
 		current_music = level.music
 		music(level.music)
 	end

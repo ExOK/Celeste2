@@ -481,7 +481,9 @@ player.update = function(self)
 		self.speed_y = min(self.speed_y + 0.8, 4.5)
 		self.speed_x = approach(self.speed_x, 0, 0.2)
 		if on_ground then
-			if self.t_grapple_pickup == 0 then music(22) end
+			if self.t_grapple_pickup == 5 then
+				music(22)
+			end
 			self.t_grapple_pickup += 1
 			if self.t_grapple_pickup > 60 then self.state = 0 end
 		end
