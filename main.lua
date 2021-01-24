@@ -6,6 +6,8 @@ snow = {}
 clouds = {}
 freeze_time = 0
 frames = 0
+seconds = 0
+minutes = 0
 shake = 0
 
 function game_start()
@@ -34,9 +36,11 @@ function _update()
 	else
 
 		-- timers
-		frames += 1
 		shake -= 1
 		infade += 1
+		frames += 1
+		if frames == 30 then seconds += 1 frames = 0 end
+		if seconds == 60 then minutes += 1 seconds = 0 end
 
 		update_input()
 
@@ -154,13 +158,11 @@ function _draw()
 end
 
 function draw_time(x,y)
-	local ts = flr(frames / 30)
-	local s = ts % 60
-	local m = flr(ts / 60) % 60
-	local h = flr(flr(ts / 60) / 60)
+	local m = minutes % 60
+	local h = flr(minutes / 60)
 	
 	rectfill(x,y,x+32,y+6,0)
-	print((h<10 and "0"..h or h)..":"..(m<10 and "0"..m or m)..":"..(s<10 and "0"..s or s),x+1,y+1,7)
+	print((h<10 and "0"..h or h)..":"..(m<10 and "0"..m or m)..":"..(seconds<10 and "0"..seconds or seconds),x+1,y+1,7)
 end
 
 function draw_clouds(scale, ox, oy, sx, sy, color)
