@@ -1,1 +1,1 @@
-have_grapple = false
+have_grapple = true
