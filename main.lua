@@ -8,7 +8,6 @@ frames = 0
 shake = 0
 
 function _init()
-
 	for i=0,25 do
 		snow[i] = { x = rnd(132), y = rnd(132) }
 	end
@@ -155,7 +154,7 @@ end
 
 -- gets the tile at the given location in the CURRENT room
 function tile_at(x, y)
-	if (raw_level) then
+	if (single_level) then
 		return mget(x, y)
 	else
 		return peek(0x4300 + (x % 128) + y * 128)
