@@ -49,3 +49,11 @@ spike_h.init = function(self)
 	end
 	self.hit_w = 3
 end
+
+snowball = new_type()
+snowball.tile = 62
+snowball.spr = 62
+snowball.base = object
+snowball.grabbable = true
+snowball.hit_w = 8
+snowball.hit_h = 8

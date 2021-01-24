@@ -53,8 +53,8 @@ player.grapple_check = function(self, x, y)
 	end
 
 	for o in all(objects) do
-		if (o.geom == g_solid and o:contains(x, y)) then
-			self.grapple_hit = on_collide_x
+		if ((o.geom == g_solid or o.grabbable) and o:contains(x, y)) then
+			self.grapple_hit = o
 			return 1
 		end
 	end
