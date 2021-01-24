@@ -80,7 +80,7 @@ function _draw()
 	for x=0,96 do
 		for y=0,16 do
 			local tile = room_tile_at(x, y)
-			if (tile != 0 and fget(tile, 1)) then
+			if (tile != 0 and fget(tile, 0)) then
 				spr(tile, x * 8, y * 8)
 			end
 		end

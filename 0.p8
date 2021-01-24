@@ -12,7 +12,7 @@ __lua__
 #include px9_decomp.lua
 #include compress.lua
 
--- compress(112, 16)
+-- compress(level[1])
 raw_level = true
 
 __gfx__

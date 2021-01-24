@@ -1,5 +1,7 @@
 
-function compress(w, h)
+function compress(level)
+	local w = level.width
+	local h = level.height
 	cls()
 	print("compressing..",5)
 	flip()
