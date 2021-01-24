@@ -95,7 +95,7 @@ function goto_level(index)
 	level_index = index
 	level_checkpoint = nil
 
-	if level.title then
+	if level.title and not standalone then
 		level_intro = 60
 	end
 
