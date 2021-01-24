@@ -473,7 +473,7 @@ player.update = function(self)
 		-- grapple pickup state
 		player.t_grapple_pickup += 1
 		if player.t_grapple_pickup > 60 then self.state = 0 end
-		
+
 	elseif self.state == 99 or self.state == 100 then
 		-- dead / finished state
 
@@ -523,6 +523,7 @@ player.update = function(self)
 			self.speed_x = 0
 			self.speed_y = 0.25
 			freeze_time = 5
+			music(22)
 		elseif o.base == bridge and not o.falling and self:overlaps(o) then
 			--falling bridge tile
 			o.falling = true
@@ -650,14 +651,12 @@ player.draw = function(self)
 		last = s
 	end
 
-	if (self.state < 50) then
+	if (self.state >= 10 and self.state <= 12) then
 		-- grapple
-		if (self.state != 0) then
-			if (self.grapple_wave == 0) then
-				line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
-			else
-				draw_sine_h(self.x, self.grapple_x, self.y - 3, 7, 2 * self.grapple_wave, 6, 0.08, 6)
-			end
+		if (self.grapple_wave == 0) then
+			line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
+		else
+			draw_sine_h(self.x, self.grapple_x, self.y - 3, 7, 2 * self.grapple_wave, 6, 0.08, 6)
 		end
 
 		-- failed grapple
