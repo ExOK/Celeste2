@@ -113,10 +113,10 @@ grappler.tile = 46
 grappler.spr = 46
 grappler.base = object
 grappler.grapple_mode = 2
-grappler.hit_x = 1
-grappler.hit_y = 1
-grappler.hit_w = 6
-grappler.hit_h = 6
+grappler.hit_x = -1
+grappler.hit_y = -1
+grappler.hit_w = 10
+grappler.hit_h = 10
 
 bridge = new_type()
 bridge.tile = 63

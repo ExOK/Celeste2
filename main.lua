@@ -21,7 +21,7 @@ function game_start()
 		add(collected, {})
 	end
 
-	goto_level(2)
+	goto_level(3)
 end
 
 function _init()

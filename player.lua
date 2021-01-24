@@ -395,7 +395,7 @@ player.update = function(self)
 		if (sgn(self.x - self.grapple_x) == self.grapple_dir) then
 			self.state = 0
 			if (self.grapple_hit != nil and self.grapple_hit.grapple_mode == 2) then
-				self.t_grapple_jump_grace = 30
+				self.t_grapple_jump_grace = 3
 				self.grapple_jump_grace_y = self.y
 			end
 			if (abs(self.speed_x) > 5) then
