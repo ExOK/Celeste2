@@ -116,7 +116,7 @@ berry.tile = 21
 berry.base = object
 berry.draw = grapple_pickup.draw
 berry.collect = function(self)
-	set_collected(flr(self.x / 8), flr(self.y / 8))
+	collected[self.id] = true
 	berry_count += 1
 	self.destroyed = true
 end
