@@ -77,6 +77,7 @@ end
 
 player.jump = function(self)
 	consume_jump_press()
+	self.state = 0
 	self.speed_y = -4
 	self.var_jump_speed = -4
 	self.speed_x += input_x * 0.2
@@ -110,6 +111,10 @@ player.grapple_jump = function(self)
 		self.speed_x = sgn(self.speed_x) * 4
 	end
 	self:move_y(self.grapple_jump_grace_y - self.y)
+end
+
+player.bounce_check = function(self, obj)
+	return self.speed_y >= 0 and self.y - self.speed_y + obj.speed_y < obj.y + 2
 end
 
 player.die = function(self)
@@ -222,7 +227,7 @@ player.update = function(self)
 		player states:
 			0 	- normal
 			1	- lift
-			2 	- holding
+			2 	- springboard bounce
 			10 	- throw grapple
 			11 	- grapple attached to solid
 			12	- grapple pulling in holdable
@@ -231,7 +236,7 @@ player.update = function(self)
 			100 - finished level
 	]]
 
-	if (self.state == 0) then
+	if self.state == 0 then
 		-- normal state
 
 		-- facing
@@ -292,7 +297,7 @@ player.update = function(self)
 			self:start_grapple()
 		end
 
-	elseif (self.state == 1) then
+	elseif self.state == 1 then
 		-- lift state
 		hold = self.grapple_hit
 
@@ -304,7 +309,23 @@ player.update = function(self)
 			self.holding = hold
 		end
 
-	elseif (self.state == 10) then
+	elseif self.state == 2 then
+		-- springboard bounce state
+
+		local at_x = approach(self.x, self.springboard.x + 4, 0.5)
+		self:move_x(at_x - self.x)
+
+		local at_y = approach(self.y, self.springboard.y + 4, 0.25)
+		self:move_y(at_y - self.y)
+
+		if self.springboard.spr == 11 and self.y >= self.springboard.y + 2 then
+			self.springboard.spr = 12
+		elseif self.y == self.springboard.y + 4 then
+			self:jump()
+			self.springboard.spr = 11
+		end
+
+	elseif self.state == 10 then
 		-- throw grapple state
 
 		-- grapple movement and hitting stuff
@@ -350,7 +371,7 @@ player.update = function(self)
 			self.grapple_retract = true
 		end
 
-	elseif (self.state == 11) then
+	elseif self.state == 11 then
 		-- grapple attached state
 		
 		-- start boost
@@ -413,7 +434,8 @@ player.update = function(self)
 				self.speed_x = sgn(self.speed_x) * 5
 			end
 		end
-	elseif (self.state == 12) then
+
+	elseif self.state == 12 then
 		-- grapple pull state
 		local obj = self.grapple_hit
 
@@ -451,17 +473,17 @@ player.update = function(self)
 		-- grapple pickup state
 		player.t_grapple_pickup += 1
 		if player.t_grapple_pickup > 60 then self.state = 0 end
-
-	elseif (self.state == 99 or self.state == 100) then
+		
+	elseif self.state == 99 or self.state == 100 then
 		-- dead / finished state
 
-		if (self.state == 100) then
+		if self.state == 100 then
 			self.x += 1
 		end
 
 		self.wipe_timer += 1
-		if (self.wipe_timer > 20) then
-			if (self.state == 99) then restart_level() else next_level() end
+		if self.wipe_timer > 20 then
+			if self.state == 99 then restart_level() else next_level() end
 		end
 		return
 	end
@@ -508,18 +530,26 @@ player.update = function(self)
 			shake = 2
 		elseif o.base == snowball and not o.held and self:overlaps(o) then
 			--snowball
-			if (self.speed_y >= 0 and self.y - self.speed_y + o.speed_y < o.y + 2) then
+			if self:bounce_check(o) then
 				self.jump_grace_y = o.y
 				self:jump()
 				o.freeze = 1
 				o.speed_y = -1
-			elseif (o.speed_x != 0 and o.thrown_timer <= 0) then
+			elseif o.speed_x != 0 and o.thrown_timer <= 0 then
 				self:die()
 				return
 			end
+		elseif o.base == springboard and self.state != 2 and not o.held and self:overlaps(o) and self:bounce_check(o) then
+			--springboard
+			self.state = 2
+			self.speed_x = 0
+			self.speed_y = 0
+			self.springboard = o
 		elseif o.base == berry and self:overlaps(o) then
+			--berry
 			o:collect()
 		elseif o.base == crumble then
+			--crumble
 			if (self.state == 0 and self:overlaps(o, 0, 1)) or (self.state == 11 and self:overlaps(o, self.grapple_dir)) then
 				o:fall()
 			end

@@ -42,7 +42,6 @@ snowball.spr = 62
 snowball.base = object
 snowball.grapple_mode = 3
 snowball.holdable = true
-snowball.state = 0
 snowball.thrown_timer = 0
 snowball.update = function(self)
 	if not self.held then
@@ -72,6 +71,7 @@ snowball.update = function(self)
 end
 snowball.on_collide_x = function(self, moved, total)
 	self.speed_x *= -1
+	self.remainder_x = 0
 	self.freeze = 1
 	return true
 end
@@ -87,6 +87,58 @@ snowball.on_collide_y = function(self, moved, total)
 	return true
 end
 snowball.on_release = function(self, thrown)
+	if thrown then
+		self.thrown_timer = 5
+	end
+end
+
+springboard = new_type()
+springboard.tile = 11
+springboard.spr = 11
+springboard.base = object
+springboard.grapple_mode = 3
+springboard.holdable = true
+springboard.thrown_timer = 0
+springboard.update = function(self)
+	if not self.held then
+		local on_ground = self:check_solid(0, 1)
+
+		if self.thrown_timer > 0 then
+			self.thrown_timer -= 1
+		end
+
+		--friction and gravity	
+		if on_ground then
+			self.speed_x = approach(self.speed_x, 0, 0.6)
+		else
+			self.speed_y = approach(self.speed_y, 4, 0.4)
+		end
+
+		--apply
+		self:move_x(self.speed_x, self.on_collide_x)
+		self:move_y(self.speed_y, self.on_collide_y)
+
+		if self.y > level.height * 8 + 24 then
+			self.destroyed = true
+		end
+	end
+end
+springboard.on_collide_x = function(self, moved, total)
+	self.speed_x *= -0.2
+	self.remainder_x = 0
+	self.freeze = 1
+	return true
+end
+springboard.on_collide_y = function(self, moved, total)
+	if self.speed_y >= 2 then
+		self.speed_y *= -0.5
+	else
+		self.speed_y = 0
+	end
+	self.remainder_y = 0
+	return true
+end
+springboard.on_release = function(self, thrown)
 	if thrown then
 		self.thrown_timer = 5
 	end
