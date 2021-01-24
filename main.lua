@@ -1,5 +1,5 @@
 -- globals
-level_index = 0
+level_index = 1
 objects = {}
 snow = {}
 clouds = {}
@@ -17,9 +17,6 @@ function game_start()
 	frames = 0
 	berry_count = 0
 	collected = {}
-	for lvl in all(levels) do
-		add(collected, {})
-	end
 
 	goto_level(level_index)
 end
@@ -39,18 +36,18 @@ function _update()
 	update_input()
 
 	--freeze
-	if (freeze_time > 0) then
+	if freeze_time > 0 then
 		freeze_time -= 1
 	else
 		--objects
 		for o in all(objects) do
-			if (o.freeze > 0) then
+			if o.freeze > 0 then
 				o.freeze -= 1
 			else
 				o:update()
 			end
 
-			if (o.destroyed) then
+			if o.destroyed then
 				del(objects, o)
 			end
 		end
@@ -78,7 +75,7 @@ function _draw()
 	for x = mid(0, flr(camera_x / 8), level.width),mid(0, flr((camera_x + 128) / 8), level.width) do
 		for y = mid(0, flr(camera_y / 8), level.height),mid(0, flr((camera_y + 128) / 8), level.height) do
 			local tile = tile_at(x, y)
-			if (tile != 0 and fget(tile, 0)) then
+			if tile != 0 and fget(tile, 0) then
 				spr(tile, x * 8, y * 8)
 			end
 		end
@@ -87,9 +84,9 @@ function _draw()
 	-- draw objects
 	local p = nil
 	for o in all(objects) do
-		if (o.base == player) then p = o else o:draw() end
+		if o.base == player then p = o else o:draw() end
 	end
-	if (p) then p:draw() end
+	if p then p:draw() end
 
 	-- draw snow
 	for i=1,#snow do
@@ -100,7 +97,7 @@ function _draw()
 	end
 
 	-- draw FG clouds
-	if (level.fog) then
+	if level.fog then
 		fillp(0b0101101001011010.1)
 		draw_clouds(1.5, 0, level.height * 8 + 1, 1, 0, 7)
 		fillp()
@@ -108,7 +105,7 @@ function _draw()
 
 	-- screen wipes
 	-- very similar functions ... can they be compressed into one?
-	if (p ~= nil and p.dead_timer > 5) then
+	if p ~= nil and p.dead_timer > 5 then
 		local e = (p.dead_timer - 5) / 12
 		for i=0,127 do
 			s = (127 + 64) * e - 32 + sin(i * 0.2) * 16 + (127 - i) * 0.25
@@ -116,7 +113,7 @@ function _draw()
 		end
 	end
 
-	if (infade < 15) then
+	if infade < 15 then
 		local e = infade / 12
 		for i=0,127 do
 			s = (127 + 64) * e - 32 + sin(i * 0.2) * 16 + (127 - i) * 0.25
@@ -125,12 +122,12 @@ function _draw()
 	end
 
 	-- game timer
-	if (infade < 45) then
+	if infade < 45 then
 		draw_time(camera_x + 4, camera_y + 4)
 	end
 
 	-- debug
-	if (false) do
+	if false then
 		for o in all(objects) do
 			rect(o.x + o.hit_x, o.y + o .hit_y, o.x + o.hit_x + o.hit_w - 1, o.y + o.hit_y + o.hit_h - 1, 8)
 		end
@@ -162,10 +159,10 @@ function draw_clouds(scale, ox, oy, sx, sy, color)
 		local y = oy + (camera_y + (c.y - camera_y * 0.9) % (128 + s / 2)) * sy
 		clip(x - s / 2 - camera_x, y - s / 2 - camera_y, s, s / 2)
 		circfill(x, y, s / 3, color)
-		if (i % 2 == 0) then
+		if i % 2 == 0 then
 			circfill(x - s / 3, y, s / 5, color)
 		end
-		if (i % 2 == 0) then
+		if i % 2 == 0 then
 			circfill(x + s / 3, y, s / 6, color)
 		end
 		c.x += (4 - i % 4) * 0.25
@@ -174,7 +171,7 @@ function draw_clouds(scale, ox, oy, sx, sy, color)
 end
 
 function approach(x, target, max_delta)
-	if (x < target) then
+	if x < target then
 		return min(x + max_delta, target)
 	else
 		return max(x - max_delta, target)
@@ -195,9 +192,9 @@ function draw_sine_h(x0, x1, y, col, amplitude, time_freq, x_freq, fade_x_dist)
 
 	for i = 1, x_max do
 		
-		if (i <= fade_x_dist) then
+		if i <= fade_x_dist then
 			fade = i / (fade_x_dist + 1)
-		elseif (i > x_max - fade_x_dist + 1) then
+		elseif i > x_max - fade_x_dist + 1 then
 			fade = (x_max + 1 - i) / (fade_x_dist + 1)
 		else
 			fade = 1

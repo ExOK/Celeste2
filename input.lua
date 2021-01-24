@@ -8,9 +8,9 @@ input_grapple_pressed = 0
 axis = {}
 axis.update = function(self)
     local prev_x = self.value
-	if (btn(self.negative)) then
-		if (btn(self.positive)) then
-            if (self.turned) then
+	if btn(self.negative) then
+		if btn(self.positive) then
+            if self.turned then
                 self.value = prev_x
 				return prev_x
 			else
@@ -23,7 +23,7 @@ axis.update = function(self)
             self.value = -1
             return -1
 		end
-	elseif (btn(self.positive)) then
+	elseif btn(self.positive) then
         self.turned = false
         self.value = 1
         return 1
@@ -55,9 +55,9 @@ function update_input()
 
 	-- input_jump
 	local jump = btn(4)
-	if (jump and not input_jump) then		
+	if jump and not input_jump then		
 		input_jump_pressed = 4
-	elseif (jump) then
+	elseif jump then
 		input_jump_pressed = max(0, input_jump_pressed - 1)
 	else
 		input_jump_pressed = 0
@@ -66,9 +66,9 @@ function update_input()
 
 	-- input_grapple
 	local grapple = btn(5)
-	if (grapple and not input_grapple) then
+	if grapple and not input_grapple then
 		input_grapple_pressed = 4
-	elseif (grapple) then
+	elseif grapple then
 		input_grapple_pressed = max(0, input_grapple_pressed - 1)
 	else
 		input_grapple_pressed = 0

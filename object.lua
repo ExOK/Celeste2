@@ -33,8 +33,8 @@ object.move_x = function(self, x, on_collide)
 	local mxs = sgn(mx)
 	while (mx != 0)
 	do
-		if (self:check_solid(mxs, 0)) then
-			if (on_collide) then
+		if self:check_solid(mxs, 0) then
+			if on_collide then
 				return on_collide(self, total - mx, total)
 			end
 			return true
@@ -56,8 +56,8 @@ object.move_y = function(self, y, on_collide)
 	local mys = sgn(my)
 	while (my != 0)
 	do
-		if (self:check_solid(0, mys)) then
-			if (on_collide) then
+		if self:check_solid(0, mys) then
+			if on_collide then
 				return on_collide(self, total - my, total)
 			end
 			return true
@@ -84,15 +84,15 @@ end
 
 object.update = function() end
 object.draw = function(self)
-	if (self.spr != nil) then
+	if self.spr != nil then
 		spr(self.spr, self.x, self.y, 1, 1, self.flip_x, self.flip_y)
 	end
 end
 
 object.overlaps = function(self, b, ox, oy)
-	if (self == b) then return false end
-	if (ox == nil) then ox = 0 end
-	if (oy == nil) then oy = 0 end
+	if self == b then return false end
+	if ox == nil then ox = 0 end
+	if oy == nil then oy = 0 end
 	return
 		ox + self.x + self.hit_x + self.hit_w > b.x + b.hit_x and
 		oy + self.y + self.hit_y + self.hit_h > b.y + b.hit_y and
@@ -109,19 +109,19 @@ object.contains = function(self, px, py)
 end
 
 object.check_solid = function(self, ox, oy)
-	if (ox == nil) then ox = 0 end
-	if (oy == nil) then oy = 0 end
+	if ox == nil then ox = 0 end
+	if oy == nil then oy = 0 end
 
 	for i = flr((ox + self.x + self.hit_x) / 8),flr((ox + self.x + self.hit_x + self.hit_w - 1) / 8) do
 		for j = tile_y(oy + self.y + self.hit_y),tile_y(oy + self.y + self.hit_y + self.hit_h - 1) do
-			if (fget(tile_at(i, j), 1)) then
+			if fget(tile_at(i, j), 1) then
 				return true
 			end
 		end
 	end
 
 	for o in all(objects) do
-		if (o.geom == g_solid and o != self and self:overlaps(o, ox, oy)) then
+		if o.geom == g_solid and o != self and self:overlaps(o, ox, oy) then
 			return true
 		end
 	end
@@ -130,17 +130,17 @@ object.check_solid = function(self, ox, oy)
 end
 
 object.corner_correct = function(self, dir_x, dir_y, side_dist, look_ahead, only_sign, func)
-	if (look_ahead == nil) then look_ahead = 1 end
-	if (only_sign == nil) then only_sign = 0 end
+	if look_ahead == nil then look_ahead = 1 end
+	if only_sign == nil then only_sign = 0 end
 
-	if (dir_x ~= 0) then
+	if dir_x ~= 0 then
 		for i = 1, side_dist do
 			for s = 1, -2, -2 do
-				if (s == -only_sign) then
+				if s == -only_sign then
 					goto continue_x
 				end
 
-				if (not self:check_solid(dir_x, i * s) and (func == nil or func(self, dir_x, i * s))) then
+				if not self:check_solid(dir_x, i * s) and (func == nil or func(self, dir_x, i * s)) then
 					self.x += dir_x
 					self.y += i * s
 					return true
@@ -149,14 +149,14 @@ object.corner_correct = function(self, dir_x, dir_y, side_dist, look_ahead, only
 				::continue_x::
 			end
 		end
-	elseif (dir_y ~= 0) then
+	elseif dir_y ~= 0 then
 		for i = 1, side_dist do
 			for s = 1, -1, -2 do
-				if (s == -only_sign) then
+				if s == -only_sign then
 					goto continue_y
 				end
 
-				if (not self:check_solid(i * s, dir_y) and (func == nil or func(self, i * s, dir_y))) then
+				if not self:check_solid(i * s, dir_y) and (func == nil or func(self, i * s, dir_y)) then
 					self.x += i * s
 					self.y += dir_y
 					return true
@@ -170,14 +170,17 @@ object.corner_correct = function(self, dir_x, dir_y, side_dist, look_ahead, only
 	return false
 end
 
+function id(tx, ty) return level_index * 100 + flr(tx) + flr(ty) * 128 end
+
 function create(type, x, y)
 	local obj = {}
 	obj.base = type
 	obj.x = x
 	obj.y = y
+	obj.id = id(flr(x/8), flr(y/8))
 	setmetatable(obj, lookup)
 	add(objects, obj)
-	if (obj.init) then obj.init(obj) end
+	if obj.init then obj.init(obj) end
 	return obj
 end
 
