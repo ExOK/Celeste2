@@ -23,15 +23,13 @@ Music
 
 TO IMPLEMENT:
 
-14 - Death (16-32)
-17 - Snowball bounce/jump (0-1) Spring jump (2-4) Cartoony fall (8-23) Screen woosh (24-32)
-
 SFX:
 
 07 - Jump (0-3) Wall Jump (4-7) Grapple ice (8-11) Snowball pickup (16-22) Snowball throw (24-30)
 08 - Grapple shoot
 14 - Grapple hit (0-5) Grapple reach wall (8-11)
-17
+14 - Death (16-32)
+17 - Snowball bounce/jump (0-1) Spring jump (2-4) Cartoony fall (8-23) Screen woosh (24-32)
 51
 52
 53
