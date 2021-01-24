@@ -10,10 +10,7 @@ __lua__
 #include player.lua
 #include px9_comp.lua
 #include px9_decomp.lua
-#include compress.lua
-
--- compress(level[1])
-raw_level = true
+single_level = true
 
 __gfx__
 00000000777777770011110001111110011111000000000000000000000000000000000000000022000000000000000000000000000000000000000000000000
