@@ -169,6 +169,3 @@ end
 crumble.fall = function(self)
 	self.breaking = true
 end
-crumble.on_grappled = function(self)
-	self:fall()
-end

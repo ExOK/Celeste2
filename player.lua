@@ -81,6 +81,7 @@ player.jump = function(self)
 	self.t_var_jump = 4
 	self.t_jump_grace = 0
 	self:move_y(self.jump_grace_y - self.y)
+	sfx(7, 3, 0, 4)
 end
 
 player.wall_jump = function(self, dir)
@@ -92,6 +93,7 @@ player.wall_jump = function(self, dir)
 	self.t_var_jump = 4
 	self.facing = dir
 	self:move_x(-dir * 3)
+	sfx(7, 3, 4, 4)
 end
 
 player.grapple_jump = function(self)
@@ -475,16 +477,16 @@ player.update = function(self)
 
 	-- object interactions
 	for o in all(objects) do
-		if (o.base == grapple_pickup and o.visible and self:overlaps(o)) then
+		if o.base == grapple_pickup and o.visible and self:overlaps(o) then
 			--grapple pickup
 			o.destroyed = true
 			have_grapple = true
-		elseif (o.base == bridge and not o.falling and self:overlaps(o)) then
+		elseif o.base == bridge and not o.falling and self:overlaps(o) then
 			--falling bridge tile
 			o.falling = true
 			self.freeze = 1
 			shake = 2
-		elseif (o.base == snowball and not o.held and self:overlaps(o)) then
+		elseif o.base == snowball and not o.held and self:overlaps(o) then
 			--snowball
 			if (self.speed_y >= 0 and self.y - self.speed_y + o.speed_y < o.y + 2) then
 				self.jump_grace_y = o.y
@@ -495,15 +497,17 @@ player.update = function(self)
 				self:die()
 				return
 			end
-		elseif (o.base == berry and self:overlaps(o)) then
+		elseif o.base == berry and self:overlaps(o) then
 			o:collect()
-		elseif (o.base == crumble and self:overlaps(o, 0, 1)) then
-			o:fall()
+		elseif o.base == crumble then
+			if (self.state == 0 and self:overlaps(o, 0, 1)) or (self.state == 11 and self:overlaps(o, self.grapple_dir)) then
+				o:fall()
+			end
 		end
 	end
 
 	-- death
-	if (self.state != 99 and (self.y > level.height * 8 + 16 or self:hazard_check())) then
+	if self.state != 99 and (self.y > level.height * 8 + 16 or self:hazard_check()) then
 		self:die()
 		return
 	end
