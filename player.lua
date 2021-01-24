@@ -17,6 +17,7 @@ player.holding = nil
 player.wipe_timer = 0
 player.finished = false
 player.t_grapple_jump_grace = 0
+player.t_grapple_pickup = 0
 
 player.state = 0
 player.frame = 0
@@ -225,6 +226,7 @@ player.update = function(self)
 			10 	- throw grapple
 			11 	- grapple attached to solid
 			12	- grapple pulling in holdable
+			50  - get grapple!!
 			99 	- dead
 			100 - finished level
 	]]
@@ -445,6 +447,11 @@ player.update = function(self)
 			self:release_holding(obj, -self.grapple_dir * 5, 0, false)
 		end
 
+	elseif self.state == 50 then
+		-- grapple pickup state
+		player.t_grapple_pickup += 1
+		if player.t_grapple_pickup > 60 then self.state = 0 end
+
 	elseif (self.state == 99 or self.state == 100) then
 		-- dead / finished state
 
@@ -470,7 +477,9 @@ player.update = function(self)
 	end
 
 	-- sprite
-	if (self.state != 11) then
+	if self.state == 50 then
+		self.frame = 3
+	elseif (self.state != 11) then
 		if (not on_ground) then
 			self.frame = 1
 		elseif (input_x != 0) then
@@ -484,10 +493,14 @@ player.update = function(self)
 
 	-- object interactions
 	for o in all(objects) do
-		if o.base == grapple_pickup and o.visible and self:overlaps(o) then
+		if o.base == grapple_pickup and self:overlaps(o) then
 			--grapple pickup
 			o.destroyed = true
 			have_grapple = true
+			self.state = 50
+			self.speed_x = 0
+			self.speed_y = 0.25
+			freeze_time = 5
 		elseif o.base == bridge and not o.falling and self:overlaps(o) then
 			--falling bridge tile
 			o.falling = true
@@ -607,7 +620,7 @@ player.draw = function(self)
 		last = s
 	end
 
-	if (self.state < 99) then
+	if (self.state < 50) then
 		-- grapple
 		if (self.state != 0) then
 			if (self.grapple_wave == 0) then
@@ -625,4 +638,14 @@ player.draw = function(self)
 
 	-- sprite
 	spr(self.spr, self.x - 4, self.y - 8, 1, 1, self.facing ~= 1)
+
+	if self.state == 50 then
+		spr(20, self.x - 4, self.y - 18)
+		for i=0,16 do
+			local s = sin(time() * 4 + i/16)
+			local c = cos(time() * 4 + i/16)
+			local ty = self.y - 14
+			line(self.x + s * 8, ty + c * 8, self.x + s * 32, ty + c * 32, 7)
+		end
+	end
 end
