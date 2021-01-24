@@ -16,12 +16,11 @@ function _init()
 		-- load level map into our map
 		reload(0x2000, 0x2000, 0x1000, index .. ".p8")
 
-		-- compress data into our map (offset down a bit)
-		local target = 0x2000 + 2048 + 256
-		clen = px9_comp(0, 0, lvl.width, lvl.height, target, mget)
+		-- compress data, store in ram
+		clen = px9_comp(0, 0, lvl.width, lvl.height, 0x4300, mget)
 
 		-- store that packed data into the main cart
-		cstore(0x1000 + offset, target, clen, "celeste2.p8")
+		cstore(0x1000 + offset, 0x4300, clen, "celeste2.p8")
 
 		-- move along
 		print("packed ".. index .." at " .. offset)
