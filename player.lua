@@ -310,7 +310,7 @@ player.update = function(self)
 		self.frame = 1
 
 		-- release
-		if (not input_grapple) then
+		if (not input_grapple or abs(self.y - self.grapple_y) > 8) then
 			self.state = 0
 			self.grapple_retract = true
 		end
@@ -379,18 +379,31 @@ player.update = function(self)
 		end
 	elseif (self.state == 12) then
 		-- grapple pull state
+		local obj = self.grapple_hit
 
 		-- pull
-		self.grapple_hit.move_x(-self.grapple_dir * 4, pull_collide_x)
+		if (obj:move_x(-self.grapple_dir * 4, pull_collide_x)) then
+			self.state = 0
+			self.grapple_retract = true
+			obj:on_release(-self.grapple_dir)
+			return
+		else
+			self.grapple_x = approach(self.grapple_x, self.x, 4)
+		end
+
+		-- y-correct
+		if (obj.y + 4 != self.y - 3) then
+			obj:move_y(sgn(self.y - obj.y) * 0.5)
+		end
 
 		-- grapple wave
 		self.grapple_wave = approach(self.grapple_wave, 0, 0.6)
 
 		-- release
-		if (not input_grapple) then
+		if (not input_grapple or abs(obj.y + 4 - (self.y - 3)) > 8) then
 			self.state = 0
 			self.grapple_retract = true
-			self.grapple_hit:on_release(-self.grapple_dir)
+			obj:on_release(-self.grapple_dir)
 		end
 
 	elseif (self.state == 99) then
@@ -478,24 +491,24 @@ player.on_collide_x = function(self, moved, target)
 
 	if (self.state == 0) then
 		if (sgn(target) == input_x and self:corner_correct(input_x, 0, 2, 2, -1, self.correction_func)) then
-			return
+			return false
 		end
 	elseif (self.state == 11) then
 		if (self:corner_correct(self.grapple_dir, 0, 4, 2, 0, self.correction_func)) then
-			return
+			return false
 		end
 	end
 
-	object.on_collide_x(self, moved, target)
+	return object.on_collide_x(self, moved, target)
 end
 
 player.on_collide_y = function(self, moved, target)
 	if (target < 0 and self:corner_correct(0, -1, 2, 1, input_x, self.correction_func)) then
-		return
+		return false
 	end
 
 	self.t_var_jump = 0
-	object.on_collide_y(self, moved, target)
+	return object.on_collide_y(self, moved, target)
 end
 
 player.draw = function(self)

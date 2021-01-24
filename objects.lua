@@ -75,6 +75,7 @@ end
 snowball.on_collide_x = function(self, moved, total)
 	self.speed_x *= -1
 	self.freeze = 1
+	return true
 end
 snowball.on_release = function(self, dir)
 	self.held = false
