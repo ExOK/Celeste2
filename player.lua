@@ -456,8 +456,10 @@ player.update = function(self)
 	end
 
 	-- sprite
-	if (self.state != 2 and self.state != 1) then
-		if (input_x != 0) then
+	if (self.state != 11) then
+		if (not on_ground) then
+			self.frame = 1
+		elseif (input_x != 0) then
 			self.frame += 0.25
 			self.frame = self.frame % 2
 		else
