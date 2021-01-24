@@ -57,7 +57,7 @@ function goto_level(index)
 
 	-- load into ram
 	local function vget(x, y) return peek(0x4300 + (x % 128) + y * 128) end
-	local function vset(x, y, v) return poke(0x4300 + (x % 128) + y * 128, v)end
+	local function vset(x, y, v) return poke(0x4300 + (x % 128) + y * 128, v) end
 	px9_decomp(0, 0, 0x1000 + level.offset, vget, vset)
 
 	-- start music
@@ -86,5 +86,14 @@ function restart_level()
 				end
 			end
 		end
+	end
+end
+
+-- gets the tile at the given location from the loaded level
+function tile_at(x, y)
+	if (single_level) then
+		return mget(x, y)
+	else
+		return peek(0x4300 + (x % 128) + y * 128)
 	end
 end
