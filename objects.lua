@@ -228,18 +228,12 @@ crumble.draw = function(self)
 		fillp()
 	end
 end
-crumble.fall = function(self)
-	self.breaking = true
-end
 
 checkpoint = new_type(13)
 checkpoint.init = function(self)
 	if level_checkpoint == self.id then
 		create(player, self.x, self.y)
 	end
-end
-checkpoint.set = function(self)
-	level_checkpoint = self.id
 end
 checkpoint.draw = function(self)
 	if level_checkpoint == self.id then

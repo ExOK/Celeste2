@@ -151,8 +151,8 @@ player.hazard_table = {
 }
 
 player.hazard_check = function(self, ox, oy)
-	if (ox == nil) then ox = 0 end
-	if (oy == nil) then oy = 0 end
+	if (not ox) then ox = 0 end
+	if (not oy) then oy = 0 end
 
 	for o in all(objects) do
 		if (o.hazard != 0 and self:overlaps(o, ox, oy) and self.hazard_table[o.hazard](self)) then
@@ -582,11 +582,11 @@ player.update = function(self)
 				end
 			elseif self.state == 11 then
 				if self:overlaps(o, self.grapple_dir) or self:overlaps(o, self.grapple_dir, 2) or self:overlaps(o, self.grapple_dir, -2) then
-					o:fall()
+					o.breaking = true
 				end
 			end
 		elseif o.base == checkpoint and self:overlaps(o) then
-			o:set()
+			level_checkpoint = o.id
 		end
 	end
 
@@ -708,8 +708,6 @@ player.draw = function(self)
 			local c = cos(time() * 4 + i/16)
 			local ty = self.y - 14
 			line(self.x + s * 16, ty + c * 16, self.x + s * 40, ty + c * 40, 7)
-			line(self.x + s * 16, ty + c * 16, self.x + s * 40 + 1, ty + c * 40 + 1, 7)
-			line(self.x + s * 16, ty + c * 16, self.x + s * 40 - 1, ty + c * 40 - 1, 7)
 		end
 	end
 end

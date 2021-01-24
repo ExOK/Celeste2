@@ -9,8 +9,10 @@ shake = 0
 
 function game_start()
 	
-	for i=0,25 do snow[i] = { x = rnd(132), y = rnd(132) } end
-	for i=0,25 do clouds[i] = { x = rnd(132), y = rnd(132), s = 16 + rnd(32) } end
+	for i=0,25 do 
+		snow[i] = { x = rnd(132), y = rnd(132) } 
+		clouds[i] = { x = rnd(132), y = rnd(132), s = 16 + rnd(32) }
+	end
 
 	-- reset state
 	frames = 0
@@ -28,9 +30,8 @@ function _update()
 
 	-- timers
 	frames += 1
-
-	-- screenshake
 	shake -= 1
+	infade += 1
 
 	update_input()
 
@@ -51,8 +52,6 @@ function _update()
 			end
 		end
 	end
-
-	infade += 1
 end
 
 function _draw()
@@ -61,7 +60,7 @@ function _draw()
 	local camera_y = peek2(0x5f2a)
 
 	if shake > 0 then
-		camera(camera_x - 2 + rnd(5),camera_y - 2 + rnd(5))
+		camera(camera_x - 2 + rnd(5), camera_y - 2 + rnd(5))
 	end
 
 	-- clear screen
@@ -170,11 +169,7 @@ function draw_clouds(scale, ox, oy, sx, sy, color)
 end
 
 function approach(x, target, max_delta)
-	if x < target then
-		return min(x + max_delta, target)
-	else
-		return max(x - max_delta, target)
-	end
+	return x < target and min(x + max_delta, target) or max(x - max_delta, target)
 end
 
 function draw_sine_h(x0, x1, y, col, amplitude, time_freq, x_freq, fade_x_dist)
