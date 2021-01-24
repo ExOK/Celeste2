@@ -14,12 +14,21 @@ player.grapple_wave = 0
 player.grapple_boost = false
 player.t_grapple_cooldown = 0
 player.grapple_retract = false
+player.holding = nil
 player.dead_timer = 0
 
 player.state = 0
 player.frame = 0
 
 -- Grapple Functions
+
+--[[
+	object grapple modes:
+		0 - no grapple
+		1 - solid
+		2 - solid centered
+		2 - holdable
+]]
 
 player.start_grapple = function(self)
 	self.state = 10
@@ -53,8 +62,8 @@ player.grapple_check = function(self, x, y)
 	end
 
 	for o in all(objects) do
-		if (o.geom == g_solid and o:contains(x, y)) then
-			self.grapple_hit = on_collide_x
+		if ((o.geom == g_solid or o.grabbable) and o:contains(x, y)) then
+			self.grapple_hit = o
 			return 1
 		end
 	end
