@@ -191,7 +191,7 @@ crumble.update = function(self)
 			self.x = -32
 			self.y = -32
 		end
-		if self.time > 60 then
+		if self.time > 90 then
 			self.x = self.ox
 			self.y = self.oy
 
