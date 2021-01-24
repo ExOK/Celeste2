@@ -548,9 +548,11 @@ player.draw = function(self)
 	-- death fx
 	if (self.state == 99) then
 		local e = self.dead_timer / 10
+		local dx = mid(camera_x, self.x, camera_x + 128)
+		local dy = mid(camera_y, self.y - 4, camera_y + 128)
 		if (e <= 1) then
 			for i=0,7 do
-				circfill(self.x + cos(i / 8) * 32 * e, self.y - 4 + sin(i / 8) * 32 * e, (1 - e) * 8, 10)
+				circfill(dx + cos(i / 8) * 32 * e, dy + sin(i / 8) * 32 * e, (1 - e) * 8, 10)
 			end
 		end
 		return
