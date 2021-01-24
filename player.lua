@@ -171,6 +171,7 @@ player.release_holding = function(self, obj, x, y, thrown)
 	obj.speed_x = x
 	obj.speed_y = y
 	obj:on_release(thrown)
+	sfx(7, 3, 24, 6)
 	self.holding = nil
 end
 
@@ -458,6 +459,7 @@ player.update = function(self)
 		-- hold
 		if (self:overlaps(obj)) then
 			self.state = 1
+			sfx(7, 3, 16, 6)
 		end
 
 		-- release
