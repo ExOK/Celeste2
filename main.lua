@@ -21,7 +21,7 @@ function game_start()
 		add(collected, {})
 	end
 
-	goto_level(2)
+	goto_level(level_index)
 end
 
 function _init()
@@ -72,22 +72,7 @@ function _draw()
 	cls(0)
 
 	-- draw clouds
-	local cc = 13
-	for i=0,#clouds do
-		local c = clouds[i]
-		local x = camera_x + (c.x - camera_x * 0.9) % (128 + c.s) - c.s / 2
-		local y = camera_y + (c.y - camera_y * 0.9) % (128 + c.s / 2)
-		clip(x - c.s / 2 - camera_x, y - c.s / 2 - camera_y, c.s, c.s / 2)
-		circfill(x, y, c.s / 3, cc)
-		if (i % 2 == 0) then
-			circfill(x - c.s / 3, y, c.s / 5, cc)
-		end
-		if (i % 2 == 0) then
-			circfill(x + c.s / 3, y, c.s / 6, cc)
-		end
-		c.x += (4 - i % 4) * 0.25
-	end
-	clip(0,0,128,128)
+	draw_clouds(1, 0, 0, 1, 1, 13)
 
 	-- draw tileset
 	for x = mid(0, flr(camera_x / 8), level.width),mid(0, flr((camera_x + 128) / 8), level.width) do
@@ -112,6 +97,13 @@ function _draw()
 		circfill(camera_x + (s.x - camera_x * 0.5) % 132 - 2, camera_y + (s.y - camera_y * 0.5) % 132, i % 2, 7)
 		s.x += (4 - i % 4)
 		s.y += sin(time() * 0.25 + i * 0.1)
+	end
+
+	-- draw FG clouds
+	if (level.fog) then
+		fillp(0b0101101001011010.1)
+		draw_clouds(1.5, 0, level.height * 8 + 1, 1, 0, 7)
+		fillp()
 	end
 
 	-- screen wipes
@@ -160,6 +152,25 @@ function draw_time(x,y)
 	
 	rectfill(x,y,x+32,y+6,0)
 	print((h<10 and "0"..h or h)..":"..(m<10 and "0"..m or m)..":"..(s<10 and "0"..s or s),x+1,y+1,7)
+end
+
+function draw_clouds(scale, ox, oy, sx, sy, color)
+	for i=0,#clouds do
+		local c = clouds[i]
+		local s = c.s * scale
+		local x = ox + (camera_x + (c.x - camera_x * 0.9) % (128 + s) - s / 2) * sx
+		local y = oy + (camera_y + (c.y - camera_y * 0.9) % (128 + s / 2)) * sy
+		clip(x - s / 2 - camera_x, y - s / 2 - camera_y, s, s / 2)
+		circfill(x, y, s / 3, color)
+		if (i % 2 == 0) then
+			circfill(x - s / 3, y, s / 5, color)
+		end
+		if (i % 2 == 0) then
+			circfill(x + s / 3, y, s / 6, color)
+		end
+		c.x += (4 - i % 4) * 0.25
+	end
+	clip(0,0,128,128)
 end
 
 function approach(x, target, max_delta)

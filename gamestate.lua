@@ -11,6 +11,7 @@ levels = {
         height = 32,
         camera_mode = 2,
 		music = 0,
+		fog = true,
 		offset = 312
     }
 }
