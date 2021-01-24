@@ -65,12 +65,6 @@ player.grapple_check = function(self, x, y)
 	for o in all(objects) do
 		if (o.grapple_mode != 0 and o:contains(x, y)) then
 			self.grapple_hit = o
-
-			if (o.grapple_mode == 2) then
-				self.grapple_x = o.x + 4
-				self.grapple_y = o.y + 4
-			end
-
 			return 1
 		end
 	end
@@ -264,10 +258,17 @@ player.update = function(self)
 		-- grapple movement
 		for i = 1, 12 do
 			local hit = self:grapple_check(self.grapple_x + self.grapple_dir, self.grapple_y)
+			local mode = self.grapple_hit and self.grapple_hit.grapple_mode or 0
+
 			if (hit == 0) then
 				self.grapple_x += self.grapple_dir
 			elseif (hit == 1) then
-				self.state = 11
+				if (mode == 2) then
+					self.grapple_x = self.grapple_hit.x + 4
+					self.grapple_y = self.grapple_hit.y + 4
+				end
+
+				self.state = mode == 3 and 12 or 11
 				self.grapple_wave = 2
 				self.grapple_boost = false
 				freeze_time = 2
@@ -353,7 +354,14 @@ player.update = function(self)
 	elseif (self.state == 12) then
 		-- grapple pull state
 
+		-- grapple wave
+		self.grapple_wave = approach(self.grapple_wave, 0, 0.6)
 
+		-- release
+		if (not input_grapple) then
+			self.state = 0
+			self.grapple_retract = true
+		end
 
 	elseif (self.state == 99) then
 		-- dead state
