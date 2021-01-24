@@ -33,12 +33,12 @@ snowball.holdable = true
 snowball.thrown_timer = 0
 snowball.update = function(self)
 	if not self.held then
-		if self.thrown_timer > 0 then
-			self.thrown_timer -= 1
-		end
+		self.thrown_timer -= 1
 
 		--speed
-		self.speed_x = approach(self.speed_x, sgn(self.speed_x) * 2, 0.1)
+		if self.speed_x != 0 then
+			self.speed_x = approach(self.speed_x, sgn(self.speed_x) * 2, 0.1)
+		end
 
 		--gravity
 		if not self:check_solid(0, 1) then
@@ -49,9 +49,7 @@ snowball.update = function(self)
 		self:move_x(self.speed_x, self.on_collide_x)
 		self:move_y(self.speed_y, self.on_collide_y)
 
-		if self.y > level.height * 8 + 24 then
-			self.destroyed = true
-		end
+		self.destroyed = self.y > level.height * 8 + 24
 	end
 end
 snowball.on_collide_x = function(self, moved, total)
@@ -96,9 +94,7 @@ springboard.update = function(self)
 		self:move_x(self.speed_x, self.on_collide_x)
 		self:move_y(self.speed_y, self.on_collide_y)
 
-		if self.y > level.height * 8 + 24 then
-			self.destroyed = true
-		end
+		self.destroyed = self.y > level.height * 8 + 24
 	end
 end
 springboard.on_collide_x = function(self, moved, total)
@@ -130,7 +126,6 @@ grappler.hit_w = 10
 grappler.hit_h = 10
 
 bridge = new_type(63)
-bridge.falling = false
 bridge.update = function(self)
 	self.y += 3 * (self.falling and 1 or 0)
 end
