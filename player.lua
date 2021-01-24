@@ -56,7 +56,7 @@ end
 
 -- 0 = nothing, 1 = hit!, 2 = fail
 player.grapple_check = function(self, x, y)
-	local tile = room_tile_at(flr(x / 8), tile_y(y))
+	local tile = tile_at(flr(x / 8), tile_y(y))
 	if (fget(tile, 1)) then
 		self.grapple_hit = nil
 		return fget(tile, 2) and 2 or 1
@@ -348,7 +348,7 @@ player.update = function(self)
 
 		self.dead_timer += 1
 		if (self.dead_timer > 20) then
-			room_load(room)
+			load()
 		end
 		return
 	end

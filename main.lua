@@ -1,5 +1,4 @@
 -- globals
-room = 0
 objects = {}
 snow = {}
 clouds = {}
@@ -17,7 +16,7 @@ function _init()
 		clouds[i] = { x = rnd(132), y = rnd(132), s = 16 + rnd(32) }
 	end
 
-	room_load(0)
+	load()
 end
 
 function _update()
@@ -79,7 +78,7 @@ function _draw()
 	-- draw tileset
 	for x=0,96 do
 		for y=0,16 do
-			local tile = room_tile_at(x, y)
+			local tile = tile_at(x, y)
 			if (tile != 0 and fget(tile, 0)) then
 				spr(tile, x * 8, y * 8)
 			end
@@ -149,7 +148,7 @@ function draw_time(x,y)
 end
 
 -- gets the tile at the given location in the CURRENT room
-function room_tile_at(x, y)
+function tile_at(x, y)
 	if (raw_level) then
 		return mget(x, y)
 	else
@@ -158,8 +157,7 @@ function room_tile_at(x, y)
 end
 
 -- loads the given room
-function room_load(index)
-	room = index
+function load()
 	objects = {}
 	infade = 0
 	camera(0, 0)
@@ -173,10 +171,10 @@ function room_load(index)
 
 	px9_decomp(0, 0, 0x2000, vget, vset)
 
-	for i = 0,15 do
-		for j = 0,15 do
+	for i = 0,level.width-1 do
+		for j = 0,level.height-1 do
 			for n=1,#types do
-				if (room_tile_at(i, j) == types[n].tile) then
+				if (tile_at(i, j) == types[n].tile) then
 					create(types[n], i * 8, j * 8)
 				end
 			end
