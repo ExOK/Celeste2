@@ -21,7 +21,7 @@ function _init()
 		clen = px9_comp(0, 0, lvl.width, lvl.height, target, mget)
 
 		-- store that packed data into the main cart
-		cstore(0x2000 + offset, target, clen, "celeste2.p8")
+		cstore(0x1000 + offset, target, clen, "celeste2.p8")
 
 		-- move along
 		print("packed ".. index .." at " .. offset)
