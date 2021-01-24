@@ -1,11 +1,9 @@
-grapple_pickup = new_type()
-grapple_pickup.spr = 20
+grapple_pickup = new_type(20)
 grapple_pickup.draw = function(self)
 	spr(self.spr, self.x, self.y + sin(time()) * 2, 1, 1, not self.right)
 end
 
-spike_v = new_type()
-spike_v.spr = 36
+spike_v = new_type(36)
 spike_v.init = function(self)
 	if self:check_solid(0, -1) then
 		self.flip_y = true
@@ -17,8 +15,7 @@ spike_v.init = function(self)
 	self.hit_h = 3
 end
 
-spike_h = new_type()
-spike_h.spr = 37
+spike_h = new_type(37)
 spike_h.init = function(self)
 	if self:check_solid(-1, 0) then
 		self.flip_x = true
@@ -30,8 +27,7 @@ spike_h.init = function(self)
 	self.hit_w = 3
 end
 
-snowball = new_type()
-snowball.spr = 62
+snowball = new_type(62)
 snowball.grapple_mode = 3
 snowball.holdable = true
 snowball.thrown_timer = 0
@@ -84,8 +80,7 @@ snowball.on_release = function(self, thrown)
 	end
 end
 
-springboard = new_type()
-springboard.spr = 11
+springboard = new_type(11)
 springboard.grapple_mode = 3
 springboard.holdable = true
 springboard.thrown_timer = 0
@@ -134,23 +129,20 @@ springboard.on_release = function(self, thrown)
 	end
 end
 
-grappler = new_type()
-grappler.spr = 46
+grappler = new_type(46)
 grappler.grapple_mode = 2
 grappler.hit_x = -1
 grappler.hit_y = -1
 grappler.hit_w = 10
 grappler.hit_h = 10
 
-bridge = new_type()
-bridge.spr = 63
+bridge = new_type(63)
 bridge.falling = false
 bridge.update = function(self)
 	self.y += 3 * (self.falling and 1 or 0)
 end
 
-berry = new_type()
-berry.spr = 21
+berry = new_type(21)
 berry.update = function(self)
 	if self.collected then
 		self.timer += 1
@@ -193,9 +185,8 @@ berry.draw = function(self)
 	end
 end
 
-crumble = new_type()
-crumble.spr = 19
-crumble.geom = g_solid
+crumble = new_type(19)
+crumble.solid = true
 crumble.grapple_mode = 1
 crumble.init = function(self)
 	self.time = 0
@@ -230,7 +221,7 @@ crumble.update = function(self)
 	end
 end
 crumble.draw = function(self)
-	spr(self.spr, self.x, self.y)
+	object.draw(self)
 	if self.time > 2 then
 		fillp(0b1010010110100101.1)
 		rectfill(self.x, self.y, self.x + 7, self.y + 7, 1)
@@ -241,8 +232,7 @@ crumble.fall = function(self)
 	self.breaking = true
 end
 
-checkpoint = new_type()
-checkpoint.spr = 13
+checkpoint = new_type(13)
 checkpoint.init = function(self)
 	if level_checkpoint == self.id then
 		create(player, self.x, self.y)
@@ -253,14 +243,13 @@ checkpoint.set = function(self)
 end
 checkpoint.draw = function(self)
 	if level_checkpoint == self.id then
-		local tx = 104
-		sspr(tx, 0, 1, 8, self.x, self.y)
+		sspr(104, 0, 1, 8, self.x, self.y)
 		pal(2, 11)
 		for i=1,7 do
-			sspr(tx + i, 0, 1, 8, self.x + i, self.y + sin(-time() * 2 + i * 0.25) * (i - 1) * 0.2)
+			sspr(104 + i, 0, 1, 8, self.x + i, self.y + sin(-time() * 2 + i * 0.25) * (i - 1) * 0.2)
 		end
 		pal()
 	else
-		spr(13, self.x, self.y)
+		object.draw(self)
 	end
 end

@@ -1,7 +1,4 @@
-player = new_type()
-player.spr = 2
-player.base = object
-
+player = new_type(2)
 player.t_jump_grace = 0
 player.t_var_jump = 0
 player.var_jump_speed = 0
