@@ -161,11 +161,11 @@ pull_collide_x = function(self, moved, target)
 	return true
 end
 
-player.release_holding = function(self, obj, x, y)
+player.release_holding = function(self, obj, x, y, thrown)
 	obj.held = false
 	obj.speed_x = x
 	obj.speed_y = y
-	obj:on_release()
+	obj:on_release(thrown)
 	self.holding = nil
 end
 
@@ -283,7 +283,7 @@ player.update = function(self)
 
 		-- throw holding
 		if (self.holding and not input_grapple) then
-			self:release_holding(self.holding, 3 * self.facing, -3)
+			self:release_holding(self.holding, 4 * self.facing, -3, true)
 		end
 
 		-- throw grapple
@@ -373,7 +373,7 @@ player.update = function(self)
 
 		-- jumps
 		if (consume_jump_press()) then
-			if (self:check_solid(self.grapple_dir * 3, 0)) then
+			if (self:check_solid(self.grapple_dir * 2, 0)) then
 				self:wall_jump(-self.grapple_dir)
 			else
 				self.grapple_jump_grace_y = self.y
@@ -437,7 +437,7 @@ player.update = function(self)
 		if (not input_grapple or abs(obj.y - self.y + 7) > 8) then
 			self.state = 0
 			self.grapple_retract = true
-			self:release_holding(self.grapple_hit, -self.grapple_dir * 3, 0)
+			self:release_holding(obj, -self.grapple_dir * 5, 0, false)
 		end
 
 	elseif (self.state == 99) then
@@ -489,13 +489,8 @@ player.update = function(self)
 			if (self.speed_y >= 0 and self.y - self.speed_y + o.speed_y < o.y + 2) then
 				self.jump_grace_y = o.y
 				self:jump()
-				if (o.speed_x == 0) then
-					o.destroyed = true
-				else
-					o.freeze = 1
-					o.speed_x = 0
-					o.speed_y = -1
-				end
+				o.freeze = 1
+				o.speed_y = -1
 			elseif (o.speed_x != 0 and o.thrown_timer <= 0) then
 				self:die()
 				return
