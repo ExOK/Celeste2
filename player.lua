@@ -152,6 +152,12 @@ player.init = function(self)
 	for i = 0,4 do
 		add(self.scarf, { x = self.x, y = self.y })
 	end
+
+	--camera
+	camera_modes[level.camera_mode](self.x, self.y)
+	camera_x = camera_target_x
+	camera_y = camera_target_y
+	camera(camera_x, camera_y)
 end
 
 player.update = function(self)
@@ -186,6 +192,7 @@ player.update = function(self)
 			0 	- normal
 			10 	- throw grapple
 			11 	- grapple attached to solid
+			12	- grapple pulling in holdable
 			99 	- dead
 	]]
 
@@ -343,6 +350,11 @@ player.update = function(self)
 				self.speed_x = sgn(self.speed_x) * 5
 			end
 		end
+	elseif (self.state == 12) then
+		-- grapple pull state
+
+
+
 	elseif (self.state == 99) then
 		-- dead state
 
@@ -401,6 +413,9 @@ player.update = function(self)
 
 	-- camera
 	camera_modes[level.camera_mode](self.x, self.y)
+	camera_x = approach(camera_x, camera_target_x, 5)
+	camera_y = approach(camera_y, camera_target_y, 5)
+	camera(camera_x, camera_y)
 end
 
 player.on_collide_x = function(self, moved, target)

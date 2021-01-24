@@ -12,15 +12,15 @@ camera_modes = {
 
     -- 1: Basic Horizontal Mode
     function(px, py)
-        camera(max(0, min(level.width * 8 - 128, px - 56)), 0)
+        camera_target_x = max(0, min(level.width * 8 - 128, px - 56))
     end,
 
     -- 2: Intro Mode
     function(px, py)
-        if (px < 32) then
-            camera(0, 0)
+        if (px < 42) then
+            camera_target_x = 0
         else
-            camera(max(32, min(level.width * 8 - 128, px - 48)), 0)
+            camera_target_x = max(40, min(level.width * 8 - 128, px - 48))
         end
     end
 
@@ -35,10 +35,8 @@ camera_target_y = 0
 
 start_level = function(index)
     level = levels[index]
-
-    level.camera_mode(0, 0)
-    camera_x = camera_target_x
-    camera_y = camera_target_y
+    camera_target_x = 0
+    camera_target_y = 0
 end
 
 snap_camera = function()
