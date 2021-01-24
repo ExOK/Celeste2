@@ -180,7 +180,7 @@ berry.update = function(self)
 		self.y += (self.player.y - 4 - self.y) / 8
 		self.flash -= 1
 
-		if self.player:check_solid(0, 1) then
+		if self.player:check_solid(0, 1) or self.player.x > level.width * 8 - 16 then
 			collected[self.id] = true
 			berry_count += 1
 			self.collected = true
