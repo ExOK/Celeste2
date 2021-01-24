@@ -73,6 +73,16 @@ end
 
 -- Helpers
 
+player.jump = function(self)
+	consume_jump_press()
+	self.speed_y = -4
+	self.speed_x += input_x * 0.2
+	self.var_jump_speed = self.speed_y
+	self.t_var_jump = 4
+	self.t_jump_grace = 0
+	self:move_y(self.jump_grace_y - self.y)
+end
+
 player.wall_jump = function(self, dir)
 	consume_jump_press()
 	self.state = 0
@@ -231,13 +241,7 @@ player.update = function(self)
 		-- jumping
 		if (input_jump_pressed > 0) then
 			if (self.t_jump_grace > 0) then
-				consume_jump_press()
-				self.speed_y = -4
-				self.speed_x += input_x * 0.2
-				self.var_jump_speed = self.speed_y
-				self.t_var_jump = 4
-				self.t_jump_grace = 0
-				self:move_y(self.jump_grace_y - self.y)
+				self:jump()
 			elseif (self:check_solid(2, 0)) then
 				self:wall_jump(-1)
 			elseif (self:check_solid(-2, 0)) then
@@ -405,12 +409,20 @@ player.update = function(self)
 			o.falling = true
 			self.freeze = 1
 			shake = 2
+		elseif (o.base == snowball and o.speed_x != 0 and self:overlaps(o)) then
+			if (self.y - self.speed_y + o.speed_y < o.y + 2) then
+				o.speed_x = 0
+				o.speed_y = 3
+				self.jump_grace_y = o.y
+				self:jump()
+			end
 		end
 	end
 
 	-- death
-	if (self:hazard_check() or self.y > level.height * 8 + 16) then
+	if (self.state != 99 and (self.y > level.height * 8 + 16 or self:hazard_check())) then
 		self.state = 99
+		freeze_time = 2
 		shake = 5
 	end
 

@@ -41,7 +41,7 @@ function _update()
 			else
 				o:update()
 			end
-			
+
 			if (o.destroyed) then
 				del(objects, o)
 			end
@@ -130,7 +130,7 @@ function _draw()
 	end
 
 	-- debug
-	if (false) do
+	if (true) do
 		for o in all(objects) do
 			rect(o.x + o.hit_x, o.y + o .hit_y, o.x + o.hit_x + o.hit_w - 1, o.y + o.hit_y + o.hit_h - 1, 8)
 		end
