@@ -1,5 +1,6 @@
 -- globals
 level_index = 1
+level_checkpoint = nil
 objects = {}
 snow = {}
 clouds = {}

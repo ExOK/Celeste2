@@ -564,6 +564,8 @@ player.update = function(self)
 			if (self.state == 0 and self:overlaps(o, 0, 1)) or (self.state == 11 and self:overlaps(o, self.grapple_dir)) then
 				o:fall()
 			end
+		elseif o.base == checkpoint and self:overlaps(o) then
+			o:set()
 		end
 	end
 

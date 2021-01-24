@@ -79,6 +79,7 @@ function goto_level(index)
 	-- set level
 	level = levels[index]
 	level_index = index
+	level_checkpoint = nil
 
 	-- load into ram
 	local function vget(x, y) return peek(0x4300 + (x % 128) + y * 128) end
@@ -114,8 +115,10 @@ function restart_level()
 	for i = 0,level.width-1 do
 		for j = 0,level.height-1 do
 			for t in all(types) do
-				if tile_at(i, j) == t.tile and not collected[id(i, j)] then
-					create(t, i * 8, j * 8)
+				if level_checkpoint == nil or t != player then
+					if tile_at(i, j) == t.tile and not collected[id(i, j)] then
+						create(t, i * 8, j * 8)
+					end
 				end
 			end
 		end

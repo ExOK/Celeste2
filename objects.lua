@@ -221,3 +221,28 @@ end
 crumble.fall = function(self)
 	self.breaking = true
 end
+
+checkpoint = new_type()
+checkpoint.tile = 13
+checkpoint.base = object
+checkpoint.init = function(self)
+	if level_checkpoint == self.id then
+		create(player, self.x, self.y)
+	end
+end
+checkpoint.set = function(self)
+	level_checkpoint = self.id
+end
+checkpoint.draw = function(self)
+	if level_checkpoint == self.id then
+		local tx = 104
+		sspr(tx, 0, 1, 8, self.x, self.y)
+		pal(2, 11)
+		for i=1,7 do
+			sspr(tx + i, 0, 1, 8, self.x + i, self.y + sin(-time() * 2 + i * 0.25) * (i - 1) * 0.2)
+		end
+		pal()
+	else
+		spr(13, self.x, self.y)
+	end
+end
