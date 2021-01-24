@@ -127,7 +127,7 @@ grappler.hit_h = 10
 
 bridge = new_type(63)
 bridge.update = function(self)
-	self.y += 3 * (self.falling and 1 or 0)
+	self.y += self.falling and 3 or 0
 end
 
 berry = new_type(21)

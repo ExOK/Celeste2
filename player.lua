@@ -254,15 +254,15 @@ player.update = function(self)
 		end
 
 		-- running
+		local target, accel = 0, 0.1
 		if (abs(self.speed_x) > 2 and input_x == sgn(self.speed_x)) then
-			self.speed_x = approach(self.speed_x, input_x * 2, 0.1)
+			target = 2
 		elseif (on_ground) then
-			self.speed_x = approach(self.speed_x, input_x * 2, 0.6)
+			target, accel = 2, 0.6
 		elseif (input_x != 0) then
-			self.speed_x = approach(self.speed_x, input_x * 2, 0.4)
-		else
-			self.speed_x = approach(self.speed_x, 0, 0.1)
+			target, accel = 2, 0.4
 		end
+		self.speed_x = approach(self.speed_x, input_x * target, accel)
 
 		-- gravity
 		if (not on_ground) then
@@ -313,7 +313,6 @@ player.update = function(self)
 	elseif self.state == 1 then
 		-- lift state
 		hold = self.grapple_hit
-
 		hold.x = approach(hold.x, self.x - 4, 4)
 		hold.y = approach(hold.y, self.y - 14, 4)
 
