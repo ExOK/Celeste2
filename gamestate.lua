@@ -86,14 +86,22 @@ function goto_level(index)
 	px9_decomp(0, 0, 0x1000 + level.offset, vget, vset)
 
 	-- start music
-	music(level.music)
+	if current_music != level.music then
+		current_music = level.music
+		music(level.music)
+	end
 	
 	-- load level contents
     restart_level()
 end
 
 function next_level()
-	goto_level(level_index + 1)
+	level_index += 1
+	if standalone then
+		load("celeste2/" .. level_index .. ".p8")
+	else
+		goto_level(level_index)
+	end
 end
 
 function restart_level()
@@ -116,7 +124,9 @@ end
 
 -- gets the tile at the given location from the loaded level
 function tile_at(x, y)
-	if single_level then
+	if (x < 0 or y < 0 or x >= level.width or y >= level.height) then return 0 end
+
+	if standalone then
 		return mget(x, y)
 	else
 		return peek(0x4300 + (x % 128) + y * 128)

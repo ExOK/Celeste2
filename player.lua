@@ -14,7 +14,8 @@ player.grapple_boost = false
 player.t_grapple_cooldown = 0
 player.grapple_retract = false
 player.holding = nil
-player.dead_timer = 0
+player.wipe_timer = 0
+player.finished = false
 player.t_grapple_jump_grace = 0
 
 player.state = 0
@@ -230,6 +231,7 @@ player.update = function(self)
 			11 	- grapple attached to solid
 			12	- grapple pulling in holdable
 			99 	- dead
+			100 - finished level
 	]]
 
 	if self.state == 0 then
@@ -465,12 +467,16 @@ player.update = function(self)
 			self:release_holding(obj, -self.grapple_dir * 5, 0, false)
 		end
 
-	elseif self.state == 99 then
-		-- dead state
+	elseif self.state == 99 or self.state == 100 then
+		-- dead / finished state
 
-		self.dead_timer += 1
-		if (self.dead_timer > 20) then
-			restart_level()
+		if self.state == 100 then
+			self.x += 1
+		end
+
+		self.wipe_timer += 1
+		if self.wipe_timer > 20 then
+			if self.state == 99 then restart_level() else next_level() end
 		end
 		return
 	end
@@ -538,8 +544,12 @@ player.update = function(self)
 	end
 
 	-- death
-	if self.state != 99 and (self.y > level.height * 8 + 16 or self:hazard_check()) then
-		self:die()
+	if self.state < 99 and (self.y > level.height * 8 + 16 or self:hazard_check()) then
+		if (level_index == 1 and self.x > level.width * 8 - 64) then
+			self.state = 100
+		else
+			self:die()
+		end
 		return
 	end
 
@@ -552,8 +562,7 @@ player.update = function(self)
 		self.x = 3
 		self.speed_x = 0
 	elseif (self.x > level.width * 8 - 3) then
-		self.x = level.width * 8 - 3
-		self.speed_x = 0
+		self.state = 100
 	end
 
 	-- camera
@@ -591,7 +600,7 @@ player.draw = function(self)
 
 	-- death fx
 	if (self.state == 99) then
-		local e = self.dead_timer / 10
+		local e = self.wipe_timer / 10
 		local dx = mid(camera_x, self.x, camera_x + 128)
 		local dy = mid(camera_y, self.y - 4, camera_y + 128)
 		if (e <= 1) then
@@ -628,18 +637,20 @@ player.draw = function(self)
 		last = s
 	end
 
-	-- grapple
-	if (self.state != 0) then
-		if (self.grapple_wave == 0) then
-			line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
-		else
-			draw_sine_h(self.x, self.grapple_x, self.y - 3, 7, 2 * self.grapple_wave, 6, 0.08, 6)
+	if (self.state < 99) then
+		-- grapple
+		if (self.state != 0) then
+			if (self.grapple_wave == 0) then
+				line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
+			else
+				draw_sine_h(self.x, self.grapple_x, self.y - 3, 7, 2 * self.grapple_wave, 6, 0.08, 6)
+			end
 		end
-	end
 
-	-- failed grapple
-	if (self.grapple_retract) then
-		line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
+		-- failed grapple
+		if (self.grapple_retract) then
+			line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
+		end
 	end
 
 	-- sprite

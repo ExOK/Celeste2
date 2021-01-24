@@ -20,9 +20,9 @@ Music
 
 SFX:
 
-07 - Jump (0-3) Wall Jump (4-7)
-08
-14
+07 - Jump (0-3) Wall Jump (4-7) Grapple ice (8-11) Snowball pickup (16-22) Snowball throw (24-30)
+08 - Grapple shoot
+14 - Grapple hit (0-5) Grapple reach wall (8-11)
 17
 51
 52
