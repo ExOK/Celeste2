@@ -9,7 +9,7 @@ levels = {
 	{
         width = 32,
         height = 32,
-        camera_mode = 3,
+        camera_mode = 2,
 		music = 0,
 		offset = 312
     }
@@ -18,7 +18,7 @@ levels = {
 camera_modes = {
 
     -- 1: Intro
-    function(px, py)
+    function(px, py, g)
         if (px < 42) then
             camera_target_x = 0
         else
@@ -26,13 +26,25 @@ camera_modes = {
         end
     end,
 
-    -- 2: Basic Horizontal
-    function(px, py)
+    -- 2: Intro 2
+    function(px, py, g)
+        if (px < 120) then
+            camera_target_x = 0
+        elseif (px > 136) then
+            camera_target_x = 128
+        else
+            camera_target_x = px - 64
+        end
+        camera_target_y = max(0, min(level.height * 8 - 128, py - 64))
+    end,
+
+    -- 3: Basic Horizontal
+    function(px, py, g)
         camera_target_x = max(0, min(level.width * 8 - 128, px - 56))
     end,
 
-    -- 3: Basic Freeform
-    function(px, py)
+    -- 4: Basic Freeform
+    function(px, py, g)
         camera_target_x = max(0, min(level.width * 8 - 128, px - 64))
         camera_target_y = max(0, min(level.height * 8 - 128, py - 64))
     end

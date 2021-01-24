@@ -307,7 +307,8 @@ player.update = function(self)
 		-- throw grapple state
 
 		-- grapple movement and hitting stuff
-		for i = 1, 12 do
+		local amount = min(64 - abs(self.grapple_x - self.x), 12)
+		for i = 1, amount do
 			local hit = self:grapple_check(self.grapple_x + self.grapple_dir, self.grapple_y)
 			local mode = self.grapple_hit and self.grapple_hit.grapple_mode or 0
 
@@ -327,7 +328,7 @@ player.update = function(self)
 				self.freeze = 2
 			end
 
-			if (hit == 2 or (hit == 0 and abs(self.grapple_x - self.x) > 64)) then
+			if (hit == 2 or (hit == 0 and abs(self.grapple_x - self.x) >= 64)) then
 				self.grapple_retract = true
 				self.freeze = 2
 				self.state = 0
@@ -518,7 +519,7 @@ player.update = function(self)
 	end
 
 	-- camera
-	camera_modes[level.camera_mode](self.x, self.y)
+	camera_modes[level.camera_mode](self.x, self.y, on_ground)
 	camera_x = approach(camera_x, camera_target_x, 5)
 	camera_y = approach(camera_y, camera_target_y, 5)
 	camera(camera_x, camera_y)
