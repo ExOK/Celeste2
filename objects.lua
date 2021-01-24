@@ -68,3 +68,16 @@ grappler.hit_x = 1
 grappler.hit_y = 1
 grappler.hit_w = 6
 grappler.hit_h = 6
+
+bridge = new_type()
+bridge.tile = 63
+bridge.base = object
+bridge.init = function(self)
+	self.spr = self.tile
+	self.falling = false
+end
+bridge.update = function(self)
+	if (self.falling) then
+		self.y += 3
+	end
+end

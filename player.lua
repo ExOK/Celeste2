@@ -370,9 +370,13 @@ player.update = function(self)
 
 	-- object interactions
 	for o in all(objects) do
-		if (o.tile == 20 and o.visible and self:overlaps(o)) then
+		if (o.base == grapple_pickup and o.visible and self:overlaps(o)) then
 			o.visible = false
 			have_grapple = true
+		elseif (o.base == bridge and not o.falling and self:overlaps(o)) then
+			o.falling = true
+			freeze_time = 1
+			shake = 2
 		end
 	end
 
