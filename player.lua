@@ -392,6 +392,7 @@ player.update = function(self)
 		if (not input_grapple or (self.grapple_hit and self.grapple_hit.destroyed)) then
 			self.state = 0
 			self.t_grapple_jump_grace = 2
+			self.grapple_jump_grace_y = self.y
 			self.grapple_retract = true
 			self.facing *= -1
 			if (abs(self.speed_x) > 5) then
