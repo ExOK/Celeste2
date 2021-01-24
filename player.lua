@@ -304,6 +304,14 @@ player.update = function(self)
 				self.speed_x = sgn(self.speed_x) * 5
 			end
 		end
+
+		-- behind grapple point
+		if (sgn(self.x - self.grapple_x) == self.grapple_dir) then
+			self.state = 0
+			if (abs(self.speed_x) > 5) then
+				self.speed_x = sgn(self.speed_x) * 5
+			end
+		end
 	elseif (self.state == 99) then
 		-- dead state
 
