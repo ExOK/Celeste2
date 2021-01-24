@@ -58,6 +58,29 @@ snowball.grapple_mode = 3
 snowball.holdable = true
 snowball.hit_w = 8
 snowball.hit_h = 8
+snowball.state = 0
+snowball.update = function(self)
+	if (not self.held) then
+		--gravity
+		local on_ground = self:check_solid(0, 1)
+		if (not on_ground) then
+			self.speed_y = approach(self.speed_y, 3, 0.4)
+		end
+
+		--apply
+		self:move_x(self.speed_x, self.on_collide_x)
+		self:move_y(self.speed_y, self.on_collide_y)
+	end
+end
+snowball.on_collide_x = function(self, moved, total)
+	self.speed_x *= -1
+	self.freeze = 1
+end
+snowball.on_release = function(self, dir)
+	self.held = false
+	self.speed_x = dir * 3
+	self.speed_y = 0
+end
 
 grappler = new_type()
 grappler.tile = 46
