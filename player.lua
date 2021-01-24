@@ -16,7 +16,6 @@ player.grapple_retract = false
 player.holding = nil
 player.dead_timer = 0
 player.t_grapple_jump_grace = 0
-player.spinning = false
 
 player.state = 0
 player.frame = 0
@@ -92,7 +91,6 @@ player.wall_jump = function(self, dir)
 	self.speed_x = 3 * dir	
 	self.t_var_jump = 4
 	self.facing = dir
-	self.spinning = true
 	self:move_x(-dir * 3)
 end
 
@@ -104,7 +102,6 @@ player.grapple_jump = function(self)
 	self.speed_y = -3
 	self.var_jump_speed = -3
 	self.t_var_jump = 4
-	self.spinning = true
 	if (abs(self.speed_x) > 4) then
 		self.speed_x = sgn(self.speed_x) * 4
 	end
@@ -230,8 +227,6 @@ player.update = function(self)
 
 	if (self.state == 0) then
 		-- normal state
-
-		self.spinning = false
 
 		-- facing
 		if (input_x ~= 0) then
@@ -462,10 +457,10 @@ player.update = function(self)
 	end
 
 	-- sprite
-	self.flip_x = false
-	self.flip_y = false
-	if (self.state != 2 and self.state != 1) then
-		if (input_x != 0) then
+	if (self.state != 11) then
+		if (not on_ground) then
+			self.frame = 1
+		elseif (input_x != 0) then
 			self.frame += 0.25
 			self.frame = self.frame % 2
 		else
@@ -496,6 +491,8 @@ player.update = function(self)
 				self:die()
 				return
 			end
+		elseif (o.base == berry and self:overlaps(o)) then
+			o:collect()
 		end
 	end
 
@@ -554,9 +551,11 @@ player.draw = function(self)
 	-- death fx
 	if (self.state == 99) then
 		local e = self.dead_timer / 10
+		local dx = mid(camera_x, self.x, camera_x + 128)
+		local dy = mid(camera_y, self.y - 4, camera_y + 128)
 		if (e <= 1) then
 			for i=0,7 do
-				circfill(self.x + cos(i / 8) * 32 * e, self.y - 4 + sin(i / 8) * 32 * e, (1 - e) * 8, 10)
+				circfill(dx + cos(i / 8) * 32 * e, dy + sin(i / 8) * 32 * e, (1 - e) * 8, 10)
 			end
 		end
 		return

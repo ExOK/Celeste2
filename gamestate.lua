@@ -98,7 +98,7 @@ function restart_level()
 	for i = 0,level.width-1 do
 		for j = 0,level.height-1 do
 			for n=1,#types do
-				if (tile_at(i, j) == types[n].tile) then
+				if (tile_at(i, j) == types[n].tile and not is_collected(i, j)) then
 					create(types[n], i * 8, j * 8)
 				end
 			end
@@ -113,4 +113,13 @@ function tile_at(x, y)
 	else
 		return peek(0x4300 + (x % 128) + y * 128)
 	end
+end
+
+function is_collected(x, y)
+	return collected[x] and collected[x][y]
+end
+
+function set_collected(x, y)
+	if (not collected[x]) then collected[x] = {} end
+	collected[x][y] = true
 end

@@ -126,3 +126,14 @@ bridge.falling = false
 bridge.update = function(self)
 	self.y += 3 * (self.falling and 1 or 0)
 end
+
+berry = new_type()
+berry.tile = 21
+berry.base = object
+berry.visible = true
+berry.draw = grapple_pickup.draw
+berry.collect = function(self)
+	set_collected(flr(self.x / 8), flr(self.y / 8))
+	berry_count += 1
+	self.destroyed = true
+end
