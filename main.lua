@@ -69,7 +69,7 @@ function _draw()
 		camera(0, 0)
 		draw_time(4, 4)
 		print(level.title, 64 - 10, 64 - 8)
-		print("0 km hiked", 64 - 16, 64)
+		print((level_index * 3) .. " km hiked", 64 - 16, 64)
 		return
 	end
 
