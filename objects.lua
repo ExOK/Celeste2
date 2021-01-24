@@ -42,8 +42,6 @@ snowball.spr = 62
 snowball.base = object
 snowball.grapple_mode = 3
 snowball.holdable = true
-snowball.hit_w = 8
-snowball.hit_h = 8
 snowball.state = 0
 snowball.thrown_timer = 0
 snowball.update = function(self)
@@ -127,6 +125,7 @@ crumble = new_type()
 crumble.tile = 19
 crumble.geom = g_solid
 crumble.base = object
+crumble.grapple_mode = 1
 crumble.init = function(self)
 	self.time = 0
 	self.breaking = false
@@ -169,4 +168,7 @@ crumble.draw = function(self)
 end
 crumble.fall = function(self)
 	self.breaking = true
+end
+crumble.on_grappled = function(self)
+	self:fall()
 end
