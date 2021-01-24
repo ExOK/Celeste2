@@ -478,8 +478,13 @@ player.update = function(self)
 
 	elseif self.state == 50 then
 		-- grapple pickup state
-		player.t_grapple_pickup += 1
-		if player.t_grapple_pickup > 60 then self.state = 0 end
+		self.speed_y = min(self.speed_y + 0.8, 4.5)
+		self.speed_x = approach(self.speed_x, 0, 0.2)
+		if on_ground then
+			if self.t_grapple_pickup == 0 then music(22) end
+			self.t_grapple_pickup += 1
+			if self.t_grapple_pickup > 60 then self.state = 0 end
+		end
 
 	elseif self.state == 99 or self.state == 100 then
 		-- dead / finished state
@@ -506,7 +511,7 @@ player.update = function(self)
 	end
 
 	-- sprite
-	if self.state == 50 then
+	if self.state == 50 and self.t_grapple_pickup > 5 then
 		self.frame = 3
 	elseif (self.state != 11) then
 		if (not on_ground) then
@@ -526,11 +531,7 @@ player.update = function(self)
 			--grapple pickup
 			o.destroyed = true
 			have_grapple = true
-			self.x = o.x+4
 			self.state = 50
-			self.speed_x = 0
-			self.speed_y = 0.25
-			music(22)
 		elseif o.base == bridge and not o.falling and self:overlaps(o) then
 			--falling bridge tile
 			o.falling = true
@@ -675,7 +676,7 @@ player.draw = function(self)
 	-- sprite
 	spr(self.spr, self.x - 4, self.y - 8, 1, 1, self.facing ~= 1)
 
-	if self.state == 50 then
+	if self.state == 50 and self.t_grapple_pickup > 5 then
 		spr(20, self.x - 4, self.y - 18)
 		for i=0,16 do
 			local s = sin(time() * 4 + i/16)
