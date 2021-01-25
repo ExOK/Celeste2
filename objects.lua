@@ -53,6 +53,17 @@ snowball.update = function(self)
 	end
 end
 snowball.on_collide_x = function(self, moved, total)
+
+	for o in all(objects) do
+		if o.base == breakable and self:overlaps(o, 1) then
+			o:destroy()
+			if not self:check_solid(1) then
+				return false
+			end
+			break
+		end
+	end
+
 	self.speed_x *= -1
 	self.remainder_x = 0
 	self.freeze = 1
@@ -85,8 +96,9 @@ springboard.update = function(self)
 
 		--friction and gravity	
 		if self:check_solid(0, 1) then
-			self.speed_x = approach(self.speed_x, 0, 0.6)
+			self.speed_x = approach(self.speed_x, 0, 1)
 		else
+			self.speed_x = approach(self.speed_x, 0, 0.2)
 			self.speed_y = approach(self.speed_y, 4, 0.4)
 		end
 
@@ -110,6 +122,7 @@ springboard.on_collide_y = function(self, moved, total)
 		self.speed_y = 0
 	end
 	self.remainder_y = 0
+	self.speed_x *= 0.5
 	return true
 end
 springboard.on_release = function(self, thrown)
@@ -210,6 +223,19 @@ crumble.draw = function(self)
 		fillp(0b1010010110100101.1)
 		rectfill(self.x, self.y, self.x + 7, self.y + 7, 1)
 		fillp()
+	end
+end
+
+breakable = new_type(14)
+breakable.solid = true
+breakable.grapple_mode = 1
+breakable.spr = 14
+breakable.destroy = function(self)
+	self.destroyed = true
+	for o in all(objects) do
+		if o.base == breakable and not o.destroyed and (self:overlaps(o, 0, 1) or self:overlaps(o, 0, -1)) then
+			o:destroy()
+		end
 	end
 end
 

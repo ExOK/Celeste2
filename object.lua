@@ -112,7 +112,7 @@ object.check_solid = function(self, ox, oy)
 	end
 
 	for o in all(objects) do
-		if o.solid and o != self and self:overlaps(o, ox, oy) then
+		if o.solid and o != self and not o.destroyed and self:overlaps(o, ox, oy) then
 			return true
 		end
 	end

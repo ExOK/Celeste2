@@ -90,8 +90,8 @@ player.bounce = function(self, x, y)
 	self.var_jump_speed = -4
 	self.t_var_jump = 4
 	self.t_jump_grace = 0
-	self:move_y(y - self.y)
-	self.speed_x += sgn(self.x - x)
+	self.speed_x += sgn(self.x - x) * 1
+	self:move_y(y - self.y)	
 end
 
 player.spring = function(self, y)
@@ -294,20 +294,21 @@ player.update = function(self)
 		end		
 
 		-- jumping
-		if (input_jump_pressed > 0) then
-			if (self.t_jump_grace > 0) then
+		if input_jump_pressed > 0 then
+			if self.t_jump_grace > 0 then
 				self:jump()
-			elseif (self:check_solid(2, 0)) then
+			elseif self:check_solid(2, 0) then
 				self:wall_jump(-1)
-			elseif (self:check_solid(-2, 0)) then
+			elseif self:check_solid(-2, 0) then
 				self:wall_jump(1)
-			elseif (self.t_grapple_jump_grace > 0) then
+			elseif self.t_grapple_jump_grace > 0 then
 				self:grapple_jump()
 			end
 		end
 
 		-- throw holding
-		if (self.holding and not input_grapple) then
+		if self.holding and not input_grapple and not self.holding:check_solid(0, -2) then
+			self.holding.y -= 2
 			if btn(3) then
 				self:release_holding(self.holding, 2 * self.facing, 0, false)
 			else
