@@ -410,7 +410,7 @@ player.update = function(self)
 		if not input_grapple or abs(self.y - self.grapple_y) > 8 then
 			self.state = 0
 			self.grapple_retract = true
-			sfx(-2, 3)
+			psfx(-2)
 		end
 
 	elseif self.state == 11 then
