@@ -29,7 +29,7 @@ player.state = 0
 		2 - holdable
 ]]
 
-player.start_grapple = function(self)
+function player.start_grapple(self)
 	self.state = 10
 
 	self.speed_x = 0
@@ -54,7 +54,7 @@ player.start_grapple = function(self)
 end
 
 -- 0 = nothing, 1 = hit!, 2 = fail
-player.grapple_check = function(self, x, y)
+function player.grapple_check(self, x, y)
 	local tile = tile_at(flr(x / 8), tile_y(y))
 	if (fget(tile, 1)) then
 		self.grapple_hit = nil
@@ -73,7 +73,7 @@ end
 
 -- Helpers
 
-player.jump = function(self)
+function player.jump(self)
 	consume_jump_press()
 	self.state = 0
 	self.speed_y = -4
@@ -86,7 +86,7 @@ player.jump = function(self)
 	psfx(7, 0, 4)
 end
 
-player.bounce = function(self, x, y)
+function player.bounce(self, x, y)
 	self.state = 0
 	self.speed_y = -4
 	self.var_jump_speed = -4
@@ -97,7 +97,7 @@ player.bounce = function(self, x, y)
 	self:move_y(y - self.y)	
 end
 
-player.spring = function(self, y)
+function player.spring(self, y)
 	consume_jump_press()
 	if input_jump then 
 		psfx(17, 2, 3)
@@ -121,7 +121,7 @@ player.spring = function(self, y)
 	end
 end
 
-player.wall_jump = function(self, dir)
+function player.wall_jump(self, dir)
 	consume_jump_press()
 	self.state = 0
 	self.speed_y = -3
@@ -134,7 +134,7 @@ player.wall_jump = function(self, dir)
 	psfx(7, 4, 4)
 end
 
-player.grapple_jump = function(self)
+function player.grapple_jump(self)
 	consume_jump_press()
 	psfx(17, 2, 3)
 	self.state = 0
@@ -151,11 +151,11 @@ player.grapple_jump = function(self)
 	self:move_y(self.grapple_jump_grace_y - self.y)
 end
 
-player.bounce_check = function(self, obj)
+function player.bounce_check(self, obj)
 	return self.speed_y >= 0 and self.y - self.speed_y < obj.y + obj.speed_y + 4
 end
 
-player.die = function(self)
+function player.die(self)
 	self.state = 99
 	freeze_time = 2
 	shake = 5
@@ -180,7 +180,7 @@ player.hazard_table = {
 	[5] = function(self) return self.speed_x >= 0 end
 }
 
-player.hazard_check = function(self, ox, oy)
+function player.hazard_check(self, ox, oy)
 	ox = ox or 0
 	oy = oy or 0
 
@@ -193,7 +193,7 @@ player.hazard_check = function(self, ox, oy)
 	return false
 end
 
-player.correction_func = function(self, ox, oy)
+function player.correction_func(self, ox, oy)
 	return not self:hazard_check(ox, oy)
 end
 
@@ -206,7 +206,7 @@ pull_collide_x = function(self, moved, target)
 	return true
 end
 
-player.release_holding = function(self, obj, x, y, thrown)
+function player.release_holding(self, obj, x, y, thrown)
 	obj.held = false
 	obj.speed_x = x
 	obj.speed_y = y
@@ -217,7 +217,7 @@ end
 
 -- Events
 
-player.init = function(self)
+function player.init(self)
 	self.x += 4
 	self.y += 8
 	self.hit_x = -3
@@ -237,7 +237,7 @@ player.init = function(self)
 	camera(camera_x, camera_y)
 end
 
-player.update = function(self)
+function player.update(self)
 	local on_ground = self:check_solid(0, 1)
 	if (on_ground) then
 		self.t_jump_grace = 4
@@ -664,7 +664,7 @@ player.update = function(self)
 	camera(camera_x, camera_y)
 end
 
-player.on_collide_x = function(self, moved, target)
+function player.on_collide_x(self, moved, target)
 
 	if self.state == 0 then
 		if sgn(target) == input_x and self:corner_correct(input_x, 0, 2, 2, -1, self.correction_func) then
@@ -679,7 +679,7 @@ player.on_collide_x = function(self, moved, target)
 	return object.on_collide_x(self, moved, target)
 end
 
-player.on_collide_y = function(self, moved, target)
+function player.on_collide_y(self, moved, target)
 	if target < 0 and self:corner_correct(0, -1, 2, 1, input_x, self.correction_func) then
 		return false
 	end
@@ -688,7 +688,7 @@ player.on_collide_y = function(self, moved, target)
 	return object.on_collide_y(self, moved, target)
 end
 
-player.draw = function(self)
+function player.draw(self)
 
 	-- death fx
 	if self.state == 99 then

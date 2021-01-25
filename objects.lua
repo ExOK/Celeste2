@@ -1,10 +1,10 @@
 grapple_pickup = new_type(20)
-grapple_pickup.draw = function(self)
+function grapple_pickup.draw(self)
 	spr(self.spr, self.x, self.y + sin(time()) * 2, 1, 1, not self.right)
 end
 
 spike_v = new_type(36)
-spike_v.init = function(self)
+function spike_v.init(self)
 	if not self:check_solid(0, 1) then
 		self.flip_y = true
 		self.hazard = 3
@@ -16,7 +16,7 @@ spike_v.init = function(self)
 end
 
 spike_h = new_type(37)
-spike_h.init = function(self)
+function spike_h.init(self)
 	if self:check_solid(-1, 0) then
 		self.flip_x = true
 		self.hazard = 4
@@ -32,7 +32,7 @@ snowball.grapple_mode = 3
 snowball.holdable = true
 snowball.thrown_timer = 0
 snowball.hp = 6
-snowball.update = function(self)
+function snowball.update(self)
 	if not self.held then
 		self.thrown_timer -= 1
 
@@ -56,7 +56,7 @@ snowball.update = function(self)
 		end
 	end
 end
-snowball.on_collide_x = function(self, moved, total)
+function snowball.on_collide_x(self, moved, total)
 	if self:corner_correct(sgn(self.speed_x), 0, 2, 2, 1) then
 		return false
 	end
@@ -71,7 +71,7 @@ snowball.on_collide_x = function(self, moved, total)
 	psfx(17, 0, 2)
 	return true
 end
-snowball.on_collide_y = function(self, moved, total)
+function snowball.on_collide_y(self, moved, total)
 	if self.speed_y < 0 then
 		self.speed_y = 0
 		self.remainder_y = 0
@@ -90,12 +90,12 @@ snowball.on_collide_y = function(self, moved, total)
 	self.remainder_y = 0
 	return true
 end
-snowball.on_release = function(self, thrown)
+function snowball.on_release(self, thrown)
 	if thrown then
 		self.thrown_timer = 5
 	end
 end
-snowball.hurt = function(self)
+function snowball.hurt(self)
 	self.hp -= 1
 	if self.hp <= 0 then
 		self.destroyed = true
@@ -103,7 +103,7 @@ snowball.hurt = function(self)
 	end
 	return false
 end
-snowball.bounce_overlaps = function(self, o)
+function snowball.bounce_overlaps(self, o)
 	if self.speed_x != 0 then
 		self.hit_w = 12
 		self.hit_x = -2
@@ -120,7 +120,7 @@ springboard = new_type(11)
 springboard.grapple_mode = 3
 springboard.holdable = true
 springboard.thrown_timer = 0
-springboard.update = function(self)
+function springboard.update(self)
 	if not self.held then
 		self.thrown_timer -= 1
 
@@ -143,13 +143,13 @@ springboard.update = function(self)
 		self.destroyed = self.y > level.height * 8 + 24
 	end
 end
-springboard.on_collide_x = function(self, moved, total)
+function springboard.on_collide_x(self, moved, total)
 	self.speed_x *= -0.2
 	self.remainder_x = 0
 	self.freeze = 1
 	return true
 end
-springboard.on_collide_y = function(self, moved, total)
+function springboard.on_collide_y(self, moved, total)
 	if self.speed_y < 0 then
 		self.speed_y = 0
 		self.remainder_y = 0
@@ -165,7 +165,7 @@ springboard.on_collide_y = function(self, moved, total)
 	self.speed_x *= 0.5
 	return true
 end
-springboard.on_release = function(self, thrown)
+function springboard.on_release(self, thrown)
 	if thrown then
 		self.thrown_timer = 5
 	end
@@ -179,12 +179,12 @@ grappler.hit_w = 10
 grappler.hit_h = 10
 
 bridge = new_type(63)
-bridge.update = function(self)
+function bridge.update(self)
 	self.y += self.falling and 3 or 0
 end
 
 berry = new_type(21)
-berry.update = function(self)
+function berry.update(self)
 	if self.collected then
 		self.timer += 1
 		self.y -= 0.2 * (self.timer > 5 and 1 or 0)
@@ -194,7 +194,9 @@ berry.update = function(self)
 		self.y += (self.player.y - 4 - self.y) / 8
 		self.flash -= 1
 
-		if self.player:check_solid(0, 1) or self.player.x > level.width * 8 - 16 then
+		if self.player:check_solid(0, 1) then self.ground += 1 else self.ground = 0 end
+
+		if self.ground > 3 or self.player.x > level.width * 8 - 16 then
 			psfx(8, 8, 8, 20)
 			collected[self.id] = true
 			berry_count += 1
@@ -204,14 +206,15 @@ berry.update = function(self)
 		end
 	end
 end
-berry.collect = function(self, player)
+function berry.collect(self, player)
 	if not self.player then
 		self.player = player
 		self.flash = 5
+		self.ground = 0
 		psfx(7, 12, 4)
 	end
 end
-berry.draw = function(self)
+function berry.draw(self)
 	if (self.timer or 0) < 5 then
 		grapple_pickup.draw(self)
 		if (self.flash or 0) > 0 then
@@ -227,13 +230,13 @@ end
 crumble = new_type(19)
 crumble.solid = true
 crumble.grapple_mode = 1
-crumble.init = function(self)
+function crumble.init(self)
 	self.time = 0
 	self.breaking = false
 	self.ox = self.x
 	self.oy = self.y
 end
-crumble.update = function(self)
+function crumble.update(self)
 	if self.breaking then
 		self.time += 1
 		if self.time > 10 then
@@ -259,7 +262,7 @@ crumble.update = function(self)
 		end
 	end
 end
-crumble.draw = function(self)
+function crumble.draw(self)
 	object.draw(self)
 	if self.time > 2 then
 		fillp(0b1010010110100101.1)
@@ -269,12 +272,12 @@ crumble.draw = function(self)
 end
 
 checkpoint = new_type(13)
-checkpoint.init = function(self)
+function checkpoint.init(self)
 	if level_checkpoint == self.id then
 		create(player, self.x, self.y)
 	end
 end
-checkpoint.draw = function(self)
+function checkpoint.draw(self)
 	if level_checkpoint == self.id then
 		sspr(104, 0, 1, 8, self.x, self.y)
 		pal(2, 11)
@@ -288,11 +291,11 @@ checkpoint.draw = function(self)
 end
 
 snowball_spawner_r = new_type(14)
-snowball_spawner_r.init = function(self)
+function snowball_spawner_r.init(self)
 	self.timer = (self.x / 8) % 32
 	self.spr = -1
 end
-snowball_spawner_r.update = function(self)
+function snowball_spawner_r.update(self)
 	self.timer += 1
 	if self.timer >= 32 and abs(self.x - 64 - camera_x) < 128 then
 		self.timer = 0
@@ -303,11 +306,11 @@ snowball_spawner_r.update = function(self)
 end
 
 snowball_spawner_l = new_type(15)
-snowball_spawner_l.init = function(self)
+function snowball_spawner_l.init(self)
 	self.timer = (self.x / 8) % 32
 	self.spr = -1
 end
-snowball_spawner_l.update = function(self)
+function snowball_spawner_l.update(self)
 	self.timer += 1
 	if self.timer >= 32 and abs(self.x - 64 - camera_x) < 128 then
 		self.timer = 0
