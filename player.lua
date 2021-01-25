@@ -377,6 +377,13 @@ function player.update(self)
 		local amount = min(64 - abs(self.grapple_x - self.x), 12)
 		for i = 1, amount do
 			local hit = self:grapple_check(self.grapple_x + self.grapple_dir, self.grapple_y)
+			if hit == 0 then
+				hit = self:grapple_check(self.grapple_x + self.grapple_dir, self.grapple_y - 1)
+			end
+			if hit == 0 then
+				hit = self:grapple_check(self.grapple_x + self.grapple_dir, self.grapple_y + 1)
+			end
+
 			local mode = self.grapple_hit and self.grapple_hit.grapple_mode or 0
 
 			if hit == 0 then
