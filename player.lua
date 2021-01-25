@@ -39,7 +39,7 @@ function player.start_grapple(self)
 	self.grapple_x = self.x
 	self.grapple_y = self.y - 3	
 	self.grapple_wave = 0
-	self.grapple_failed = false
+	self.grapple_retract = false
 	self.t_grapple_cooldown = 6
 	self.t_var_jump = 0
 
