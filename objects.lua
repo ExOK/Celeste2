@@ -31,7 +31,7 @@ snowball = new_type(62)
 snowball.grapple_mode = 3
 snowball.holdable = true
 snowball.thrown_timer = 0
-snowball.hp = 5
+snowball.hp = 6
 snowball.update = function(self)
 	if not self.held then
 		self.thrown_timer -= 1
@@ -50,7 +50,10 @@ snowball.update = function(self)
 		self:move_x(self.speed_x, self.on_collide_x)
 		self:move_y(self.speed_y, self.on_collide_y)
 
-		self.destroyed = self.y > level.height * 8 + 24
+		--bounds
+		if self.y > level.height * 8 + 24 then
+			self.destroyed = true
+		end
 	end
 end
 snowball.on_collide_x = function(self, moved, total)
@@ -99,6 +102,18 @@ snowball.hurt = function(self)
 		return true
 	end
 	return false
+end
+snowball.bounce_overlaps = function(self, o)
+	if self.speed_x != 0 then
+		self.hit_w = 12
+		self.hit_x = -2
+		local ret = self:overlaps(o)
+		self.hit_w = 8
+		self.hit_x = 0
+		return ret
+	else
+		return self:overlaps(o)
+	end
 end
 
 springboard = new_type(11)
