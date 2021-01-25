@@ -385,7 +385,7 @@ player.update = function(self)
 			end
 
 			if hit == 2 or (hit == 0 and abs(self.grapple_x - self.x) >= 64) then
-				sfx(14, 3, 8, 3)
+				sfx(hit == 2 and 7 or 14, 3, 8, 3)
 				self.grapple_retract = true
 				self.freeze = 2
 				self.state = 0
