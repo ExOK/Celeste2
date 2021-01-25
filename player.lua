@@ -50,7 +50,7 @@ player.start_grapple = function(self)
 	end
 	self.facing = self.grapple_dir
 
-	psfx(8)
+	psfx(8, 0, 5)
 end
 
 -- 0 = nothing, 1 = hit!, 2 = fail
