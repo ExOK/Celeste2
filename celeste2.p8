@@ -1,6 +1,8 @@
 pico-8 cartridge // http://www.pico-8.com
 version 29
 __lua__
+-- celeste2
+-- exok games
 
 #include main.lua
 #include gamestate.lua

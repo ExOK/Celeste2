@@ -37,7 +37,7 @@ levels = {
 		columns = 1
     },
     {
-		offset = 2405,
+		offset = 2408,
         width = 128,
         height = 16,
         camera_mode = 5,
