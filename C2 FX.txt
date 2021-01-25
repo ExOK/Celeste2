@@ -29,6 +29,7 @@ Music
 TO IMPLEMENT:
 
 Sequence 40 - Ending jingle
+22 - Title screen start
 
 SFX:
 
