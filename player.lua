@@ -123,6 +123,7 @@ end
 
 player.grapple_jump = function(self)
 	consume_jump_press()
+	sfx(17, 3, 2, 3)
 	self.state = 0
 	self.t_grapple_jump_grace = 0
 	self.state = 0
