@@ -288,23 +288,31 @@ checkpoint.draw = function(self)
 end
 
 snowball_spawner_r = new_type(14)
-snowball_spawner_r.timer = 0
+snowball_spawner_r.init = function(self)
+	self.timer = (self.x / 8) % 32
+	self.spr = -1
+end
 snowball_spawner_r.update = function(self)
 	self.timer += 1
-	if self.timer >= 30 then
+	if self.timer >= 32 and abs(self.x - 64 - camera_x) < 128 then
 		self.timer = 0
 		local snowball = create(snowball, self.x, self.y - 8)
 		snowball.speed_x = 2
+		snowball.speed_y = 4
 	end
 end
 
 snowball_spawner_l = new_type(15)
-snowball_spawner_l.timer = 0
+snowball_spawner_l.init = function(self)
+	self.timer = (self.x / 8) % 32
+	self.spr = -1
+end
 snowball_spawner_l.update = function(self)
 	self.timer += 1
-	if self.timer >= 30 then
+	if self.timer >= 32 and abs(self.x - 64 - camera_x) < 128 then
 		self.timer = 0
 		local snowball = create(snowball, self.x, self.y - 8)
 		snowball.speed_x = -2
+		snowball.speed_y = 4
 	end
 end
