@@ -50,7 +50,7 @@ player.start_grapple = function(self)
 	end
 	self.facing = self.grapple_dir
 
-	sfx(8, 3)
+	psfx(8)
 end
 
 -- 0 = nothing, 1 = hit!, 2 = fail
@@ -83,7 +83,7 @@ player.jump = function(self)
 	self.t_jump_grace = 0
 	self.auto_var_jump = false
 	self:move_y(self.jump_grace_y - self.y)
-	sfx(7, 3, 0, 4)
+	psfx(7, 0, 4)
 end
 
 player.bounce = function(self, x, y)
@@ -100,9 +100,9 @@ end
 player.spring = function(self, y)
 	consume_jump_press()
 	if input_jump then 
-		sfx(17, 3, 2, 3)
+		psfx(17, 2, 3)
 	else
-		sfx(17, 3, 0, 2)
+		psfx(17, 0, 2)
 	end
 	self.state = 0
 	self.speed_y = -5
@@ -116,7 +116,7 @@ player.spring = function(self, y)
 	for o in all(objects) do
 		if o.base == crumble and not o.destroyed and self.springboard:overlaps(o, 0, 4) then
 			o.breaking = true
-			sfx(8, 3, 20, 4)
+			psfx(8, 20, 4)
 		end
 	end
 end
@@ -131,12 +131,12 @@ player.wall_jump = function(self, dir)
 	self.auto_var_jump = false
 	self.facing = dir
 	self:move_x(-dir * 3)
-	sfx(7, 3, 4, 4)
+	psfx(7, 4, 4)
 end
 
 player.grapple_jump = function(self)
 	consume_jump_press()
-	sfx(17, 3, 2, 3)
+	psfx(17, 2, 3)
 	self.state = 0
 	self.t_grapple_jump_grace = 0
 	self.state = 0
@@ -159,7 +159,7 @@ player.die = function(self)
 	self.state = 99
 	freeze_time = 2
 	shake = 5
-	sfx(14, 3, 16, 16)
+	psfx(14, 16, 16, 120)
 end
 
 --[[
@@ -211,7 +211,7 @@ player.release_holding = function(self, obj, x, y, thrown)
 	obj.speed_x = x
 	obj.speed_y = y
 	obj:on_release(thrown)
-	sfx(7, 3, 24, 6)
+	psfx(7, 24, 6)
 	self.holding = nil
 end
 
@@ -397,11 +397,11 @@ player.update = function(self)
 				self.grapple_wave = 2
 				self.grapple_boost = false
 				self.freeze = 2
-				sfx(14, 3, 0, 5)
+				psfx(14, 0, 5)
 			end
 
 			if hit == 2 or (hit == 0 and abs(self.grapple_x - self.x) >= 64) then
-				sfx(hit == 2 and 7 or 14, 3, 8, 3)
+				psfx(hit == 2 and 7 or 14, 8, 3)
 				self.grapple_retract = true
 				self.freeze = 2
 				self.state = 0
@@ -416,7 +416,7 @@ player.update = function(self)
 		if not input_grapple or abs(self.y - self.grapple_y) > 8 then
 			self.state = 0
 			self.grapple_retract = true
-			sfx(-2, 3)
+			psfx(-2)
 		end
 
 	elseif self.state == 11 then
@@ -444,7 +444,7 @@ player.update = function(self)
 		-- wall pose
 		if self.spr != 4 and self:check_solid(self.grapple_dir, 0) then
 			self.spr = 4
-			sfx(14, 3, 8, 3)
+			psfx(14, 8, 3)
 		end
 
 		-- jumps
@@ -511,7 +511,7 @@ player.update = function(self)
 		-- hold
 		if (self:overlaps(obj)) then
 			self.state = 1
-			sfx(7, 3, 16, 6)
+			psfx(7, 16, 6)
 		end
 
 		-- release
@@ -526,11 +526,11 @@ player.update = function(self)
 		self.speed_y = min(self.speed_y + 0.8, 4.5)
 		self.speed_x = approach(self.speed_x, 0, 0.2)
 		if on_ground then
-			if self.t_grapple_pickup == 5 then
-				music(22)
-			end
+			if self.t_grapple_pickup == 0 then music(39) end
+			if self.t_grapple_pickup == 61 then music(-1) end
+			if self.t_grapple_pickup == 70 then music(22) end
+			if self.t_grapple_pickup > 80 then self.state = 0 end
 			self.t_grapple_pickup += 1
-			if self.t_grapple_pickup > 60 then self.state = 0 end
 		end
 
 	elseif self.state == 99 or self.state == 100 then
@@ -538,7 +538,7 @@ player.update = function(self)
 
 		if self.state == 100 then
 			self.x += 1
-			if self.wipe_timer == 5 and level_index > 1 then sfx(17, 3, 24, 9) end
+			if self.wipe_timer == 5 and level_index > 1 then psfx(17, 24, 9) end
 		end
 
 		self.wipe_timer += 1
@@ -559,7 +559,7 @@ player.update = function(self)
 	end
 
 	-- sprite
-	if self.state == 50 and self.t_grapple_pickup > 5 then
+	if self.state == 50 and self.t_grapple_pickup > 0 then
 		self.spr = 5
 	elseif (self.state != 11) then
 		if (not on_ground) then
@@ -584,12 +584,12 @@ player.update = function(self)
 			o.falling = true
 			self.freeze = 1
 			shake = 2
-			sfx(8, 3, 16, 4)
+			psfx(8, 16, 4)
 		elseif o.base == snowball and not o.held then
 			--snowball
 			if self:bounce_check(o) and o:bounce_overlaps(self) then
 				self:bounce(o.x + 4, o.y)
-				sfx(17, 3, 0, 2)
+				psfx(17, 0, 2)
 				o.freeze = 1
 				o.speed_y = -1
 				o:hurt()
@@ -614,16 +614,16 @@ player.update = function(self)
 			--crumble
 			if self.state == 0 and self:overlaps(o, 0, 1) then
 				o.breaking = true
-				sfx(8, 3, 20, 4)
+				psfx(8, 20, 4)
 			elseif self.state == 11 then
 				if self:overlaps(o, self.grapple_dir) or self:overlaps(o, self.grapple_dir, 2) or self:overlaps(o, self.grapple_dir, -2) then
 					o.breaking = true
-					sfx(8, 3, 20, 4)
+					psfx(8, 20, 4)
 				end
 			end
 		elseif o.base == checkpoint and level_checkpoint != o.id and self:overlaps(o) then
 			level_checkpoint = o.id
-			sfx(8, 3, 24, 6)
+			psfx(8, 24, 6, 20)
 		end
 	end
 
@@ -745,7 +745,7 @@ player.draw = function(self)
 	-- sprite
 	spr(self.spr, self.x - 4, self.y - 8, 1, 1, self.facing ~= 1)
 
-	if self.state == 50 and self.t_grapple_pickup > 5 then
+	if self.state == 50 and self.t_grapple_pickup > 0 then
 		spr(20, self.x - 4, self.y - 18)
 		for i=0,16 do
 			local s = sin(time() * 4 + i/16)

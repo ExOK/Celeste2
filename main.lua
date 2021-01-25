@@ -9,6 +9,7 @@ frames = 0
 seconds = 0
 minutes = 0
 shake = 0
+sfx_timer = 0
 
 function game_start()
 	
@@ -33,10 +34,11 @@ function _update()
 
 	if level_intro > 0 then
 		level_intro -= 1
-		if level_intro == 0 then sfx(17, 3, 24, 9) end
+		if level_intro == 0 then psfx(17, 24, 9) end
 	else
 
 		-- timers
+		sfx_timer -= 1
 		infade += 1
 		shake -= 1
 		frames += 1
@@ -205,6 +207,13 @@ end
 
 function approach(x, target, max_delta)
 	return x < target and min(x + max_delta, target) or max(x - max_delta, target)
+end
+
+function psfx(id, off, len, lock)
+	if sfx_timer <= 0 or lock then
+		sfx(id, 3, off, len)
+		if lock then sfx_timer = lock end
+	end
 end
 
 function draw_sine_h(x0, x1, y, col, amplitude, time_freq, x_freq, fade_x_dist)

@@ -37,7 +37,7 @@ levels = {
 		columns = 1
     },
     {
-		offset = 2405,
+		offset = 2408,
         width = 128,
         height = 16,
         camera_mode = 5,
@@ -49,12 +49,12 @@ levels = {
 		fogmode = 2
     },
     {
+		offset = 2632,
         width = 128,
         height = 16,
         camera_mode = 6,
         camera_barriers_x = { 105 },
         music = 2,
-		offset = 0,
 		pal = function() pal(2, 14) pal(5, 2) end,
 		bg = 13,
 		clouds = 15,
@@ -184,7 +184,7 @@ function goto_level(index)
 	end
 
 	if level_index == 2 then 
-		sfx(17, 3, 8, 16)
+		psfx(17, 8, 16)
 	end
 
 	-- load into ram
@@ -219,6 +219,7 @@ function restart_level()
 	objects = {}
 	infade = 0
 	have_grapple = level_index > 2
+	sfx_timer = 0
 
 	for i = 0,level.width-1 do
 		for j = 0,level.height-1 do

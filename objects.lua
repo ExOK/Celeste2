@@ -68,7 +68,7 @@ snowball.on_collide_x = function(self, moved, total)
 	self.speed_x *= -1
 	self.remainder_x = 0
 	self.freeze = 1
-	sfx(17, 3, 0, 2)
+	psfx(17, 0, 2)
 	return true
 end
 snowball.on_collide_y = function(self, moved, total)
@@ -80,10 +80,10 @@ snowball.on_collide_y = function(self, moved, total)
 
 	if self.speed_y >= 4 then
 		self.speed_y = -2
-		sfx(17, 3, 0, 2)
+		psfx(17, 0, 2)
 	elseif self.speed_y >= 1 then
 		self.speed_y = -1
-		sfx(17, 3, 0, 2)
+		psfx(17, 0, 2)
 	else
 		self.speed_y = 0
 	end
@@ -195,7 +195,7 @@ berry.update = function(self)
 		self.flash -= 1
 
 		if self.player:check_solid(0, 1) or self.player.x > level.width * 8 - 16 then
-			sfx(8, 3, 8, 8)
+			psfx(8, 8, 8, 20)
 			collected[self.id] = true
 			berry_count += 1
 			self.collected = true
@@ -208,7 +208,7 @@ berry.collect = function(self, player)
 	if not self.player then
 		self.player = player
 		self.flash = 5
-		sfx(7, 3, 12, 4)
+		psfx(7, 12, 4)
 	end
 end
 berry.draw = function(self)
