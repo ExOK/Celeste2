@@ -96,13 +96,17 @@ end
 
 player.spring = function(self, y)
 	consume_jump_press()
+	if input_jump then 
+		sfx(17, 3, 2, 3)
+	else
+		sfx(17, 3, 0, 2)
+	end
 	self.state = 0
 	self.speed_y = -5
 	self.var_jump_speed = -5
 	self.t_var_jump = 6
 	self.t_jump_grace = 0
 	self.remainder_y = 0
-	sfx(7, 3, 0, 4)
 end
 
 player.wall_jump = function(self, dir)
@@ -119,6 +123,7 @@ end
 
 player.grapple_jump = function(self)
 	consume_jump_press()
+	sfx(17, 3, 2, 3)
 	self.state = 0
 	self.t_grapple_jump_grace = 0
 	self.state = 0
@@ -140,6 +145,7 @@ player.die = function(self)
 	self.state = 99
 	freeze_time = 2
 	shake = 5
+	sfx(14, 3, 16, 16)
 end
 
 --[[
@@ -516,6 +522,7 @@ player.update = function(self)
 
 		if self.state == 100 then
 			self.x += 1
+			if self.wipe_timer == 5 and level_index > 1 then sfx(17, 3, 24, 9) end
 		end
 
 		self.wipe_timer += 1
@@ -565,6 +572,7 @@ player.update = function(self)
 			--snowball
 			if self:bounce_check(o) then
 				self:bounce(o.x + 4, o.y)
+				sfx(17, 3, 0, 2)
 				o.freeze = 1
 				o.speed_y = -1
 			elseif o.speed_x != 0 and o.thrown_timer <= 0 then
@@ -603,6 +611,8 @@ player.update = function(self)
 	if self.state < 99 and (self.y > level.height * 8 + 16 or self:hazard_check()) then
 		if (level_index == 1 and self.x > level.width * 8 - 64) then
 			self.state = 100
+			self.wipe_timer = -30
+			sfx(17, 3, 8, 16)
 		else
 			self:die()
 		end

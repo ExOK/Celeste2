@@ -6,6 +6,8 @@ snow = {}
 clouds = {}
 freeze_time = 0
 frames = 0
+seconds = 0
+minutes = 0
 shake = 0
 
 function game_start()
@@ -31,12 +33,15 @@ function _update()
 
 	if level_intro > 0 then
 		level_intro -= 1
+		if level_intro == 0 then sfx(17, 3, 24, 9) end
 	else
 
 		-- timers
-		frames += 1
-		shake -= 1
 		infade += 1
+		shake -= 1
+		frames += 1
+		if frames == 30 then seconds += 1 frames = 0 end
+		if seconds == 60 then minutes += 1 seconds = 0 end
 
 		update_input()
 
@@ -87,9 +92,11 @@ function _draw()
 	for x = mid(0, flr(camera_x / 8), level.width),mid(0, flr((camera_x + 128) / 8), level.width) do
 		for y = mid(0, flr(camera_y / 8), level.height),mid(0, flr((camera_y + 128) / 8), level.height) do
 			local tile = tile_at(x, y)
+			if level_index == 1 and fget(tile, 1) then pal(2, 12) end
 			if tile != 0 and fget(tile, 0) then
 				spr(tile, x * 8, y * 8)
 			end
+			pal()
 		end
 	end
 
@@ -139,28 +146,26 @@ function _draw()
 	end
 
 	-- debug
-	if false then
-		for o in all(objects) do
-			rect(o.x + o.hit_x, o.y + o .hit_y, o.x + o.hit_x + o.hit_w - 1, o.y + o.hit_y + o.hit_h - 1, 8)
-		end
-
-		camera(0, 0)
-		print("cpu: " .. flr(stat(1) * 100) .. "/100", 9, 9, 8)
-		print("mem: " .. flr(stat(0)) .. "/2048", 9, 15, 8)
-		print("idx: " .. level.offset, 9, 21, 8)
+	--[[
+	for o in all(objects) do
+		rect(o.x + o.hit_x, o.y + o .hit_y, o.x + o.hit_x + o.hit_w - 1, o.y + o.hit_y + o.hit_h - 1, 8)
 	end
+
+	camera(0, 0)
+	print("cpu: " .. flr(stat(1) * 100) .. "/100", 9, 9, 8)
+	print("mem: " .. flr(stat(0)) .. "/2048", 9, 15, 8)
+	print("idx: " .. level.offset, 9, 21, 8)
+	]]
 
 	camera(camera_x, camera_y)
 end
 
 function draw_time(x,y)
-	local ts = flr(frames / 30)
-	local s = ts % 60
-	local m = flr(ts / 60) % 60
-	local h = flr(flr(ts / 60) / 60)
+	local m = minutes % 60
+	local h = flr(minutes / 60)
 	
 	rectfill(x,y,x+32,y+6,0)
-	print((h<10 and "0"..h or h)..":"..(m<10 and "0"..m or m)..":"..(s<10 and "0"..s or s),x+1,y+1,7)
+	print((h<10 and "0"..h or h)..":"..(m<10 and "0"..m or m)..":"..(seconds<10 and "0"..seconds or seconds),x+1,y+1,7)
 end
 
 function draw_clouds(scale, ox, oy, sx, sy, color)
