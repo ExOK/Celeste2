@@ -682,7 +682,7 @@ function player.update(self)
 			music(40)
 		end
 		if self.y > 376 then show_score += 1 end
-		if show_score == 90 then music(38) end
+		if show_score == 120 then music(38) end
 	end
 
 	-- camera

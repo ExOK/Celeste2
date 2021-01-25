@@ -163,7 +163,7 @@ function _draw()
 	end
 
 	-- score
-	if show_score > 90 then
+	if show_score > 105 then
 		rectfill(34,392,98, 434, 1)
 		rectfill(32,390,96, 432, 0)
 		rect(32,390,96, 432, 7)
