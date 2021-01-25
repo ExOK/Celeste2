@@ -92,9 +92,11 @@ function _draw()
 	for x = mid(0, flr(camera_x / 8), level.width),mid(0, flr((camera_x + 128) / 8), level.width) do
 		for y = mid(0, flr(camera_y / 8), level.height),mid(0, flr((camera_y + 128) / 8), level.height) do
 			local tile = tile_at(x, y)
+			if level_index == 1 and fget(tile, 1) then pal(2, 12) end
 			if tile != 0 and fget(tile, 0) then
 				spr(tile, x * 8, y * 8)
 			end
+			pal()
 		end
 	end
 
@@ -144,16 +146,16 @@ function _draw()
 	end
 
 	-- debug
-	if false then
-		for o in all(objects) do
-			rect(o.x + o.hit_x, o.y + o .hit_y, o.x + o.hit_x + o.hit_w - 1, o.y + o.hit_y + o.hit_h - 1, 8)
-		end
-
-		camera(0, 0)
-		print("cpu: " .. flr(stat(1) * 100) .. "/100", 9, 9, 8)
-		print("mem: " .. flr(stat(0)) .. "/2048", 9, 15, 8)
-		print("idx: " .. level.offset, 9, 21, 8)
+	--[[
+	for o in all(objects) do
+		rect(o.x + o.hit_x, o.y + o .hit_y, o.x + o.hit_x + o.hit_w - 1, o.y + o.hit_y + o.hit_h - 1, 8)
 	end
+
+	camera(0, 0)
+	print("cpu: " .. flr(stat(1) * 100) .. "/100", 9, 9, 8)
+	print("mem: " .. flr(stat(0)) .. "/2048", 9, 15, 8)
+	print("idx: " .. level.offset, 9, 21, 8)
+	]]
 
 	camera(camera_x, camera_y)
 end
