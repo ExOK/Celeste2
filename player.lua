@@ -655,7 +655,12 @@ function player.update(self)
 		self.x = 3
 		self.speed_x = 0
 	elseif (self.x > level.width * 8 - 3) then
-		self.state = 100
+		if level.right_edge then
+			self.x = level.width * 8 - 3
+			self.speed_x = 0
+		else
+			self.state = 100
+		end
 	end
 
 	-- intro bridge music
