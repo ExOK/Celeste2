@@ -672,6 +672,7 @@ function player.update(self)
 	if current_music == levels[1].music and self.x > 61 * 8 then
 		current_music = 37
 		music(37)
+		psfx(17, 24, 9)
 	end
 
 	-- ending music
@@ -681,6 +682,7 @@ function player.update(self)
 			music(40)
 		end
 		if self.y > 376 then show_score += 1 end
+		if show_score == 90 then music(38) end
 	end
 
 	-- camera
