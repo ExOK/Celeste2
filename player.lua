@@ -2,6 +2,7 @@ player = new_type(2)
 player.t_jump_grace = 0
 player.t_var_jump = 0
 player.var_jump_speed = 0
+player.auto_var_jump = false
 player.grapple_x = 0
 player.grapple_y = 0
 player.grapple_dir = 0
@@ -80,6 +81,7 @@ player.jump = function(self)
 	self.speed_x += input_x * 0.2
 	self.t_var_jump = 4
 	self.t_jump_grace = 0
+	self.auto_var_jump = false
 	self:move_y(self.jump_grace_y - self.y)
 	sfx(7, 3, 0, 4)
 end
@@ -90,7 +92,8 @@ player.bounce = function(self, x, y)
 	self.var_jump_speed = -4
 	self.t_var_jump = 4
 	self.t_jump_grace = 0
-	self.speed_x += sgn(self.x - x) * 1
+	self.auto_var_jump = true
+	self.speed_x += sgn(self.x - x) * 0.5
 	self:move_y(y - self.y)	
 end
 
@@ -107,6 +110,7 @@ player.spring = function(self, y)
 	self.t_var_jump = 6
 	self.t_jump_grace = 0
 	self.remainder_y = 0
+	self.auto_var_jump = false
 	self.springboard.player = nil
 
 	for o in all(objects) do
@@ -124,6 +128,7 @@ player.wall_jump = function(self, dir)
 	self.var_jump_speed = -3
 	self.speed_x = 3 * dir	
 	self.t_var_jump = 4
+	self.auto_var_jump = false
 	self.facing = dir
 	self:move_x(-dir * 3)
 	sfx(7, 3, 4, 4)
@@ -138,6 +143,7 @@ player.grapple_jump = function(self)
 	self.speed_y = -3
 	self.var_jump_speed = -3
 	self.t_var_jump = 4
+	self.auto_var_jump = false
 	self.grapple_retract = true
 	if (abs(self.speed_x) > 4) then
 		self.speed_x = sgn(self.speed_x) * 4
@@ -146,7 +152,7 @@ player.grapple_jump = function(self)
 end
 
 player.bounce_check = function(self, obj)
-	return self.speed_y >= 0 and self.y - self.speed_y + obj.speed_y < obj.y + 2
+	return self.speed_y >= 0 and self.y - self.speed_y < obj.y + obj.speed_y + 4
 end
 
 player.die = function(self)
@@ -301,7 +307,7 @@ player.update = function(self)
 
 		-- variable jumping
 		if (self.t_var_jump > 0) then
-			if (input_jump) then
+			if (input_jump or self.auto_var_jump) then
 				self.speed_y = self.var_jump_speed
 				self.t_var_jump -= 1
 			else

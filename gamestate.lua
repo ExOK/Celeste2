@@ -51,7 +51,8 @@ levels = {
     {
         width = 128,
         height = 16,
-        camera_mode = 5,
+        camera_mode = 6,
+        camera_barriers_x = { 105 },
         music = 2,
 		offset = 0,
 		pal = function() pal(2, 14) pal(5, 2) end,
@@ -61,6 +62,17 @@ levels = {
     }
 }
 
+camera_x_barrier = function(tile_x, px, py)
+    local bx = tile_x * 8
+    if px < bx - 8 then
+        camera_target_x = min(camera_target_x, bx - 128)
+    elseif px > bx + 8 then
+        camera_target_x = max(camera_target_x, bx)
+    end
+end
+
+c_offset = 0
+c_flag = false
 camera_modes = {
 
     -- 1: Intro
@@ -88,12 +100,7 @@ camera_modes = {
     function(px, py, g)
         camera_target_x = max(0, min(level.width * 8 - 128, px - 56))
         for i,b in ipairs(level.camera_barriers_x) do
-            local bx = b * 8
-            if px < bx - 8 then
-                camera_target_x = min(camera_target_x, bx - 128)
-            elseif px > bx + 8 then
-                camera_target_x = max(camera_target_x, bx)
-            end
+            camera_x_barrier(b, px, py)
         end
 
         if py < level.camera_barrier_y * 8 + 3 then
@@ -115,9 +122,32 @@ camera_modes = {
         camera_target_y = max(0, min(level.height * 8 - 128, py - 64))
     end,
 
-    -- 5: Level 3
+    -- 5: Level 3-1
     function(px, py, g)
         camera_target_x = max(0, min(level.width * 8 - 128, px - 32))
+    end,
+
+    -- 6: Level 3-2
+    function(px, py, g)
+        if px > 848 then
+            c_offset = 48
+        elseif px < 704 then
+            c_offset = 32
+        elseif px > 808 then
+            c_flag = true
+            c_offset = 96
+        end
+
+        camera_target_x = max(0, min(level.width * 8 - 128, px - c_offset))
+
+        for i,b in ipairs(level.camera_barriers_x) do
+            camera_x_barrier(b, px, py)
+        end
+
+        if c_flag then
+            camera_target_x = max(camera_target_x, 672)
+        end
+
     end,
 
     -- Basic Horizontal
