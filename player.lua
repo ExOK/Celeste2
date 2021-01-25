@@ -568,6 +568,7 @@ player.update = function(self)
 			o.falling = true
 			self.freeze = 1
 			shake = 2
+			sfx(8, 3, 16, 4)
 		elseif o.base == snowball and not o.held and self:overlaps(o) then
 			--snowball
 			if self:bounce_check(o) then
@@ -591,19 +592,20 @@ player.update = function(self)
 		elseif o.base == berry and self:overlaps(o) then
 			--berry
 			o:collect(self)
-		elseif o.base == crumble then
+		elseif o.base == crumble and not o.breaking then
 			--crumble
-			if self.state == 0 then
-				if self:overlaps(o, 0, 1) then
-					o.breaking = true
-				end
+			if self.state == 0 and self:overlaps(o, 0, 1) then
+				o.breaking = true
+				sfx(8, 3, 20, 4)
 			elseif self.state == 11 then
 				if self:overlaps(o, self.grapple_dir) or self:overlaps(o, self.grapple_dir, 2) or self:overlaps(o, self.grapple_dir, -2) then
 					o.breaking = true
+					sfx(8, 3, 20, 4)
 				end
 			end
-		elseif o.base == checkpoint and self:overlaps(o) then
+		elseif o.base == checkpoint and level_checkpoint != o.id and self:overlaps(o) then
 			level_checkpoint = o.id
+			sfx(8, 3, 24, 6)
 		end
 	end
 

@@ -67,10 +67,8 @@ end
 
 function _draw()
 
-	-- clear screen
-	cls(level and level.bg and level.bg or 0)
-
 	if level_intro > 0 then
+		cls(0)
 		camera(0, 0)
 		draw_time(4, 4)
 		print(level.title, 64 - 10, 64 - 8)
@@ -84,6 +82,9 @@ function _draw()
 	if shake > 0 then
 		camera(camera_x - 2 + rnd(5), camera_y - 2 + rnd(5))
 	end
+
+	-- clear screen
+	cls(level and level.bg and level.bg or 0)
 
 	-- draw clouds
 	draw_clouds(1, 0, 0, 1, 1, level.clouds or 13)
