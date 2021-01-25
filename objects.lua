@@ -53,15 +53,8 @@ snowball.update = function(self)
 	end
 end
 snowball.on_collide_x = function(self, moved, total)
-
-	for o in all(objects) do
-		if o.base == breakable and self:overlaps(o, 1) then
-			o:destroy()
-			if not self:check_solid(1) then
-				return false
-			end
-			break
-		end
+	if self:corner_correct(sgn(self.speed_x), 0, 2, 2, 1) then
+		return false
 	end
 
 	self.speed_x *= -1
@@ -240,19 +233,6 @@ crumble.draw = function(self)
 		fillp(0b1010010110100101.1)
 		rectfill(self.x, self.y, self.x + 7, self.y + 7, 1)
 		fillp()
-	end
-end
-
-breakable = new_type(14)
-breakable.solid = true
-breakable.grapple_mode = 1
-breakable.spr = 14
-breakable.destroy = function(self)
-	self.destroyed = true
-	for o in all(objects) do
-		if o.base == breakable and not o.destroyed and (self:overlaps(o, 0, 1) or self:overlaps(o, 0, -1)) then
-			o:destroy()
-		end
 	end
 end
 
