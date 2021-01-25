@@ -1,47 +1,47 @@
 levels = {
     {
+        offset = 0,
         width = 96,
         height = 16,
 		camera_mode = 1,
 		music = 38,
-        offset = 0
     },
     {
+		offset = 341,
         width = 32,
         height = 32,
         camera_mode = 2,
 		music = 36,
 		fogmode = 1,
 		clouds = 0,
-		offset = 308,
 		columns = 1
     },
     {
+		offset = 677,
         width = 128,
         height = 22,
         camera_mode = 3,
         camera_barriers_x = { 38 },
         camera_barrier_y = 6,
         music = 2,
-		offset = 644,
 		title = "trailhead"
     },
     {
+        offset = 1311,
         width = 128,
         height = 32,
         camera_mode = 4,
         music = 2,
-        offset = 1278,
 		title = "10 km marker",
 		pal = function() pal(2, 12) pal(5, 2) end,
 		columns = 1
     },
     {
+		offset = 2405,
         width = 128,
         height = 16,
         camera_mode = 5,
         music = 2,
-		offset = 2372,
 		title = "20 km marker",
 		pal = function() pal(2, 14) pal(5, 2) end,
 		bg = 13,
