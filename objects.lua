@@ -5,7 +5,7 @@ end
 
 spike_v = new_type(36)
 spike_v.init = function(self)
-	if self:check_solid(0, -1) then
+	if not self:check_solid(0, 1) then
 		self.flip_y = true
 		self.hazard = 3
 	else
@@ -71,6 +71,12 @@ snowball.on_collide_x = function(self, moved, total)
 	return true
 end
 snowball.on_collide_y = function(self, moved, total)
+	if self.speed_y < 0 then
+		self.speed_y = 0
+		self.remainder_y = 0
+		return true
+	end
+
 	if self.speed_y >= 4 then
 		self.speed_y = -2
 		sfx(17, 3, 0, 2)
@@ -119,6 +125,12 @@ springboard.on_collide_x = function(self, moved, total)
 	return true
 end
 springboard.on_collide_y = function(self, moved, total)
+	if self.speed_y < 0 then
+		self.speed_y = 0
+		self.remainder_y = 0
+		return true
+	end
+
 	if self.speed_y >= 2 then
 		self.speed_y *= -0.5
 	else

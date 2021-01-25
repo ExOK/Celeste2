@@ -84,7 +84,7 @@ camera_modes = {
         if px % 128 > 8 and px % 128 < 120 then
             px = flr(px / 128) * 128 + 64
         end
-        if py % 128 > 8 and py % 128 < 120 then
+        if py % 128 > 4 and py % 128 < 124 then
             py = flr(py / 128) * 128 + 64
         end
         camera_target_x = max(0, min(level.width * 8 - 128, px - 64))
