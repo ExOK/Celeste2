@@ -23,11 +23,9 @@ Music
 38 - Pure wind ambience (start level)
 37 - Wind + bwommmm (at bridge)
 36 - Sparse wind + bwomm (after falling)
+Sequence 39 - Hookshot powerup
 
 TO IMPLEMENT:
-
-17 - item respawn (5-7)
-Sequence 39 - Hookshot powerup
 
 SFX:
 
@@ -35,6 +33,7 @@ SFX:
 08 - Grapple shoot (0-4) Get strawb (8-15) Bridge crumble (16-19) Box break (20-23) Checkpoint (24-29)
 14 - Grapple hit (0-5) Grapple reach wall (8-11) Death (16-32)
 17 - Snowball bounce/jump (0-1) Spring jump (2-4) Cartoony fall (8-23) Screen woosh (24-32)
+17 - item respawn (5-7)
 
 54
 55

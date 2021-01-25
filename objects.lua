@@ -255,6 +255,7 @@ function crumble.update(self)
 			if can_respawn then
 				self.breaking = false
 				self.time = 0
+				psfx(17, 5, 3)
 			else
 				self.x = -32
 				self.y = -32
@@ -302,6 +303,7 @@ function snowball_spawner_r.update(self)
 		local snowball = create(snowball, self.x, self.y - 8)
 		snowball.speed_x = 2
 		snowball.speed_y = 4
+		psfx(17, 5, 3)
 	end
 end
 
@@ -317,5 +319,6 @@ function snowball_spawner_l.update(self)
 		local snowball = create(snowball, self.x, self.y - 8)
 		snowball.speed_x = -2
 		snowball.speed_y = 4
+		psfx(17, 5, 3)
 	end
 end

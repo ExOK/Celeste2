@@ -61,7 +61,7 @@ levels = {
 		fogmode = 2
     },
     {
-		offset = 2632,
+		offset = 2864,
         width = 128,
         height = 16,
         camera_mode = 5,
