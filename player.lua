@@ -515,7 +515,7 @@ player.update = function(self)
 		end
 
 		-- release
-		if (not input_grapple or abs(obj.y - self.y + 7) > 8) then
+		if not input_grapple or abs(obj.y - self.y + 7) > 8 or sgn(obj.x + 4 - self.x) == -self.grapple_dir then
 			self.state = 0
 			self.grapple_retract = true
 			self:release_holding(obj, -self.grapple_dir * 5, 0, false)

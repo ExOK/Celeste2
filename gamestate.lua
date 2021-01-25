@@ -59,6 +59,17 @@ levels = {
 		bg = 13,
 		clouds = 15,
 		fogmode = 2
+    },
+    {
+		offset = 2632,
+        width = 128,
+        height = 16,
+        camera_mode = 5,
+        music = 2,
+		pal = function() pal(2, 14) pal(5, 2) end,
+		bg = 13,
+		clouds = 15,
+		fogmode = 2
     }
 }
 
@@ -122,7 +133,7 @@ camera_modes = {
         camera_target_y = max(0, min(level.height * 8 - 128, py - 64))
     end,
 
-    -- 5: Level 3-1
+    -- 5: Level 3-1 and 3-3
     function(px, py, g)
         camera_target_x = max(0, min(level.width * 8 - 128, px - 32))
     end,
