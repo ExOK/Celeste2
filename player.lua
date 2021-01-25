@@ -107,9 +107,10 @@ player.spring = function(self, y)
 	self.t_var_jump = 6
 	self.t_jump_grace = 0
 	self.remainder_y = 0
+	self.springboard.player = nil
 
 	for o in all(objects) do
-		if o.base == crumble and not o.destroyed and self.springboard:overlaps(o, 0, 1) then
+		if o.base == crumble and not o.destroyed and self.springboard:overlaps(o, 0, 4) then
 			o.breaking = true
 			sfx(8, 3, 20, 4)
 		end
@@ -598,6 +599,7 @@ player.update = function(self)
 			self.t_jump_grace = 0
 			self.springboard = o
 			self.remainder_y = 0
+			o.player = self
 			self:move_y(o.y + 4 - self.y)
 		elseif o.base == berry and self:overlaps(o) then
 			--berry

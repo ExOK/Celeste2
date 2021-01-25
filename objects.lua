@@ -136,6 +136,10 @@ springboard.update = function(self)
 		self:move_x(self.speed_x, self.on_collide_x)
 		self:move_y(self.speed_y, self.on_collide_y)
 
+		if self.player != nil then
+			self.player:move_y(self.speed_y)
+		end
+
 		self.destroyed = self.y > level.height * 8 + 24
 	end
 end
@@ -153,7 +157,7 @@ springboard.on_collide_y = function(self, moved, total)
 	end
 
 	if self.speed_y >= 2 then
-		self.speed_y *= -0.5
+		self.speed_y *= -0.4
 	else
 		self.speed_y = 0
 	end
@@ -280,5 +284,27 @@ checkpoint.draw = function(self)
 		pal()
 	else
 		object.draw(self)
+	end
+end
+
+snowball_spawner_r = new_type(14)
+snowball_spawner_r.timer = 0
+snowball_spawner_r.update = function(self)
+	self.timer += 1
+	if self.timer >= 30 then
+		self.timer = 0
+		local snowball = create(snowball, self.x, self.y - 8)
+		snowball.speed_x = 2
+	end
+end
+
+snowball_spawner_l = new_type(15)
+snowball_spawner_l.timer = 0
+snowball_spawner_l.update = function(self)
+	self.timer += 1
+	if self.timer >= 30 then
+		self.timer = 0
+		local snowball = create(snowball, self.x, self.y - 8)
+		snowball.speed_x = -2
 	end
 end
