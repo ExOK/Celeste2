@@ -23,11 +23,13 @@ Music
 38 - Pure wind ambience (start level)
 37 - Wind + bwommmm (at bridge)
 36 - Sparse wind + bwomm (after falling)
+39 - Hookshot powerup
+40 - Ending jingle
 
 TO IMPLEMENT:
 
 17 - item respawn (5-7)
-Sequence 39 - Hookshot powerup
+Sequence 40 - Ending jingle
 
 SFX:
 
