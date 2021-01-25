@@ -590,6 +590,7 @@ function player.update(self)
 			--grapple pickup
 			o.destroyed = true
 			have_grapple = true
+			psfx(7, 12, 4)
 			self.state = 50
 		elseif o.base == bridge and not o.falling and self:overlaps(o) then
 			--falling bridge tile
