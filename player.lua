@@ -299,10 +299,11 @@ function player.update(self)
 
 		-- gravity
 		if (not on_ground) then
+			local max = btn(3) and 5.2 or 4.5
 			if (abs(self.speed_y) < 0.2) then
-				self.speed_y = min(self.speed_y + 0.4, 4.5)
+				self.speed_y = min(self.speed_y + 0.4, max)
 			else
-				self.speed_y = min(self.speed_y + 0.8, 4.5)
+				self.speed_y = min(self.speed_y + 0.8, max)
 			end
 		end
 
