@@ -13,6 +13,7 @@ function game_start()
 	shake = 0
 	sfx_timer = 0
 	berry_count = 0
+	death_count = 0
 	collected = {}
 	camera_x = 0
 	camera_y = 0
@@ -45,6 +46,7 @@ function _update()
 			if titlescreen_flash < -30 then goto_level(1) end
 		elseif btn(4) or btn(5) then
 			titlescreen_flash = 50
+			sfx(22, 3)
 		end
 	
 	-- level intro card

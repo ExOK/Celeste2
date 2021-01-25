@@ -7,7 +7,7 @@ levels = {
 		music = 38,
     },
     {
-		offset = 341,
+		offset = 343,
         width = 32,
         height = 32,
         camera_mode = 2,
@@ -17,7 +17,7 @@ levels = {
 		columns = 1
     },
     {
-		offset = 677,
+		offset = 679,
         width = 128,
         height = 22,
         camera_mode = 3,
@@ -27,7 +27,7 @@ levels = {
 		title = "trailhead"
     },
     {
-        offset = 1311,
+        offset = 1313,
         width = 128,
         height = 32,
         camera_mode = 4,
@@ -37,7 +37,7 @@ levels = {
 		columns = 1
     },
     {
-		offset = 2408,
+		offset = 2410,
         width = 128,
         height = 16,
         camera_mode = 5,
@@ -49,7 +49,7 @@ levels = {
 		fogmode = 2
     },
     {
-		offset = 2632,
+		offset = 2634,
         width = 128,
         height = 16,
         camera_mode = 6,
@@ -61,7 +61,7 @@ levels = {
 		fogmode = 2
     },
     {
-		offset = 2864,
+		offset = 2866,
         width = 128,
         height = 16,
         camera_mode = 7,

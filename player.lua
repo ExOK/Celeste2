@@ -159,6 +159,7 @@ function player.die(self)
 	self.state = 99
 	freeze_time = 2
 	shake = 5
+	death_count += 1
 	psfx(14, 16, 16, 120)
 end
 
@@ -736,14 +737,9 @@ function player.draw(self)
 		last = s
 	end
 
+	-- grapple
 	if self.state >= 10 and self.state <= 12 then
-		-- grapple
-		if (self.grapple_wave == 0) then
-			line(self.x, self.y - 2, self.grapple_x, self.grapple_y + 1, 1)
-			line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
-		else
-			draw_sine_h(self.x, self.grapple_x, self.y - 3, 7, 2 * self.grapple_wave, 6, 0.08, 6)
-		end
+		draw_sine_h(self.x, self.grapple_x, self.y - 3, 7, 2 * self.grapple_wave, 6, 0.08, 6)
 	end
 
 	-- retracting grapple
