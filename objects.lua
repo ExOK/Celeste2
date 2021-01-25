@@ -31,14 +31,22 @@ snowball = new_type(62)
 snowball.grapple_mode = 3
 snowball.holdable = true
 snowball.thrown_timer = 0
+snowball.stop = false
 snowball.hp = 6
 function snowball.update(self)
 	if not self.held then
 		self.thrown_timer -= 1
 
 		--speed
-		if self.speed_x != 0 then
-			self.speed_x = approach(self.speed_x, sgn(self.speed_x) * 2, 0.1)
+		if self.stop then
+			self.speed_x = approach(self.speed_x, 0, 0.25)
+			if self.speed_x == 0 then
+				self.stop = false
+			end
+		else
+			if self.speed_x != 0 then
+				self.speed_x = approach(self.speed_x, sgn(self.speed_x) * 2, 0.1)
+			end
 		end
 
 		--gravity
@@ -91,9 +99,10 @@ function snowball.on_collide_y(self, moved, total)
 	return true
 end
 function snowball.on_release(self, thrown)
-	if thrown then
-		self.thrown_timer = 5
+	if not thrown then
+		self.stop = true
 	end
+	self.thrown_timer = 8
 end
 function snowball.hurt(self)
 	self.hp -= 1

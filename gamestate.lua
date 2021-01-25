@@ -70,6 +70,18 @@ levels = {
 		bg = 13,
 		clouds = 7,
 		fogmode = 2,
+    },
+    {
+		offset = 0,
+        width = 16,
+        height = 62,
+        camera_mode = 8,
+        music = 2,
+		pal = function() pal(2, 12) pal(5, 2) end,
+		bg = 13,
+		clouds = 7,
+        fogmode = 2,
+        right_edge = true
     }
 }
 
@@ -87,7 +99,7 @@ c_flag = false
 camera_modes = {
 
     -- 1: Intro
-    function(px, py, g)
+    function(px, py)
         if px < 42 then
             camera_target_x = 0
         else
@@ -96,7 +108,7 @@ camera_modes = {
     end,
 
     -- 2: Intro 2
-    function(px, py, g)
+    function(px, py)
         if px < 120 then
             camera_target_x = 0
         elseif px > 136 then
@@ -108,7 +120,7 @@ camera_modes = {
     end,
 
     -- 3: Level 1
-    function(px, py, g)
+    function(px, py)
         camera_target_x = max(0, min(level.width * 8 - 128, px - 56))
         for i,b in ipairs(level.camera_barriers_x) do
             camera_x_barrier(b, px, py)
@@ -122,7 +134,7 @@ camera_modes = {
     end,
 
     -- 4: Level 2
-    function(px, py, g)
+    function(px, py)
         if px % 128 > 8 and px % 128 < 120 then
             px = flr(px / 128) * 128 + 64
         end
@@ -134,12 +146,12 @@ camera_modes = {
     end,
 
     -- 5: Level 3-1 and 3-3
-    function(px, py, g)
+    function(px, py)
         camera_target_x = max(0, min(level.width * 8 - 128, px - 32))
     end,
 
     -- 6: Level 3-2
-    function(px, py, g)
+    function(px, py)
         if px > 848 then
             c_offset = 48
         elseif px < 704 then
@@ -161,7 +173,7 @@ camera_modes = {
     end,
 
     --7: Level 3-3
-    function (px, py, g)
+    function (px, py)
         if px > 420 then
             if px < 436 then
                 c_offset = 32 + (px - 420)
@@ -173,6 +185,11 @@ camera_modes = {
         end
         camera_target_x = max(0, min(level.width * 8 - 128, px - c_offset))
     end,
+
+    --8: End
+    function (px, py)
+        camera_target_y = max(0, min(level.height * 8 - 128, py - 32))
+    end
 }
 
 snap_camera = function()
