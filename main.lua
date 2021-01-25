@@ -68,7 +68,7 @@ end
 function _draw()
 
 	-- clear screen
-	cls(0)
+	cls(level and level.bg and level.bg or 0)
 
 	if level_intro > 0 then
 		camera(0, 0)
@@ -86,16 +86,26 @@ function _draw()
 	end
 
 	-- draw clouds
-	draw_clouds(1, 0, 0, 1, 1, 13)
+	draw_clouds(1, 0, 0, 1, 1, level.clouds or 13)
+
+	-- columns
+	if level.columns then
+		fillp(0b0000100000000010.1)
+		local x = 0
+		while x < level.width do
+			local tx = x * 8 + camera_x * 0.1
+			rectfill(tx, 0, tx + (x % 2) * 8 + 8, level.height * 8, level.columns)
+			x += 1 + x % 7
+		end
+		fillp()
+	end
 
 	-- draw tileset
 	for x = mid(0, flr(camera_x / 8), level.width),mid(0, flr((camera_x + 128) / 8), level.width) do
 		for y = mid(0, flr(camera_y / 8), level.height),mid(0, flr((camera_y + 128) / 8), level.height) do
 			local tile = tile_at(x, y)
-			if level_index == 1 and fget(tile, 1) then pal(2, 12) end
-			if tile != 0 and fget(tile, 0) then
-				spr(tile, x * 8, y * 8)
-			end
+			if level.spal and fget(tile, 1) then level.spal() end
+			if tile != 0 and fget(tile, 0) then spr(tile, x * 8, y * 8) end
 			pal()
 		end
 	end
