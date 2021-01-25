@@ -71,8 +71,8 @@ function _draw()
 		cls(0)
 		camera(0, 0)
 		draw_time(4, 4)
-		print(level.title, 64 - 10, 64 - 8)
-		print((level_index * 3) .. " km hiked", 64 - 16, 64)
+		print_center("level " .. (level_index - 2), 64, 64 - 8, 7)
+		print_center(level.title, 64, 64, 7)
 		return
 	end
 
@@ -196,6 +196,11 @@ function draw_clouds(scale, ox, oy, sx, sy, color)
 		c.x += (4 - i % 4) * 0.25
 	end
 	clip(0,0,128,128)
+end
+
+function print_center(text, x, y, c)
+	x -= (#text * 4 - 1) / 2
+	print(text, x, y, c)
 end
 
 function approach(x, target, max_delta)

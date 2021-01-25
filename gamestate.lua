@@ -22,7 +22,7 @@ levels = {
         camera_barrier_y = 6,
         music = 2,
 		offset = 644,
-		title = "level 1"
+		title = "trailhead"
     },
     {
         width = 128,
@@ -30,7 +30,7 @@ levels = {
         camera_mode = 4,
         music = 2,
         offset = 1278,
-		title = "level 2",
+		title = "10 km marker",
 		spal = function() pal(2, 12) end,
 		columns = 1,
 		fog = true
