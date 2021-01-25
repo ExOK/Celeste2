@@ -29,11 +29,11 @@ levels = {
         height = 32,
         camera_mode = 4,
         music = 2,
-        offset = 0,
+        offset = 1278,
 		title = "level 2",
 		spal = function() pal(2, 12) end,
-		columns = 0,
-		bg = 2
+		columns = 1,
+		fog = true
     }
 }
 
