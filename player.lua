@@ -569,15 +569,15 @@ player.update = function(self)
 			self.freeze = 1
 			shake = 2
 			sfx(8, 3, 16, 4)
-		elseif o.base == snowball and not o.held and self:overlaps(o) then
+		elseif o.base == snowball and not o.held then
 			--snowball
-			if self:bounce_check(o) then
+			if self:bounce_check(o) and o:bounce_overlaps(self) then
 				self:bounce(o.x + 4, o.y)
 				sfx(17, 3, 0, 2)
 				o.freeze = 1
 				o.speed_y = -1
 				o:hurt()
-			elseif o.speed_x != 0 and o.thrown_timer <= 0 then
+			elseif o.speed_x != 0 and o.thrown_timer <= 0 and self:overlaps(o) then
 				self:die()
 				return
 			end
