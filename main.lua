@@ -1,29 +1,35 @@
--- globals
 level_index = 1
 level_intro = 0
-titlescreen = false
-snow = {}
-clouds = {}
-freeze_time = 0
-frames = 0
-seconds = 0
-minutes = 0
-shake = 0
-sfx_timer = 0
 
 function game_start()
 	
+	-- reset state
+	snow = {}
+	clouds = {}
+	freeze_time = 0
+	frames = 0
+	seconds = 0
+	minutes = 0
+	shake = 0
+	sfx_timer = 0
+	berry_count = 0
+	collected = {}
+	camera_x = 0
+	camera_y = 0
+	titlescreen_flash = nil
+
 	for i=0,25 do 
 		snow[i] = { x = rnd(132), y = rnd(132) } 
 		clouds[i] = { x = rnd(132), y = rnd(132), s = 16 + rnd(32) }
 	end
 
-	-- reset state
-	frames = 0
-	berry_count = 0
-	collected = {}
-
-	goto_level(level_index)
+	-- goto titlescreen or level
+	if level_index == 0 then
+		current_music = 38
+		music(current_music)
+	else
+		goto_level(level_index)
+	end
 end
 
 function _init()
@@ -32,11 +38,22 @@ end
 
 function _update()
 
-	if level_intro > 0 then
+	-- titlescreen
+	if level_index == 0 then
+		if titlescreen_flash then
+			titlescreen_flash-= 1
+			if titlescreen_flash < -30 then goto_level(1) end
+		elseif btn(4) or btn(5) then
+			titlescreen_flash = 50
+		end
+	
+	-- level intro card
+	elseif level_intro > 0 then
 		level_intro -= 1
 		if level_intro == 0 then psfx(17, 24, 9) end
-	else
 
+	-- normal level
+	else
 		-- timers
 		sfx_timer -= 1
 		infade += 1
@@ -68,6 +85,33 @@ function _update()
 end
 
 function _draw()
+
+	pal()
+
+	if level_index == 0 then
+
+		cls(0)
+		
+		if titlescreen_flash then
+			local c=10
+			if titlescreen_flash>10 then
+				if titlescreen_flash%10<5 then c=7 end
+			elseif titlescreen_flash>5 then c=2
+			elseif titlescreen_flash>0 then c=1
+			else c=0 end
+			if c<10 then for i=1,16 do pal(i,c) end end
+		end
+
+		sspr(72, 32, 56, 32, 36, 32)
+		rect(0,0,127,127,7)
+		print_center("lANI'S tREK", 64, 68, 14)
+		print_center("a game by", 64, 80, 1)
+		print_center("maddy thorson", 64, 87, 5)
+		print_center("noel berry", 64, 94, 5)
+		print_center("lena raine", 64, 101, 5)
+		draw_snow()
+		return
+	end
 
 	if level_intro > 0 then
 		cls(0)
@@ -121,12 +165,7 @@ function _draw()
 	if p then p:draw() end
 
 	-- draw snow
-	for i=1,#snow do
-		local s = snow[i]
-		circfill(camera_x + (s.x - camera_x * 0.5) % 132 - 2, camera_y + (s.y - camera_y * 0.5) % 132, i % 2, 7)
-		s.x += (4 - i % 4)
-		s.y += sin(time() * 0.25 + i * 0.1)
-	end
+	draw_snow()
 
 	-- draw FG clouds
 	if level.fogmode then
@@ -198,6 +237,15 @@ function draw_clouds(scale, ox, oy, sx, sy, color, count)
 		c.x += (4 - i % 4) * 0.25
 	end
 	clip(0,0,128,128)
+end
+
+function draw_snow()
+	for i=1,#snow do
+		local s = snow[i]
+		circfill(camera_x + (s.x - camera_x * 0.5) % 132 - 2, camera_y + (s.y - camera_y * 0.5) % 132, i % 2, 7)
+		s.x += (4 - i % 4)
+		s.y += sin(time() * 0.25 + i * 0.1)
+	end
 end
 
 function print_center(text, x, y, c)
