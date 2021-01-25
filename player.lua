@@ -670,6 +670,15 @@ function player.update(self)
 		music(37)
 	end
 
+	-- ending music
+	if level_index == 8 then
+		if current_music != 40 and self.y > 40 then
+			current_music = 40
+			music(40)
+		end
+		if self.y > 376 then show_score += 1 end
+	end
+
 	-- camera
 	camera_modes[level.camera_mode](self.x, self.y, on_ground)
 	camera_x = approach(camera_x, camera_target_x, 5)

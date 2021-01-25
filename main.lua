@@ -17,6 +17,7 @@ function game_start()
 	collected = {}
 	camera_x = 0
 	camera_y = 0
+	show_score = 0
 	titlescreen_flash = nil
 
 	for i=0,25 do 
@@ -60,7 +61,7 @@ function _update()
 		sfx_timer -= 1
 		infade += 1
 		shake -= 1
-		frames += 1
+		if level_index != 8 then frames += 1 end
 		if frames == 30 then seconds += 1 frames = 0 end
 		if seconds == 60 then minutes += 1 seconds = 0 end
 
@@ -157,6 +158,19 @@ function _draw()
 			if tile != 0 and fget(tile, 0) then spr(tile, x * 8, y * 8) end
 			pal() palt()
 		end
+	end
+
+	-- score
+	if show_score > 90 then
+		rectfill(34,392,98, 434, 1)
+		rectfill(32,390,96, 432, 0)
+		rect(32,390,96, 432, 7)
+		spr(21, 44, 396)
+		print("X "..berry_count, 56, 398, 7)
+		spr(72, 44, 408)
+		draw_time(56, 408)
+		spr(71, 44, 420)
+		print("X "..death_count, 56, 421, 7)
 	end
 
 	-- draw objects
