@@ -1,7 +1,7 @@
 objects = {}
 types = {}
 lookup = {}
-lookup.__index = function(self, i) return self.base[i] end
+function lookup.__index(self, i) return self.base[i] end
 
 object = {}
 object.speed_x = 0;
@@ -17,7 +17,7 @@ object.hazard = 0
 object.facing = 1
 object.freeze = 0
 
-object.move_x = function(self, x, on_collide)	
+function object.move_x(self, x, on_collide)	
 	self.remainder_x += x
 	local mx = flr(self.remainder_x + 0.5)
 	self.remainder_x -= mx
@@ -40,7 +40,7 @@ object.move_x = function(self, x, on_collide)
 	return false
 end
 
-object.move_y = function(self, y, on_collide)
+function object.move_y(self, y, on_collide)
 	self.remainder_y += y
 	local my = flr(self.remainder_y + 0.5)
 	self.remainder_y -= my
@@ -63,24 +63,24 @@ object.move_y = function(self, y, on_collide)
 	return false
 end
 
-object.on_collide_x = function(self, moved, target)
+function object.on_collide_x(self, moved, target)
 	self.remainder_x = 0
 	self.speed_x = 0
 	return true
 end
 
-object.on_collide_y = function(self, moved, target)
+function object.on_collide_y(self, moved, target)
 	self.remainder_y = 0
 	self.speed_y = 0
 	return true
 end
 
-object.update = function() end
-object.draw = function(self)
+function object.update() end
+function object.draw(self)
 	spr(self.spr, self.x, self.y, 1, 1, self.flip_x, self.flip_y)
 end
 
-object.overlaps = function(self, b, ox, oy)
+function object.overlaps(self, b, ox, oy)
 	if self == b then return false end
 	ox = ox or 0
 	oy = oy or 0
@@ -91,7 +91,7 @@ object.overlaps = function(self, b, ox, oy)
 		oy + self.y + self.hit_y < b.y + b.hit_y + b.hit_h
 end
 
-object.contains = function(self, px, py)
+function object.contains(self, px, py)
 	return
 		px >= self.x + self.hit_x and
 		px < self.x + self.hit_x + self.hit_w and
@@ -99,7 +99,7 @@ object.contains = function(self, px, py)
 		py < self.y + self.hit_y + self.hit_h
 end
 
-object.check_solid = function(self, ox, oy)
+function object.check_solid(self, ox, oy)
 	ox = ox or 0
 	oy = oy or 0
 
@@ -120,7 +120,7 @@ object.check_solid = function(self, ox, oy)
 	return false
 end
 
-object.corner_correct = function(self, dir_x, dir_y, side_dist, look_ahead, only_sign, func)
+function object.corner_correct(self, dir_x, dir_y, side_dist, look_ahead, only_sign, func)
 	look_ahead = look_ahead or 1
 	only_sign = only_sign or 1
 
