@@ -385,7 +385,7 @@ player.update = function(self)
 			end
 
 			if hit == 2 or (hit == 0 and abs(self.grapple_x - self.x) >= 64) then
-				sfx(14, 3, 8, 3)
+				sfx(hit == 2 and 7 or 14, 3, 8, 3)
 				self.grapple_retract = true
 				self.freeze = 2
 				self.state = 0
@@ -613,8 +613,7 @@ player.update = function(self)
 	if self.state < 99 and (self.y > level.height * 8 + 16 or self:hazard_check()) then
 		if (level_index == 1 and self.x > level.width * 8 - 64) then
 			self.state = 100
-			self.wipe_timer = -30
-			sfx(17, 3, 8, 16)
+			self.wipe_timer = -15
 		else
 			self:die()
 		end
@@ -631,6 +630,12 @@ player.update = function(self)
 		self.speed_x = 0
 	elseif (self.x > level.width * 8 - 3) then
 		self.state = 100
+	end
+
+	-- intro bridge music
+	if current_music == levels[1].music and self.x > 61 * 8 then
+		current_music = 37
+		music(37)
 	end
 
 	-- camera

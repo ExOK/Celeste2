@@ -19,22 +19,20 @@ X Screen woosh
 Music
 
 22 - Lowkey Loop Start
-00 or 02 - Full track start
+02 - Full track start
+38 - Pure wind ambience (start level)
+37 - Wind + bwommmm (at bridge)
+36 - Sparse wind + bwomm (after falling)
 
 TO IMPLEMENT:
 
 SFX:
 
-07 - Jump (0-3) Wall Jump (4-7) Grapple ice (8-11) Snowball pickup (16-22) Snowball throw (24-30)
-07 - Hit strawb (12-15)
-08 - Grapple shoot (0-4)
-08 - Get strawb (8-15) Bridge crumble (16-19) Box break (20-23) Checkpoint (24-29)
-14 - Grapple hit (0-5) Grapple reach wall (8-11)
-14 - Death (16-32)
+07 - Jump (0-3) Wall Jump (4-7) Grapple ice (8-11) Hit strawb (12-15) Snowball pickup (16-22) Snowball throw (24-30)
+08 - Grapple shoot (0-4) Get strawb (8-15) Bridge crumble (16-19) Box break (20-23) Checkpoint (24-29)
+14 - Grapple hit (0-5) Grapple reach wall (8-11) Death (16-32)
 17 - Snowball bounce/jump (0-1) Spring jump (2-4) Cartoony fall (8-23) Screen woosh (24-32)
-51
-52
-53
+
 54
 55
 56
