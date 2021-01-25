@@ -200,7 +200,7 @@ end
 -- Grappled Objects
 
 pull_collide_x = function(self, moved, target)
-	if (self:corner_correct(sgn(target), 0, 2, 2, 0)) then
+	if (self:corner_correct(sgn(target), 0, 4, 2, 0)) then
 		return false
 	end
 	return true
@@ -475,13 +475,13 @@ player.update = function(self)
 		end
 
 		-- release if beyond grapple point
-		if (sgn(self.x - self.grapple_x) == self.grapple_dir) then
+		if sgn(self.x - self.grapple_x) == self.grapple_dir then
 			self.state = 0
-			if (self.grapple_hit != nil and self.grapple_hit.grapple_mode == 2) then
+			if self.grapple_hit != nil and self.grapple_hit.grapple_mode == 2 then
 				self.t_grapple_jump_grace = 3
 				self.grapple_jump_grace_y = self.y
 			end
-			if (abs(self.speed_x) > 5) then
+			if abs(self.speed_x) > 5 then
 				self.speed_x = sgn(self.speed_x) * 5
 			end
 		end
@@ -491,17 +491,18 @@ player.update = function(self)
 		local obj = self.grapple_hit
 
 		-- pull
-		if (obj:move_x(-self.grapple_dir * 6, pull_collide_x)) then
+		if obj:move_x(-self.grapple_dir * 6, pull_collide_x) then
 			self.state = 0
 			self.grapple_retract = true
 			obj:on_release(-self.grapple_dir)
+			obj.held = false
 			return
 		else
 			self.grapple_x = approach(self.grapple_x, self.x, 6)
 		end
 
 		-- y-correct
-		if (obj.y != self.y - 7) then
+		if obj.y != self.y - 7 then
 			obj:move_y(sgn(self.y - obj.y - 7) * 0.5)
 		end
 

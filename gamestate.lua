@@ -64,7 +64,7 @@ levels = {
 		offset = 2632,
         width = 128,
         height = 16,
-        camera_mode = 5,
+        camera_mode = 7,
         music = 2,
 		pal = function() pal(2, 14) pal(5, 2) end,
 		bg = 13,
@@ -158,19 +158,21 @@ camera_modes = {
         if c_flag then
             camera_target_x = max(camera_target_x, 672)
         end
-
     end,
 
-    -- Basic Horizontal
-    function(px, py, g)
-        camera_target_x = max(0, min(level.width * 8 - 128, px - 56))
+    --7: Level 3-3
+    function (px, py, g)
+        if px > 428 then
+            if px < 436 then
+                c_offset = 32 + (px - 428)
+            else
+                c_offset = 40
+            end
+        else
+            c_offset = 32
+        end
+        camera_target_x = max(0, min(level.width * 8 - 128, px - c_offset))
     end,
-
-    -- Basic Freeform
-    function(px, py, g)
-        camera_target_x = max(0, min(level.width * 8 - 128, px - 64))
-        camera_target_y = max(0, min(level.height * 8 - 128, py - 64))
-    end
 }
 
 snap_camera = function()
