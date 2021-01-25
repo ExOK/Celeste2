@@ -72,7 +72,7 @@ levels = {
 		fogmode = 2,
     },
     {
-		offset = 0,
+		offset = 3056,
         width = 16,
         height = 62,
         camera_mode = 8,
@@ -218,8 +218,8 @@ function goto_level(index)
 	end
 
 	-- load into ram
-	local function vget(x, y) return peek(0x4300 + (x % 128) + y * 128) end
-	local function vset(x, y, v) return poke(0x4300 + (x % 128) + y * 128, v) end
+	local function vget(x, y) return peek(0x4300 + x + y * level.width) end
+	local function vset(x, y, v) return poke(0x4300 + x + y * level.width, v) end
 	px9_decomp(0, 0, 0x1000 + level.offset, vget, vset)
 
 	-- start music
@@ -271,6 +271,6 @@ function tile_at(x, y)
 	if standalone then
 		return mget(x, y)
 	else
-		return peek(0x4300 + (x % 128) + y * 128)
+		return peek(0x4300 + x + y * level.width)
 	end
 end
