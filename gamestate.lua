@@ -103,7 +103,7 @@ camera_modes = {
 
     -- 5: Level 3
     function(px, py, g)
-        camera_target_x = max(0, min(level.width * 8 - 128, px - 40))
+        camera_target_x = max(0, min(level.width * 8 - 128, px - 32))
     end,
 
     -- Basic Horizontal
