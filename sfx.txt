@@ -28,9 +28,6 @@ Music
 
 TO IMPLEMENT:
 
-Sequence 40 - Ending jingle
-22 - Title screen start
-
 SFX:
 
 07 - Jump (0-3) Wall Jump (4-7) Grapple ice (8-11) Hit strawb (12-15) Snowball pickup (16-22) Snowball throw (24-30)
@@ -38,7 +35,7 @@ SFX:
 14 - Grapple hit (0-5) Grapple reach wall (8-11) Death (16-32)
 17 - Snowball bounce/jump (0-1) Spring jump (2-4) Cartoony fall (8-23) Screen woosh (24-32)
 17 - item respawn (5-7)
-
+22 - Title screen start
 54
 55
 56
