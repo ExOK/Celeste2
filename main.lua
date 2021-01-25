@@ -128,7 +128,7 @@ function _draw()
 
 	-- draw FG clouds
 	if level.fog then
-		fillp(0b0101101001011010.1)
+		if level.fog == 1 then fillp(0b0101101001011010.1) end
 		draw_clouds(1.5, 0, level.height * 8 + 1, 1, 0, 7)
 		fillp()
 	end

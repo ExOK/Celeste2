@@ -11,7 +11,7 @@ levels = {
         height = 32,
         camera_mode = 2,
 		music = 36,
-		fog = true,
+		fog = 1,
 		clouds = 0,
 		offset = 308,
 		columns = 1
@@ -42,7 +42,11 @@ levels = {
         camera_mode = 5,
         music = 2,
 		offset = 644,
-		title = "20 km marker"
+		title = "20 km marker",
+		spal = function() pal(2, 14) end,
+		bg = 13,
+		clouds = 15,
+		fog = 2
     }
 }
 
