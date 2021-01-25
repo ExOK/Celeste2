@@ -14,7 +14,7 @@ levels = {
 		fog = true,
 		clouds = 0,
 		offset = 308,
-		columns = 13
+		columns = 1
     },
     {
         width = 128,
@@ -34,8 +34,7 @@ levels = {
         offset = 1278,
 		title = "10 km marker",
 		spal = function() pal(2, 12) end,
-		columns = 1,
-		fog = true
+		columns = 1
     },
     {
         width = 128,

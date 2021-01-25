@@ -87,7 +87,7 @@ function _draw()
 	cls(level and level.bg and level.bg or 0)
 
 	-- draw clouds
-	draw_clouds(1, 0, 0, 1, 1, level.clouds or 13)
+	draw_clouds(1, 0, 0, 1, 1, level.clouds or 5)
 
 	-- columns
 	if level.columns then
