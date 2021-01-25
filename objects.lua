@@ -291,34 +291,23 @@ function checkpoint.draw(self)
 	end
 end
 
-snowball_spawner_r = new_type(14)
-function snowball_spawner_r.init(self)
-	self.timer = (self.x / 8) % 32
-	self.spr = -1
-end
-function snowball_spawner_r.update(self)
-	self.timer += 1
-	if self.timer >= 32 and abs(self.x - 64 - camera_x) < 128 then
-		self.timer = 0
-		local snowball = create(snowball, self.x, self.y - 8)
-		snowball.speed_x = 2
-		snowball.speed_y = 4
-		psfx(17, 5, 3)
+function make_spawner(tile, dir)
+	local spawner = new_type(tile)
+	function spawner.init(self)
+		self.timer = (self.x / 8) % 32
+		self.spr = -1
 	end
-end
-
-snowball_spawner_l = new_type(15)
-function snowball_spawner_l.init(self)
-	self.timer = (self.x / 8) % 32
-	self.spr = -1
-end
-function snowball_spawner_l.update(self)
-	self.timer += 1
-	if self.timer >= 32 and abs(self.x - 64 - camera_x) < 128 then
-		self.timer = 0
-		local snowball = create(snowball, self.x, self.y - 8)
-		snowball.speed_x = -2
-		snowball.speed_y = 4
-		psfx(17, 5, 3)
+	function spawner.update(self)
+		self.timer += 1
+		if self.timer >= 32 and abs(self.x - 64 - camera_x) < 128 then
+			self.timer = 0
+			local snowball = create(snowball, self.x, self.y - 8)
+			snowball.speed_x = dir * 2
+			snowball.speed_y = 4
+			psfx(17, 5, 3)
+		end
 	end
+	return spawner
 end
+snowball_spawner_r = make_spawner(14, 1)
+snowball_spawner_l = make_spawner(15, -1)
