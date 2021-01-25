@@ -211,6 +211,8 @@ end
 -- Events
 
 player.init = function(self)
+	self.x += 4
+	self.y += 8
 	self.hit_x = -3
 	self.hit_y = -6
 	self.hit_w = 6
