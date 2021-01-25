@@ -509,7 +509,7 @@ function player.update(self)
 		self.grapple_wave = approach(self.grapple_wave, 0, 0.6)
 
 		-- hold
-		if (self:overlaps(obj)) then
+		if self:overlaps(obj) then
 			self.state = 1
 			psfx(7, 16, 6)
 		end
