@@ -156,6 +156,7 @@ camera_modes = {
         if px > 848 then
             c_offset = 48
         elseif px < 704 then
+            c_flag = false
             c_offset = 32
         elseif px > 808 then
             c_flag = true
