@@ -62,13 +62,14 @@ end
 snowball.on_collide_y = function(self, moved, total)
 	if self.speed_y >= 4 then
 		self.speed_y = -2
+		sfx(17, 3, 0, 2)
 	elseif self.speed_y >= 1 then
 		self.speed_y = -1
+		sfx(17, 3, 0, 2)
 	else
 		self.speed_y = 0
 	end
 	self.remainder_y = 0
-	sfx(17, 3, 0, 2)
 	return true
 end
 snowball.on_release = function(self, thrown)
