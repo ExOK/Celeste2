@@ -406,6 +406,7 @@ function player.update(self)
 				self.grapple_boost = false
 				self.freeze = 2
 				psfx(14, 0, 5)
+				break
 			end
 
 			if hit == 2 or (hit == 0 and abs(self.grapple_x - self.x) >= 64) then
@@ -413,6 +414,7 @@ function player.update(self)
 				self.grapple_retract = true
 				self.freeze = 2
 				self.state = 0
+				break
 			end
 		end
 
