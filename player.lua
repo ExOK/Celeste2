@@ -576,6 +576,7 @@ player.update = function(self)
 				sfx(17, 3, 0, 2)
 				o.freeze = 1
 				o.speed_y = -1
+				o:hurt()
 			elseif o.speed_x != 0 and o.thrown_timer <= 0 then
 				self:die()
 				return

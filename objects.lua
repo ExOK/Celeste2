@@ -31,6 +31,7 @@ snowball = new_type(62)
 snowball.grapple_mode = 3
 snowball.holdable = true
 snowball.thrown_timer = 0
+snowball.hp = 5
 snowball.update = function(self)
 	if not self.held then
 		self.thrown_timer -= 1
@@ -55,6 +56,10 @@ end
 snowball.on_collide_x = function(self, moved, total)
 	if self:corner_correct(sgn(self.speed_x), 0, 2, 2, 1) then
 		return false
+	end
+
+	if self:hurt() then
+		return true
 	end
 
 	self.speed_x *= -1
@@ -86,6 +91,14 @@ snowball.on_release = function(self, thrown)
 	if thrown then
 		self.thrown_timer = 5
 	end
+end
+snowball.hurt = function(self)
+	self.hp -= 1
+	if self.hp <= 0 then
+		self.destroyed = true
+		return true
+	end
+	return false
 end
 
 springboard = new_type(11)
