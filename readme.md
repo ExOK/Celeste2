@@ -11,7 +11,7 @@ A sequel to [Celeste Classic](https://mattmakesgames.itch.io/celesteclassic).
  - `_updater.p8`: Takes the gfx/sfx from `core` and places them into `celeste2` and each level cartridge
  - `sfx.txt`: Sound FX information
 
-After modifying a level and running the `_packer`, you must update the respective level offset in `gamestate.lua` for it to load from the main cartridge correctly. this could be automated but we ran out of time!
+After modifying a level and running the `_packer`, you must update the respective level offsets in `gamestate.lua` for it to load from the main cartridge correctly. This could be automated but we ran out of time!
 
 ## Credits
  - [Maddy Thorson](https://twitter.com/maddythorson) (level design, coding)

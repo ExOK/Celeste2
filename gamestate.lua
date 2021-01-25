@@ -32,7 +32,7 @@ levels = {
         height = 32,
         camera_mode = 4,
         music = 2,
-		title = "ice caves",
+		title = "glacial caves",
 		pal = function() pal(2, 12) pal(5, 2) end,
 		columns = 1
     },
@@ -42,7 +42,7 @@ levels = {
         height = 16,
         camera_mode = 5,
         music = 2,
-		title = "cliffside",
+		title = "golden valley",
 		pal = function() pal(2, 14) pal(5, 2) end,
 		bg = 13,
 		clouds = 15,
