@@ -374,7 +374,7 @@ function player.update(self)
 		-- throw grapple state
 
 		-- grapple movement and hitting stuff
-		local amount = min(64 - abs(self.grapple_x - self.x), 12)
+		local amount = min(64 - abs(self.grapple_x - self.x), 6)
 		for i = 1, amount do
 			local hit = self:grapple_check(self.grapple_x + self.grapple_dir, self.grapple_y)
 			if hit == 0 then
@@ -387,7 +387,7 @@ function player.update(self)
 			local mode = self.grapple_hit and self.grapple_hit.grapple_mode or 0
 
 			if hit == 0 then
-				self.grapple_x += self.grapple_dir
+				self.grapple_x += self.grapple_dir * 2
 			elseif hit == 1 then
 				if mode == 2 then
 					self.grapple_x = self.grapple_hit.x + 4
