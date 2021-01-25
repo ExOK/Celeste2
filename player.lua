@@ -107,6 +107,13 @@ player.spring = function(self, y)
 	self.t_var_jump = 6
 	self.t_jump_grace = 0
 	self.remainder_y = 0
+
+	for o in all(objects) do
+		if o.base == crumble and not o.destroyed and self.springboard:overlaps(o, 0, 1) then
+			o.breaking = true
+			sfx(8, 3, 20, 4)
+		end
+	end
 end
 
 player.wall_jump = function(self, dir)

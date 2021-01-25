@@ -36,6 +36,14 @@ levels = {
 		spal = function() pal(2, 12) end,
 		columns = 1,
 		fog = true
+    },
+    {
+        width = 128,
+        height = 16,
+        camera_mode = 5,
+        music = 2,
+		offset = 644,
+		title = "20 km marker"
     }
 }
 
@@ -93,12 +101,17 @@ camera_modes = {
         camera_target_y = max(0, min(level.height * 8 - 128, py - 64))
     end,
 
-    -- 4: Basic Horizontal
+    -- 5: Level 3
+    function(px, py, g)
+        camera_target_x = max(0, min(level.width * 8 - 128, px - 40))
+    end,
+
+    -- Basic Horizontal
     function(px, py, g)
         camera_target_x = max(0, min(level.width * 8 - 128, px - 56))
     end,
 
-    -- 5: Basic Freeform
+    -- Basic Freeform
     function(px, py, g)
         camera_target_x = max(0, min(level.width * 8 - 128, px - 64))
         camera_target_y = max(0, min(level.height * 8 - 128, py - 64))
