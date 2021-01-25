@@ -66,10 +66,10 @@ levels = {
         height = 16,
         camera_mode = 7,
         music = 2,
-		pal = function() pal(2, 14) pal(5, 2) end,
+		pal = function() pal(2, 15) pal(5, 2) end,
 		bg = 13,
-		clouds = 15,
-		fogmode = 2
+		clouds = 7,
+		fogmode = 2,
     }
 }
 

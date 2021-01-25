@@ -115,6 +115,12 @@ function snowball.bounce_overlaps(self, o)
 		return self:overlaps(o)
 	end
 end
+function snowball.draw(self)
+	pal(7, 1)
+	spr(self.spr, self.x, self.y + 1)
+	pal()
+	spr(self.spr, self.x, self.y)
+end
 
 springboard = new_type(11)
 springboard.grapple_mode = 3
