@@ -2,13 +2,15 @@ levels = {
     {
         width = 96,
         height = 16,
-        camera_mode = 1,
+		camera_mode = 1,
+		music = 38,
         offset = 0
     },
     {
         width = 32,
         height = 32,
         camera_mode = 2,
+		music = 36,
 		fog = true,
 		clouds = 0,
 		offset = 308,
@@ -122,6 +124,10 @@ function goto_level(index)
 
 	if level.title and not standalone then
 		level_intro = 60
+	end
+
+	if level_index == 2 then 
+		sfx(17, 3, 8, 16)
 	end
 
 	-- load into ram
