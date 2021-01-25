@@ -9,8 +9,10 @@ levels = {
         width = 32,
         height = 32,
         camera_mode = 2,
-        fog = true,
-        offset = 308
+		fog = true,
+		clouds = 0,
+		offset = 308,
+		columns = 13
     },
     {
         width = 128,
@@ -28,7 +30,10 @@ levels = {
         camera_mode = 4,
         music = 2,
         offset = 0,
-        title = "level 2"
+		title = "level 2",
+		spal = function() pal(2, 12) end,
+		columns = 0,
+		bg = 2
     }
 }
 
