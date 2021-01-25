@@ -107,6 +107,7 @@ end
 function snowball.hurt(self)
 	self.hp -= 1
 	if self.hp <= 0 then
+		psfx(8, 16, 4)
 		self.destroyed = true
 		return true
 	end
