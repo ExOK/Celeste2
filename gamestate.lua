@@ -189,7 +189,7 @@ function restart_level()
 	objects = {}
 	infade = 0
 	have_grapple = level_index > 2
-	stop_sounds = false
+	sfx_timer = 0
 
 	for i = 0,level.width-1 do
 		for j = 0,level.height-1 do

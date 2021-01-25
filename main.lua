@@ -9,6 +9,7 @@ frames = 0
 seconds = 0
 minutes = 0
 shake = 0
+sfx_timer = 0
 
 function game_start()
 	
@@ -37,6 +38,7 @@ function _update()
 	else
 
 		-- timers
+		sfx_timer -= 1
 		infade += 1
 		shake -= 1
 		frames += 1
@@ -207,9 +209,10 @@ function approach(x, target, max_delta)
 	return x < target and min(x + max_delta, target) or max(x - max_delta, target)
 end
 
-function psfx(a, b, c)
-	if not stop_sounds then
-		sfx(a, 3, b, c)
+function psfx(id, off, len, lock)
+	if sfx_timer <= 0 or lock then
+		sfx(id, 3, off, len)
+		if lock then sfx_timer = lock end
 	end
 end
 

@@ -49,7 +49,7 @@ player.start_grapple = function(self)
 	end
 	self.facing = self.grapple_dir
 
-	sfx(8, 3)
+	psfx(8)
 end
 
 -- 0 = nothing, 1 = hit!, 2 = fail
@@ -153,8 +153,7 @@ player.die = function(self)
 	self.state = 99
 	freeze_time = 2
 	shake = 5
-	psfx(14, 16, 16)
-	stop_sounds = true
+	psfx(14, 16, 16, 120)
 end
 
 --[[
@@ -618,7 +617,7 @@ player.update = function(self)
 			end
 		elseif o.base == checkpoint and level_checkpoint != o.id and self:overlaps(o) then
 			level_checkpoint = o.id
-			psfx(8, 24, 6)
+			psfx(8, 24, 6, 20)
 		end
 	end
 
