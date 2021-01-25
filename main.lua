@@ -288,11 +288,13 @@ function draw_sine_h(x0, x1, y, col, amplitude, time_freq, x_freq, fade_x_dist)
 
 		ax = x0 + i * x_sign
 		ay = y + sin(time() * time_freq + i * x_freq) * amplitude * fade
+		pset(ax, ay + 1, 1)
 		pset(ax, ay, col)
 
 		this_y = ay
 		while (abs(ay - last_y) > 1) do
 			ay -= sgn(this_y - last_y)
+			pset(ax - x_sign, ay + 1, 1)
 			pset(ax - x_sign, ay, col)
 		end
 		last_y = this_y

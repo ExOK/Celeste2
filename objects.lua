@@ -200,7 +200,7 @@ function berry.update(self)
 		self.y += (self.player.y - 4 - self.y) / 8
 		self.flash -= 1
 
-		if self.player:check_solid(0, 1) then self.ground += 1 else self.ground = 0 end
+		if self.player:check_solid(0, 1) and self.player.state != 99 then self.ground += 1 else self.ground = 0 end
 
 		if self.ground > 3 or self.player.x > level.width * 8 - 16 then
 			psfx(8, 8, 8, 20)
