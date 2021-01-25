@@ -154,7 +154,7 @@ function goto_level(index)
 	end
 
 	if level_index == 2 then 
-		sfx(17, 3, 8, 16)
+		psfx(17, 8, 16)
 	end
 
 	-- load into ram
@@ -189,6 +189,7 @@ function restart_level()
 	objects = {}
 	infade = 0
 	have_grapple = level_index > 2
+	stop_sounds = false
 
 	for i = 0,level.width-1 do
 		for j = 0,level.height-1 do

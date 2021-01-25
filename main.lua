@@ -33,7 +33,7 @@ function _update()
 
 	if level_intro > 0 then
 		level_intro -= 1
-		if level_intro == 0 then sfx(17, 3, 24, 9) end
+		if level_intro == 0 then psfx(17, 24, 9) end
 	else
 
 		-- timers
@@ -205,6 +205,12 @@ end
 
 function approach(x, target, max_delta)
 	return x < target and min(x + max_delta, target) or max(x - max_delta, target)
+end
+
+function psfx(a, b, c)
+	if not stop_sounds then
+		sfx(a, 3, b, c)
+	end
 end
 
 function draw_sine_h(x0, x1, y, col, amplitude, time_freq, x_freq, fade_x_dist)
