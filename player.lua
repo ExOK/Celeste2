@@ -747,6 +747,7 @@ function player.draw(self)
 
 	-- retracting grapple
 	if self.grapple_retract then
+		line(self.x, self.y - 2, self.grapple_x, self.grapple_y + 1, 1)
 		line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
 	end
 
