@@ -82,15 +82,13 @@ camera_modes = {
     -- 4: Level 2
     function(px, py, g)
         if px % 128 > 8 and px % 128 < 120 then
-            camera_target_x = flr(px / 128) * 128
-        else
-            camera_target_x = max(0, min(level.width * 8 - 128, px - 64))
+            px = flr(px / 128) * 128 + 64
         end
         if py % 128 > 8 and py % 128 < 120 then
-            camera_target_y = flr(py / 128) * 128
-        else
-            camera_target_y = max(0, min(level.height * 8 - 128, py - 64))
+            py = flr(py / 128) * 128 + 64
         end
+        camera_target_x = max(0, min(level.width * 8 - 128, px - 64))
+        camera_target_y = max(0, min(level.height * 8 - 128, py - 64))
     end,
 
     -- 4: Basic Horizontal
