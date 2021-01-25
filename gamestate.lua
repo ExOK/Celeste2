@@ -162,11 +162,11 @@ camera_modes = {
 
     --7: Level 3-3
     function (px, py, g)
-        if px > 428 then
+        if px > 420 then
             if px < 436 then
-                c_offset = 32 + (px - 428)
+                c_offset = 32 + (px - 420)
             else
-                c_offset = 40
+                c_offset = 48
             end
         else
             c_offset = 32
