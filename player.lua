@@ -739,6 +739,7 @@ function player.draw(self)
 	if self.state >= 10 and self.state <= 12 then
 		-- grapple
 		if (self.grapple_wave == 0) then
+			line(self.x, self.y - 2, self.grapple_x, self.grapple_y + 1, 1)
 			line(self.x, self.y - 3, self.grapple_x, self.grapple_y, 7)
 		else
 			draw_sine_h(self.x, self.grapple_x, self.y - 3, 7, 2 * self.grapple_wave, 6, 0.08, 6)
