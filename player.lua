@@ -624,7 +624,7 @@ function player.update(self)
 				o.breaking = true
 				psfx(8, 20, 4)
 			elseif self.state == 11 then
-				if self:overlaps(o, self.grapple_dir) or self:overlaps(o, self.grapple_dir, 2) or self:overlaps(o, self.grapple_dir, -2) then
+				if self:overlaps(o, self.grapple_dir) or self:overlaps(o, self.grapple_dir, 3) or self:overlaps(o, self.grapple_dir, -2) then
 					o.breaking = true
 					psfx(8, 20, 4)
 				end
