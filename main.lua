@@ -1,4 +1,4 @@
-level_index = 7
+level_index = 0
 level_intro = 0
 
 function game_start()
