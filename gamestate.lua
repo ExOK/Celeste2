@@ -32,7 +32,7 @@ levels = {
         height = 32,
         camera_mode = 4,
         music = 2,
-		title = "10 km marker",
+		title = "ice caves",
 		pal = function() pal(2, 12) pal(5, 2) end,
 		columns = 1
     },
@@ -42,7 +42,7 @@ levels = {
         height = 16,
         camera_mode = 5,
         music = 2,
-		title = "20 km marker",
+		title = "cliffside",
 		pal = function() pal(2, 14) pal(5, 2) end,
 		bg = 13,
 		clouds = 15,
@@ -74,7 +74,8 @@ levels = {
     {
 		offset = 3056,
         width = 16,
-        height = 62,
+		height = 62,
+		title = "destination",
         camera_mode = 8,
         music = 2,
 		pal = function() pal(2, 1) pal(7, 11) end,

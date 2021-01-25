@@ -1,4 +1,4 @@
-level_index = 0
+level_index = 7
 level_intro = 0
 
 function game_start()
@@ -120,7 +120,9 @@ function _draw()
 		cls(0)
 		camera(0, 0)
 		draw_time(4, 4)
-		print_center("level " .. (level_index - 2), 64, 64 - 8, 7)
+		if level_index != 8 then
+			print_center("level " .. (level_index - 2), 64, 64 - 8, 7)
+		end
 		print_center(level.title, 64, 64, 7)
 		return
 	end
