@@ -39,7 +39,7 @@ function player.start_grapple(self)
 	self.grapple_x = self.x
 	self.grapple_y = self.y - 3	
 	self.grapple_wave = 0
-	self.grapple_failed = false
+	self.grapple_retract = false
 	self.t_grapple_cooldown = 6
 	self.t_var_jump = 0
 
@@ -299,10 +299,11 @@ function player.update(self)
 
 		-- gravity
 		if (not on_ground) then
+			local max = btn(3) and 5.2 or 4.5
 			if (abs(self.speed_y) < 0.2) then
-				self.speed_y = min(self.speed_y + 0.4, 4.5)
+				self.speed_y = min(self.speed_y + 0.4, max)
 			else
-				self.speed_y = min(self.speed_y + 0.8, 4.5)
+				self.speed_y = min(self.speed_y + 0.8, max)
 			end
 		end
 
@@ -406,6 +407,7 @@ function player.update(self)
 				self.grapple_boost = false
 				self.freeze = 2
 				psfx(14, 0, 5)
+				break
 			end
 
 			if hit == 2 or (hit == 0 and abs(self.grapple_x - self.x) >= 64) then
@@ -413,6 +415,7 @@ function player.update(self)
 				self.grapple_retract = true
 				self.freeze = 2
 				self.state = 0
+				break
 			end
 		end
 
