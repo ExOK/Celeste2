@@ -87,7 +87,7 @@ function _draw()
 	cls(level and level.bg and level.bg or 0)
 
 	-- draw clouds
-	draw_clouds(1, 0, 0, 1, 1, level.clouds or 13)
+	draw_clouds(1, 0, 0, 1, 1, level.clouds or 13, #clouds)
 
 	-- columns
 	if level.columns then
@@ -129,7 +129,7 @@ function _draw()
 	-- draw FG clouds
 	if level.fogmode then
 		if level.fogmode == 1 then fillp(0b0101101001011010.1) end
-		draw_clouds(1.5, 0, level.height * 8 + 1, 1, 0, 7)
+		draw_clouds(1.25, 0, level.height * 8 + 1, 1, 0, 7, #clouds - 10)
 		fillp()
 	end
 
@@ -179,8 +179,8 @@ function draw_time(x,y)
 	print((h<10 and "0"..h or h)..":"..(m<10 and "0"..m or m)..":"..(seconds<10 and "0"..seconds or seconds),x+1,y+1,7)
 end
 
-function draw_clouds(scale, ox, oy, sx, sy, color)
-	for i=0,#clouds do
+function draw_clouds(scale, ox, oy, sx, sy, color, count)
+	for i=0,count do
 		local c = clouds[i]
 		local s = c.s * scale
 		local x = ox + (camera_x + (c.x - camera_x * 0.9) % (128 + s) - s / 2) * sx
