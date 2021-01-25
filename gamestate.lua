@@ -47,6 +47,17 @@ levels = {
 		bg = 13,
 		clouds = 15,
 		fogmode = 2
+    },
+    {
+        width = 128,
+        height = 16,
+        camera_mode = 5,
+        music = 2,
+		offset = 0,
+		pal = function() pal(2, 14) pal(5, 2) end,
+		bg = 13,
+		clouds = 15,
+		fogmode = 2
     }
 }
 
