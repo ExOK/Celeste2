@@ -158,6 +158,7 @@ berry.update = function(self)
 		self.flash -= 1
 
 		if self.player:check_solid(0, 1) or self.player.x > level.width * 8 - 16 then
+			sfx(8, 3, 8, 8)
 			collected[self.id] = true
 			berry_count += 1
 			self.collected = true
@@ -170,6 +171,7 @@ berry.collect = function(self, player)
 	if not self.player then
 		self.player = player
 		self.flash = 5
+		sfx(7, 3, 12, 4)
 	end
 end
 berry.draw = function(self)
