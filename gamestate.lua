@@ -11,7 +11,7 @@ levels = {
         height = 32,
         camera_mode = 2,
 		music = 36,
-		fog = 1,
+		fogmode = 1,
 		clouds = 0,
 		offset = 308,
 		columns = 1
@@ -33,7 +33,7 @@ levels = {
         music = 2,
         offset = 1278,
 		title = "10 km marker",
-		spal = function() pal(2, 12) end,
+		pal = function() pal(2, 12) pal(5, 2) end,
 		columns = 1
     },
     {
@@ -43,10 +43,10 @@ levels = {
         music = 2,
 		offset = 644,
 		title = "20 km marker",
-		spal = function() pal(2, 14) end,
+		pal = function() pal(2, 14) pal(5, 2) end,
 		bg = 13,
 		clouds = 15,
-		fog = 2
+		fogmode = 2
     }
 }
 

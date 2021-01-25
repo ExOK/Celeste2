@@ -87,7 +87,7 @@ function _draw()
 	cls(level and level.bg and level.bg or 0)
 
 	-- draw clouds
-	draw_clouds(1, 0, 0, 1, 1, level.clouds or 5)
+	draw_clouds(1, 0, 0, 1, 1, level.clouds or 13)
 
 	-- columns
 	if level.columns then
@@ -105,9 +105,9 @@ function _draw()
 	for x = mid(0, flr(camera_x / 8), level.width),mid(0, flr((camera_x + 128) / 8), level.width) do
 		for y = mid(0, flr(camera_y / 8), level.height),mid(0, flr((camera_y + 128) / 8), level.height) do
 			local tile = tile_at(x, y)
-			if level.spal and fget(tile, 1) then level.spal() end
+			if level.pal and fget(tile, 7) then level.pal() end
 			if tile != 0 and fget(tile, 0) then spr(tile, x * 8, y * 8) end
-			pal()
+			pal() palt()
 		end
 	end
 
@@ -127,8 +127,8 @@ function _draw()
 	end
 
 	-- draw FG clouds
-	if level.fog then
-		if level.fog == 1 then fillp(0b0101101001011010.1) end
+	if level.fogmode then
+		if level.fogmode == 1 then fillp(0b0101101001011010.1) end
 		draw_clouds(1.5, 0, level.height * 8 + 1, 1, 0, 7)
 		fillp()
 	end
