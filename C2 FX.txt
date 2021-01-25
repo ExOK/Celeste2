@@ -26,6 +26,9 @@ Music
 
 TO IMPLEMENT:
 
+17 - item respawn (5-7)
+Sequence 39 - Hookshot powerup
+
 SFX:
 
 07 - Jump (0-3) Wall Jump (4-7) Grapple ice (8-11) Hit strawb (12-15) Snowball pickup (16-22) Snowball throw (24-30)
