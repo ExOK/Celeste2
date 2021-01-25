@@ -1,7 +1,7 @@
 
-## Classic Celeste 2
+## Celeste Classic 2
 Made in 3 days for [Celeste's](https://celestegame.com) 3rd anniversary.
-A sequel to [Celeste Classic](https://mattmakesgames.itch.io/celesteclassic)
+A sequel to [Celeste Classic](https://mattmakesgames.itch.io/celesteclassic).
 
 ## Files
  - `celeste2.p8`: The final cartridge that gets published
