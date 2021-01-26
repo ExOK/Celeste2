@@ -255,12 +255,9 @@ function restart_level()
 
 	for i = 0,level.width-1 do
 		for j = 0,level.height-1 do
-			for t in all(types) do
-				if level_checkpoint == nil or t != player then
-					if tile_at(i, j) == t.spr and not collected[id(i, j)] then
-						create(t, i * 8, j * 8)
-					end
-				end
+			local t = types[tile_at(i, j)]
+			if t and not collected[id(i, j)] and (not level_checkpoint or t != player) then
+				create(t, i * 8, j * 8)
 			end
 		end
 	end

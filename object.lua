@@ -180,6 +180,6 @@ function new_type(spr)
 	obj.spr = spr
 	obj.base = object
 	setmetatable(obj, lookup)
-	add(types, obj)
+	types[spr] = obj
 	return obj
 end
