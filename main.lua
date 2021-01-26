@@ -58,9 +58,9 @@ function _update()
 	-- normal level
 	else
 		-- timers
-		sfx_timer -= 1
-		infade += 1
-		shake -= 1
+		sfx_timer = max(sfx_timer - 1)
+		shake = max(shake - 1)
+		infade = min(infade + 1, 60)
 		if level_index != 8 then frames += 1 end
 		if frames == 30 then seconds += 1 frames = 0 end
 		if seconds == 60 then minutes += 1 seconds = 0 end
