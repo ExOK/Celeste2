@@ -105,7 +105,7 @@ function _draw()
 			if c<10 then for i=1,16 do pal(i,c) end end
 		end
 
-		sspr(72, 32, 56, 32, 36, 32)
+		sspr(64, 32, 64, 32, 36, 32)
 		rect(0,0,127,127,7)
 		print_center("lANI'S tREK", 64, 68, 14)
 		print_center("a game by", 64, 80, 1)
@@ -169,7 +169,7 @@ function _draw()
 		rect(32,390,96, 432, 7)
 		spr(21, 44, 396)
 		print("X "..berry_count, 56, 398, 7)
-		spr(72, 44, 408)
+		spr(87, 44, 408)
 		draw_time(56, 408)
 		spr(71, 44, 420)
 		print("X "..death_count, 56, 421, 7)

@@ -37,7 +37,7 @@ levels = {
 		columns = 1
     },
     {
-		offset = 2410,
+		offset = 2411,
         width = 128,
         height = 16,
         camera_mode = 5,
@@ -49,7 +49,7 @@ levels = {
 		fogmode = 2
     },
     {
-		offset = 2634,
+		offset = 2645,
         width = 128,
         height = 16,
         camera_mode = 6,
@@ -61,7 +61,7 @@ levels = {
 		fogmode = 2
     },
     {
-		offset = 2866,
+		offset = 2880,
         width = 128,
         height = 16,
         camera_mode = 7,
@@ -72,7 +72,7 @@ levels = {
 		fogmode = 2,
     },
     {
-		offset = 3056,
+		offset = 3079,
         width = 16,
 		height = 62,
 		title = "destination",
@@ -117,12 +117,12 @@ camera_modes = {
         else
             camera_target_x = px - 64
         end
-        camera_target_y = max(0, min(level.height * 8 - 128, py - 64))
+        camera_target_y = max(min(level.height * 8 - 128, py - 64))
     end,
 
     -- 3: Level 1
     function(px, py)
-        camera_target_x = max(0, min(level.width * 8 - 128, px - 56))
+        camera_target_x = max(min(level.width * 8 - 128, px - 56))
         for i,b in ipairs(level.camera_barriers_x) do
             camera_x_barrier(b, px, py)
         end
@@ -142,13 +142,13 @@ camera_modes = {
         if py % 128 > 4 and py % 128 < 124 then
             py = flr(py / 128) * 128 + 64
         end
-        camera_target_x = max(0, min(level.width * 8 - 128, px - 64))
-        camera_target_y = max(0, min(level.height * 8 - 128, py - 64))
+        camera_target_x = max(min(level.width * 8 - 128, px - 64))
+        camera_target_y = max(min(level.height * 8 - 128, py - 64))
     end,
 
     -- 5: Level 3-1
     function(px, py)
-        camera_target_x = max(0, min(level.width * 8 - 128, px - 32))
+        camera_target_x = max(min(level.width * 8 - 128, px - 32))
     end,
 
     -- 6: Level 3-2
@@ -178,7 +178,7 @@ camera_modes = {
     function (px, py)
         if px > 420 then
             if px < 436 then
-                c_offset = 32 + (px - 420)
+                c_offset = 32 + px - 420
             elseif px > 808 then
                 c_offset = 48 - min(16, px - 808)
             else

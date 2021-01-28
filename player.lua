@@ -300,7 +300,7 @@ function player.update(self)
 		-- gravity
 		if not on_ground then
 			local max = btn(3) and 5.2 or 4.4
-			if abs(self.speed_y) < 0.2 then
+			if abs(self.speed_y) < 0.2 and input_jump then
 				self.speed_y = min(self.speed_y + 0.4, max)
 			else
 				self.speed_y = min(self.speed_y + 0.8, max)
@@ -321,9 +321,9 @@ function player.update(self)
 		if input_jump_pressed > 0 then
 			if self.t_jump_grace > 0 then
 				self:jump()
-			elseif self:check_solid(2, 0) then
+			elseif self:check_solid(2) then
 				self:wall_jump(-1)
-			elseif self:check_solid(-2, 0) then
+			elseif self:check_solid(-2) then
 				self:wall_jump(1)
 			elseif self.t_grapple_jump_grace > 0 then
 				self:grapple_jump()
