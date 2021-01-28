@@ -146,7 +146,7 @@ camera_modes = {
         camera_target_y = max(0, min(level.height * 8 - 128, py - 64))
     end,
 
-    -- 5: Level 3-1 and 3-3
+    -- 5: Level 3-1
     function(px, py)
         camera_target_x = max(0, min(level.width * 8 - 128, px - 32))
     end,
@@ -163,7 +163,7 @@ camera_modes = {
             c_offset = 96
         end
 
-        camera_target_x = max(0, min(level.width * 8 - 128, px - c_offset))
+        camera_target_x = max(min(level.width * 8 - 128, px - c_offset))
 
         for i,b in ipairs(level.camera_barriers_x) do
             camera_x_barrier(b, px, py)
@@ -179,6 +179,8 @@ camera_modes = {
         if px > 420 then
             if px < 436 then
                 c_offset = 32 + (px - 420)
+            elseif px > 808 then
+                c_offset = 48 - min(16, px - 808)
             else
                 c_offset = 48
             end
