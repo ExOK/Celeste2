@@ -125,6 +125,13 @@ function snowball.bounce_overlaps(self, o)
 		return self:overlaps(o)
 	end
 end
+function snowball.contains(self, px, py)
+	return
+		px >= self.x and
+		px < self.x + 8 and
+		py >= self.y - 1 and
+		py < self.y + 10
+end
 function snowball.draw(self)
 	pal(7, 1)
 	spr(self.spr, self.x, self.y + 1)
@@ -152,7 +159,7 @@ function springboard.update(self)
 		self:move_x(self.speed_x, self.on_collide_x)
 		self:move_y(self.speed_y, self.on_collide_y)
 
-		if self.player != nil then
+		if self.player then
 			self.player:move_y(self.speed_y)
 		end
 

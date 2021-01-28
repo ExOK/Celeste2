@@ -267,7 +267,7 @@ end
 
 -- gets the tile at the given location from the loaded level
 function tile_at(x, y)
-	if (x < 0 or y < 0 or x >= level.width or y >= level.height) then return 0 end
+	if x < 0 or y < 0 or x >= level.width or y >= level.height then return 0 end
 
 	if standalone then
 		return mget(x, y)

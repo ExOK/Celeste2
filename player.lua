@@ -453,14 +453,14 @@ function player.update(self)
 		end
 
 		-- wall pose
-		if self.spr != 4 and self:check_solid(self.grapple_dir, 0) then
+		if self.spr != 4 and self:check_solid(self.grapple_dir) then
 			self.spr = 4
 			psfx(14, 8, 3)
 		end
 
 		-- jumps
 		if consume_jump_press() then
-			if self:check_solid(self.grapple_dir * 2, 0) then
+			if self:check_solid(self.grapple_dir * 2) then
 				self:wall_jump(-self.grapple_dir)
 			else
 				self.grapple_jump_grace_y = self.y
@@ -530,7 +530,7 @@ function player.update(self)
 		if not input_grapple or abs(obj.y - self.y + 7) > 8 or sgn(obj.x + 4 - self.x) == -self.grapple_dir then
 			self.state = 0
 			self.grapple_retract = true
-			self:release_holding(obj, -self.grapple_dir * 5, 0, false)
+			self:release_holding(obj, -self.grapple_dir * 5, 0, true)
 		end
 
 	elseif self.state == 50 then

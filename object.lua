@@ -24,7 +24,7 @@ function object.move_x(self, x, on_collide)
 
 	local total = mx
 	local mxs = sgn(mx)
-	while (mx != 0)
+	while mx != 0
 	do
 		if self:check_solid(mxs, 0) then
 			if on_collide then
@@ -47,7 +47,7 @@ function object.move_y(self, y, on_collide)
 	
 	local total = my
 	local mys = sgn(my)
-	while (my != 0)
+	while my != 0
 	do
 		if self:check_solid(0, mys) then
 			if on_collide then

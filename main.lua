@@ -310,7 +310,7 @@ function draw_sine_h(x0, x1, y, col, amplitude, time_freq, x_freq, fade_x_dist)
 		pset(ax, ay, col)
 
 		this_y = ay
-		while (abs(ay - last_y) > 1) do
+		while abs(ay - last_y) > 1 do
 			ay -= sgn(this_y - last_y)
 			pset(ax - x_sign, ay + 1, 1)
 			pset(ax - x_sign, ay, col)
