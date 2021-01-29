@@ -247,9 +247,7 @@ function player.update(self)
 		self.t_jump_grace = max(0, self.t_jump_grace - 1)
 	end
 
-	if self.t_grapple_jump_grace > 0 then
-		self.t_grapple_jump_grace -= 1
-	end
+	self.t_grapple_jump_grace = max(self.t_grapple_jump_grace - 1)
 
 	if self.t_grapple_cooldown > 0 and self.state < 1 then
 		self.t_grapple_cooldown -= 1
@@ -377,6 +375,7 @@ function player.update(self)
 
 		-- grapple movement and hitting stuff
 		local amount = min(64 - abs(self.grapple_x - self.x), 6)
+		local grabbed = false
 		for i = 1, amount do
 			local hit = self:grapple_check(self.grapple_x + self.grapple_dir, self.grapple_y)
 			if hit == 0 then
@@ -396,10 +395,7 @@ function player.update(self)
 					self.grapple_y = self.grapple_hit.y + 4
 				elseif mode == 3 then
 					self.grapple_hit.held = true
-				end
-
-				if self.grapple_hit and self.grapple_hit.on_grappled then
-					self.grapple_hit:on_grappled()
+					grabbed = true
 				end
 
 				self.state = mode == 3 and 12 or 11
@@ -424,7 +420,7 @@ function player.update(self)
 		self.spr = 3
 
 		-- release
-		if not input_grapple or abs(self.y - self.grapple_y) > 8 then
+		if not grabbed and (not input_grapple or abs(self.y - self.grapple_y) > 8) then
 			self.state = 0
 			self.grapple_retract = true
 			psfx(-2)
@@ -474,7 +470,7 @@ function player.update(self)
 		-- release
 		if not input_grapple or (self.grapple_hit and self.grapple_hit.destroyed) then
 			self.state = 0
-			self.t_grapple_jump_grace = 2
+			self.t_grapple_jump_grace = 4
 			self.grapple_jump_grace_y = self.y
 			self.grapple_retract = true
 			self.facing *= -1
@@ -489,7 +485,7 @@ function player.update(self)
 		if sgn(self.x - self.grapple_x) == self.grapple_dir then
 			self.state = 0
 			if self.grapple_hit != nil and self.grapple_hit.grapple_mode == 2 then
-				self.t_grapple_jump_grace = 3
+				self.t_grapple_jump_grace = 4
 				self.grapple_jump_grace_y = self.y
 			end
 			if abs(self.speed_x) > 5 then
